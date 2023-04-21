@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <section>
+    <h2>My Projects</h2>
+    <div class="grid-container">
+      <a href="{{ url_for('static', filename='/pdf/MasterThesis.pdf') }}" class="grid-item"><img src="{{ url_for('static', filename='images/thesis_page.jpg') }}" alt="Thesis"></a>
+      <a href="{{ url_for('static', filename='/pdf/BachelorThesis.pdf') }}" class="grid-item"><img src="{{ url_for('static', filename='images/bachelor_page.jpg') }}" alt="Bachelor"></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Group Projects</h2>
+    <div class="grid-container">
+      <a href="{{ url_for('static', filename='/pdf/daylightposter.pdf') }}" class="grid-item"><img src="{{ url_for('static', filename='images/daylight.jpg') }}" alt="Thesis"></a>
+      <a href="{{ url_for('static', filename='/pdf/indoorclimate.pdf') }}" class="grid-item"><img src="{{ url_for('static', filename='images/indoorclimate.jpg') }}" alt="Bachelor"></a>
+      <a href="{{ url_for('static', filename='/pdf/MEP.pdf') }}" class="grid-item"><img src="{{ url_for('static', filename='images/MEP.jpg') }}" alt="Bachelor"></a>
+    </div>
+  </section>
+
+  <style>
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 20px;
+    }
+
+    .grid-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 600px;
+      overflow: hidden;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .grid-item:hover {
+      transform: scale(1.1);
+    }
+
+    .grid-item img {
+      max-width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  </style>
+{% endblock %}
+
+
