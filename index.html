@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/styles.css">
+	<style>
+		body {
+		  background-image: linear-gradient(to top, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%);
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<nav>
+			<ul>
+				<li><a href="/home">Home</a></li>
+				<li><a href="/about">About</a></li>
+				<li><a href="/projects">Projects</a></li>
+				<li><a href="/contact">Contact</a></li>
+			</ul>
+			<div class="logo">
+				<img src="images/me.jpg" alt="My Profile Picture">
+				<h1>Oskar Gram Nielsen</h1>
+			</div>
+		</nav>
+	</header>
+	
+	<main>
+		{% block content %}
+		{% endblock %}
+	</main>
+	
+	<!-- <footer>
+		<p>&copy; {{ year }} My Portfolio</p>
+	</footer> -->
+	
+	<!-- <script src="{{ url_for('static', filename='js/scripts.js') }}"></script> -->
+</body>
+</html>
