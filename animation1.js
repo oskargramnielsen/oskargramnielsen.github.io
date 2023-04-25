@@ -3,16 +3,7 @@ async function init () {
     
     await sleep(1000)
     node.innerText = ""
-    // await node.type('Hello, ')
-    
-    // while (true) {
-    //   await node.type('I\'m Oskar!')
-    //   await sleep(2000)
-    //   await node.delete('I\'m Oskar!')
-    //   await node.type('Take a look at my site.')
-    //   await sleep(2000)
-    //   await node.delete('Take a look at my site.')
-    // }
+
     while (true) {
         await node.type('Hi. I\’m Oskar.')
         await sleep(2000)
