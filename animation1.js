@@ -14,10 +14,10 @@ async function init() {
   
     while (true) {
       await node.type('Hi. I’m Oskar.');
-      await sleep(500);
+      await sleep(700);
       await node.delete('Hi. I’m Oskar.');
       await node.type('An architectural engineer.');
-      await sleep(500);
+      await sleep(700);
       await node.delete('An architectural engineer.');
       await node.type('Welcome to my website. ');
       
