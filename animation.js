@@ -15,7 +15,7 @@ canvas.style.top = `${headerHeight}px`;
 // Define the size of the canvas and the size of the squares
 const canvasWidth = 6000;
 const canvasHeight = 4000;
-const squareSize = 20;
+const squareSize = 15;
 
 
 // Calculate the number of squares needed to fill the canvas
@@ -46,7 +46,7 @@ function updateHeatmapData(x, y) {
     for (let i = 0; i < squaresPerRow; i++) {
       for (let j = 0; j < squaresPerColumn; j++) {
         const distance = Math.sqrt(Math.pow(i * squareSize - x, 2) + Math.pow(j * squareSize - y, 2));
-        const colorValue = Math.min(Math.round(100 - distance / 2), 100);
+        const colorValue = Math.min(Math.round(250 - distance / 2), 250);
         const color = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
         colors[j * squaresPerRow + i] = color;
       }

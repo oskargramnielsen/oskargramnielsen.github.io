@@ -26,54 +26,133 @@
 	</header>
 
   <main>
-	
+
   <section>
     <h2>My Projects</h2>
     <div class="grid-container">
-      <a href="pdf/MasterThesis.pdf" class="grid-item"><img src="images/thesis_page.jpg" alt="Thesis"></a>
-      <a href="pdf/BachelorThesis.pdf" class="grid-item"><img src="images/bachelor_page.jpg" alt="Bachelor"></a>
-    </div>
-  </section>
-
-
-
-  <section>
-    <h2>Group Projects</h2>
-    <div class="grid-container">
-      <a href="pdf/daylightposter.pdf" class="grid-item"><img src="images/daylight.jpg" alt="daylightposter"></a>
-      <a href="pdf/indoorclimate.pdf" class="grid-item"><img src="images/indoorclimate.jpg" alt="indoorclimate"></a>
-      <a href="pdf/byg127.pdf" class="grid-item"><img src="images/127page.jpg" alt="127"></a>
-      <a href="pdf/MEP.pdf" class="grid-item"><img src="images/MEP.jpg" alt="MEP"></a>
+      <div class="grid-item">
+        <a href="pdf/MasterThesis.pdf">
+          <img src="images/thesis_page.jpg" alt="Thesis">
+          <div class="text-container">
+            <h2>Master Thesis</h2>
+            <p>Building a system architecture capable of representing LCA calculations.</p>
+          </div>
+        </a>
+      </div>
+      <div class="grid-item">
+        <a href="pdf/BachelorThesis.pdf">
+          <img src="images/bachelor_page.jpg" alt="Bachelor">
+          <div class="text-container">
+            <h2>Bachelor Thesis</h2>
+            <p>Micro scale analysis of open urban waterscapes in early design stages.</p>
+          </div>
+        </a>
+      </div>
     </div>
   </section>
   
+  <section>
+    <h2>Group Projects</h2>
+    <div class="grid-container">
+      <div class="grid-item">
+        <a href="pdf/daylightposter.pdf">
+          <img src="images/daylight.jpg" alt="daylightposter">
+          <div class="text-container">
+            <h2>Daylight, glare and view analysis</h2>
+            <p>The study assessed shading solutions based on daylight, glare and view out in Building 210 at DTU Campus.</p>
+          </div>
+        </a>
+      </div>
+      <div class="grid-item">
+        <a href="pdf/indoorclimate.pdf">
+          <img src="images/indoorclimate.jpg" alt="indoorclimate">
+          <div class="text-container">
+            <h2>Indoor climate analysis</h2>
+            <p>The study assessed active and passive means for improving indoor environment in existing buildings.</p>
+          </div>
+        </a>
+      </div>
+      <div class="grid-item">
+        <a href="pdf/byg127.pdf">
+          <img src="images/127page.jpg" alt="127page">
+          <div class="text-container">
+            <h2>Optimization of daylight and economy</h2>
+            <p>The study assessed shading solutions based on daylight and economy in Building 127 at DTU Campus.</p>
+
+          </div>
+        </a>
+      </div>
+      <div class="grid-item">
+        <a href="pdf/MEP.pdf">
+          <img src="images/MEP.jpg" alt="MEP">
+          <div class="text-container">
+            <h2>MEP report of office building</h2>
+            <p>A report proposing a complete MEP design of an office building projected at DTU</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <style>
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       grid-gap: 20px;
     }
 
-    .grid-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 400px;
-      overflow: hidden;
-      transition: transform 0.3s ease-in-out;
-    }
-
     .grid-item:hover {
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
+  
+    .grid-item {
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  height: 90%;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+  width: 100%;
+  max-width: 400px;
+}
 
-    .grid-item img {
-      max-width: 100%;
-      height: auto;
-      object-fit: cover;
-    }
+
+
+.grid-item img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.text-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: black;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 40px;
+  text-align: center;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-item:hover .text-container {
+  opacity: 1;
+}
+
   </style>
-
+  
+  
   </main>
 	</body>
 </html>
