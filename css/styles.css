@@ -45,11 +45,13 @@ body {
   z-index: 1;
 }
 
-/* new animation */
+/* typing animation */
 
 body {
   font-family: 'Source Code Pro', monospace;
-  font-size: 3em;}
+  font-size: 3em;
+  color: black;
+}
 
 .blinking-cursor {
   user-select: none;
@@ -59,6 +61,7 @@ body {
   to {
     visibility: hidden; } }
 
+/* sliding down animation */
 
 /* hover animation */
 
@@ -73,7 +76,6 @@ body {
 
 a {
   text-decoration-color: rgb(49, 49, 49);
-  font-size: x-large;
 }
 
 
