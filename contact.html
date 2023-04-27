@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +10,64 @@
 		body {
 		  background-image: linear-gradient(to top, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%);
 		}
+
+    h2 {
+        animation-name: change-color, grow-shrink;
+        animation-duration: 1.5s;
+        animation-iteration-count: 1;
+        }
+
+    .p1 {
+    animation-name: change-color, right-slide;
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
+    }
+    .photozoom {
+    animation-name: change-color, zoom;
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
+    }
+    .photoslide {
+    animation-name: change-color, up-slide;
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
+    }
+
+    @keyframes change-color {
+    0% { color: #ffffff00; }
+    100% { color: #000000; }
+    }
+
+    @keyframes grow-shrink {
+    0% { transform: translate(0px, -20px); }
+    100% { transform: translate(0,0); }
+    }
+
+    @keyframes left-slide {
+    0% { transform: translate(-75px, 0px); }
+    100% { transform: translate(0,0); }
+    }
+    @keyframes right-slide {
+    0% { transform: translate(75px, 0px); }
+    100% { transform: translate(0,0); }
+    }
+    @keyframes up-slide {
+    0% { transform: translate(0px, 200px); }
+    100% { transform: translate(0,0); }
+    }
+    @keyframes zoom {
+        0% { transform: scale(0.7); }
+        100% { transform: scale(1); }
+        }
+
+    .image-container {
+      animation-name: change-color, up-slide;
+      animation-duration: 1.5s;
+      animation-iteration-count: 1;
+      position: relative;
+      display: inline-block;
+    }
+
 	</style>
 </head>
 <body>
@@ -26,15 +87,15 @@
 	</header>
 
   <main>
-  <!-- <h1 style="font-size: 26px; color: rgb(0, 0, 0);">Contact Me</h1> -->
+
   <h2>Contact me</h2>
   <section style="max-width: 1200px; margin: 0 auto; padding: 0px;">
     <div style="display: flex; justify-content: space-between;">
       <div style="width: 55%;">
-        <p style="font-size: 20px; color: #666;">If you have any questions, please don't hesitate to reach out to me.</p>
+        <p style="font-size: 20px; color: #666;" class="p1">If you have any questions, please don't hesitate to reach out to me.</p>
         <p style="font-size: 20px; color: #ffffff00;">...</p>
-        <p style="font-size: 20px; color: #666;">Email: oskargram1996@gmail.com</p>
-        <p style="font-size: 20px; color: #666;">Phone: +4524232517</p>
+        <p style="font-size: 20px; color: #666;"class="p1">Email: oskargram1996@gmail.com</p>
+        <p style="font-size: 20px; color: #666;"class="p1">Phone: +4524232517</p>
         <div style="display: flex; gap: 20px; margin-top: 30px;">
           <a href="https://www.linkedin.com/in/oskar-gram-nielsen-462bb3141/" target="_blank">
             <img src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg" alt="LinkedIn" style="width:40px;height:40px;">
@@ -45,12 +106,16 @@
         </div>
       </div>
       <div style="width: 40%;">
-        <img src="images/me.jpg" alt="My Profile Picture" style="border-radius: 50%; width: 50%;">
+        <img src="images/me.jpg" alt="My Profile Picture" style="border-radius: 50%; width: 50%;" class="photozoom">
 
       </div>
     </div>
 
-    <img src="images/Blue dot 2021-17.png" style="width: 60%; padding: 30px; margin-left: auto; margin-right: auto; display: block;"  >
+    <div class="image-container">
+      <img src="images/Blue dot 2021-17.png" style="width: 60%; padding: 50px; margin-left: auto; margin-right: auto; display: block;" alt="Image description">
+    </div>
+    
+    
   </section>
 </main>
 
