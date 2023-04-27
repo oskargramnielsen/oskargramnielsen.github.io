@@ -5,16 +5,18 @@ async function init() {
     header.style.opacity = "0";
     header.style.transform = "translate(0px, -150px)";
 
-    await sleep(1000);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
 
     node.innerText = "";
   
     while (true) {
       await node.type('Hi. I’m Oskar.');
-      await sleep(700);
+      await new Promise(resolve => setTimeout(resolve, 700));
+      
       await node.delete('Hi. I’m Oskar.');
       await node.type('An architectural engineer.');
-      await sleep(700);
+      await new Promise(resolve => setTimeout(resolve, 700));
       await node.delete('An architectural engineer.');
       await node.type('Welcome to my website. ');
       
@@ -26,9 +28,9 @@ async function init() {
     header.style.transform = "translate(0px, 0px)";
     header.style.transition = "all 1.7s ease";
 
-    await sleep(5000);
+    await new Promise(resolve => setTimeout(resolve, 5000));
     await node.delete('Welcome to my website. ');
-    await sleep(2000);
+    await new Promise(resolve => setTimeout(resolve, 2000));
   
     }
   }

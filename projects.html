@@ -14,7 +14,7 @@
         }
 
       @keyframes left-slide {
-      0% { transform: translate(-75px, 0px); }
+      0% { transform: translate(-20px, 0px); }
       100% { transform: translate(0,0); }
       }
 
@@ -64,7 +64,7 @@
     <p style="font-size: 20px;" class="p1"></pstyle>Here is a selection of projects created during my architectural engineering studies. </p>
 
 
-    <h2>My Projects</h2>
+    <h2 style="font-size: 12;"> My Projects</h2>
     <div class="grid-container">
       <div class="grid-item">
         <a href="pdf/MasterThesis.pdf">
@@ -149,10 +149,10 @@
       position: relative;
       align-items: center;
       justify-content: center;
-      height: 90%;
-      overflow: hidden;
+      height: 100%;
+      /* overflow: hidden; */
       transition: transform 0.3s ease-in-out;
-      width: 100%;
+      /* width: 100%; */
       max-width: 400px;
     }
 
@@ -167,23 +167,24 @@
         }
 
         @keyframes left-slide {
-        0% { transform: translate(-75px, 0px); }
+        0% { transform: translate(-20px, 0px); }
         100% { transform: translate(0,0); }
         }
         @keyframes zoom {
-        0% { transform: scale(0.7); }
+        0% { transform: scale(0.9); }
         100% { transform: scale(1); }
         }
 
 
 
 .grid-item img {
-  max-width: 100%;
-  height: auto;
+  /* max-width: 100%; */
+  height: 100%;
   object-fit: cover;
   position: relative;
-  width: 100%;
-  max-width: 400px;
+  /* width: 100%; */
+  /* max-width: 400px; */
+  
 }
 
 .text-container {
