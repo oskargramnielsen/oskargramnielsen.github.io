@@ -3,12 +3,9 @@ async function init() {
     const node = document.querySelector("#type-text");
     const header = document.querySelector("header");
     header.style.opacity = "0";
-    header.style.transform = "translateY(-100)";
+    header.style.transform = "translate(0px, -150px)";
 
     await sleep(1000);
-
-
-
 
     node.innerText = "";
   
@@ -22,18 +19,16 @@ async function init() {
       await node.type('Welcome to my website. ');
       
       
-
     const header = document.querySelector("header");
     
     
     header.style.opacity = "1";
-    header.style.transform = "translateY(0)";
-    header.style.transition = "all 2s ease";
+    header.style.transform = "translate(0px, 0px)";
+    header.style.transition = "all 1.7s ease";
 
     await sleep(5000);
-      await node.delete('Welcome to my website. ');
-    
-      await sleep(2000);
+    await node.delete('Welcome to my website. ');
+    await sleep(2000);
   
     }
   }
