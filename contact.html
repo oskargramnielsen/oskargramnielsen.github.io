@@ -21,6 +21,12 @@
     animation-name: change-color, right-slide;
     animation-duration: 1.5s;
     animation-iteration-count: 1;
+    } 
+
+    .p2 {
+    animation-name: change-color, left-slide;
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
     }
     .photozoom {
     animation-name: change-color, zoom;
@@ -44,19 +50,19 @@
     }
 
     @keyframes left-slide {
-    0% { transform: translate(-75px, 0px); }
+    0% { transform: translate(-20px, 0px); }
     100% { transform: translate(0,0); }
     }
     @keyframes right-slide {
-    0% { transform: translate(75px, 0px); }
+    0% { transform: translate(20px, 0px); }
     100% { transform: translate(0,0); }
     }
     @keyframes up-slide {
-    0% { transform: translate(0px, 200px); }
+    0% { transform: translate(0px, 30px); }
     100% { transform: translate(0,0); }
     }
     @keyframes zoom {
-        0% { transform: scale(0.7); }
+        0% { transform: scale(0.9); }
         100% { transform: scale(1); }
         }
 
@@ -92,15 +98,16 @@
   <section style="max-width: 1200px; margin: 0 auto; padding: 0px;">
     <div style="display: flex; justify-content: space-between;">
       <div style="width: 55%;">
-        <p style="font-size: 20px; color: #666;" class="p1">If you have any questions, please don't hesitate to reach out to me.</p>
-        <p style="font-size: 20px; color: #ffffff00;">...</p>
-        <p style="font-size: 20px; color: #666;"class="p1">Email: oskargram1996@gmail.com</p>
-        <p style="font-size: 20px; color: #666;"class="p1">Phone: +4524232517</p>
+        <p style="font-size: 20px; color: #000000;" class="p1">If you have any questions, please don't hesitate to reach out to me.</p>
+        <p style="font-size: 20px; color: #00000000;">...</p>
+        <p style="font-size: 20px; color: #000000;"class="p1">Email: <a href="mailto:oskargram1996@gmail.com" style="color: #000;">oskargram1996@gmail.com</a>
+        </p>
+        <p style="font-size: 20px; color: #000000;"class="p1">Phone: +4524232517</p>
         <div style="display: flex; gap: 20px; margin-top: 30px;">
-          <a href="https://www.linkedin.com/in/oskar-gram-nielsen-462bb3141/" target="_blank">
+          <a href="https://www.linkedin.com/in/oskar-gram-nielsen-462bb3141/" target="_blank" class="p2">
             <img src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg" alt="LinkedIn" style="width:40px;height:40px;">
           </a>
-          <a href="https://github.com/oskargramnielsen" target="_blank">
+          <a href="https://github.com/oskargramnielsen" target="_blank" class="p2">
             <img src="https://cdn4.iconfinder.com/data/icons/iconsimple-logotypes/512/github-512.png" alt="GitHub" style="width:40px;height:40px;">
           </a>
         </div>
@@ -114,7 +121,8 @@
     <div class="image-container">
       <img src="images/Blue dot 2021-17.png" style="width: 60%; padding: 50px; margin-left: auto; margin-right: auto; display: block;" alt="Image description">
     </div>
-    
+
+
     
   </section>
 </main>
