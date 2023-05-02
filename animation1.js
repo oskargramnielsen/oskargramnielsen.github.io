@@ -5,18 +5,17 @@ async function init() {
     header.style.opacity = "0";
     header.style.transform = "translate(0px, -150px)";
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve.bind(this), 1000));
 
 
     node.innerText = "";
   
     while (true) {
       await node.type('Hi. I’m Oskar.');
-      await new Promise(resolve => setTimeout(resolve, 700));
-      
+      await new Promise(resolve => setTimeout(resolve.bind(this), 700));
       await node.delete('Hi. I’m Oskar.');
       await node.type('An architectural engineer.');
-      await new Promise(resolve => setTimeout(resolve, 700));
+      await new Promise(resolve => setTimeout(resolve.bind(this), 700));
       await node.delete('An architectural engineer.');
       await node.type('Welcome to my website. ');
       
@@ -28,16 +27,16 @@ async function init() {
     header.style.transform = "translate(0px, 0px)";
     header.style.transition = "all 1.7s ease";
 
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve.bind(this), 5000));
     await node.delete('Welcome to my website. ');
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve.bind(this), 2000));
   
     }
   }
   
   // Source code 🚩
   
-  const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
+  const sleep = (time) => new Promise((resolve) => setTimeout(resolve.bind(this), time));
   
   class TypeAsync extends HTMLSpanElement {
     get typeInterval() {
