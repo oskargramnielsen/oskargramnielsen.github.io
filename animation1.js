@@ -5,18 +5,20 @@ async function init() {
   header.style.opacity = "0";
   header.style.transform = "translate(0px, -150px)";
 
-  // await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise(resolve => setTimeout(resolve, 1000));
 
   node.innerText = "";
 
-  while (true) {
-    // await node.type('Hi. I’m Oskar.');
-    // await sleep(700);
-    // await node.delete('Hi. I’m Oskar.');
-    // await node.type('An architectural engineer.');
-    // await sleep(700);
-    // await node.delete('An architectural engineer.');
-    // await node.type('Welcome to my website. ');
+  for await (const _ of (async function* () {
+    while (true) yield null;
+  })()) {
+    await node.type('Hi. I’m Oskar.');
+    await sleep(700);
+    await node.delete('Hi. I’m Oskar.');
+    await node.type('An architectural engineer.');
+    await sleep(700);
+    await node.delete('An architectural engineer.');
+    await node.type('Welcome to my website. ');
     
     header.style.opacity = "1";
     header.style.transform = "translate(0px, 0px)";
