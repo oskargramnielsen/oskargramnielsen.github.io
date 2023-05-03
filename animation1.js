@@ -12,7 +12,7 @@ async function init() {
   
     while (true) {
       await node.type('Hi. I’m Oskar.');
-      await new Promise(resolve => setTimeout(resolve.bind(this), 700));
+      await new Promise(resolve => setTimeout(resolve, 700));
       await node.delete('Hi. I’m Oskar.');
       await node.type('An architectural engineer.');
       await new Promise(resolve => setTimeout(resolve.bind(this), 700));
