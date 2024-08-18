@@ -1,41 +1,11 @@
-async function init() {
-
-  const node = document.querySelector("#type-text");
-  const header = document.querySelector("header");
-  header.style.opacity = "0";
-  header.style.transform = "translate(0px, -150px)";
-
-  await new Promise(resolve => setTimeout(resolve, 1000));
-
-  node.innerText = "";
-
-  for await (const _ of (async function* () {
-    while (true) yield null;
-  })()) {
-    await node.type('Hi. I’m Oskar.');
-    await sleep(700);
-    await node.delete('Hi. I’m Oskar.');
-    await node.type('An architectural engineer.');
-    await sleep(700);
-    await node.delete('An architectural engineer.');
-    await node.type('Welcome to my website. ');
-    
-    header.style.opacity = "1";
-    header.style.transform = "translate(0px, 0px)";
-    header.style.transition = "all 1.7s ease";
-
-    await sleep(5000);
-    await node.delete('Welcome to my website. ');
-    await sleep(2000);
-  }
-}
-
+// Function to sleep for a specified time
 const sleep = (time) => {
   return new Promise(resolve => {
     setTimeout(resolve, time);
   });
 }
 
+// Class for typing animation
 class TypeAsync extends HTMLSpanElement {
   get typeInterval() {
     const randomMs = 100 * Math.random();
@@ -57,6 +27,50 @@ class TypeAsync extends HTMLSpanElement {
   }
 }
 
+// Initialize the typing animation and dropdown functionality
+async function init() {
+  const node = document.querySelector("#type-text");
+  const header = document.querySelector("header");
+  const menuToggle = document.querySelector('.menu-toggle');
+  const menuItems = document.querySelector('.menu-items');
+
+  // Initially hide the header and move it upwards
+  header.style.opacity = "0";
+  header.style.transform = "translate(0px, -150px)";
+
+  await sleep(1000); // Wait for 1 second
+
+  node.innerText = ""; // Clear the text
+
+  for await (const _ of (async function* () {
+    while (true) yield null; // Infinite loop for animation
+  })()) {
+    await node.type('Hi. I’m Oskar.');
+    await sleep(700);
+    await node.delete('Hi. I’m Oskar.');
+    await node.type('An architectural engineer.');
+    await sleep(700);
+    await node.delete('An architectural engineer.');
+    await node.type('Welcome to my website.');
+
+    // Make the header visible and move it to its original position
+    header.style.opacity = "1";
+    header.style.transform = "translate(0px, 0px)";
+    header.style.transition = "all 1.7s ease";
+
+    // await sleep(5000); // Wait for 5 seconds
+    await node.delete('Welcome to my website.');
+    // await sleep(2000); // Wait for 2 seconds
+  }
+
+  // Dropdown functionality
+  menuToggle.addEventListener('click', () => {
+    menuItems.classList.toggle('show'); // Toggle the 'show' class
+  });
+}
+
+// Custom element definition
 customElements.define("type-async", TypeAsync, { extends: "span" });
 
-init();
+// Start the animation when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', init);
