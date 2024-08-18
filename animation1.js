@@ -58,9 +58,13 @@ async function init() {
     header.style.transform = "translate(0px, 0px)";
     header.style.transition = "all 1.7s ease";
 
-    // await sleep(5000); // Wait for 5 seconds
+    await sleep(1000); // Wait for 5 seconds
     await node.delete('Welcome to my website.');
-    // await sleep(2000); // Wait for 2 seconds
+    
+    await sleep(100); // Wait for 2 seconds
+    
+    // Redirect to info.html after deleting the text
+    window.location.href = 'info.html';
   }
 
   // Dropdown functionality
