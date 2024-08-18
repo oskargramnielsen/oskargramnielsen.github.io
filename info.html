@@ -1,151 +1,177 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="css/styles.css">
-	<style>
-		body {
-		  background-image: linear-gradient(to top, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%);
-		}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            background-image: linear-gradient(to top, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%);
+        }
         h2 {
-        animation-name: change-color, grow-shrink;
-        animation-duration: 0.7s;
-        animation-iteration-count: 1;
+            animation-name: change-color, grow-shrink;
+            animation-duration: 0.7s;
+            animation-iteration-count: 1;
         }
-
         .p1 {
-        animation-name: change-color, right-slide;
-        animation-duration: 1s;
-        animation-iteration-count: 1;
+            animation-name: change-color, right-slide;
+            animation-duration: 1s;
+            animation-iteration-count: 1;
         }
-
         @keyframes change-color {
-        0% { color: #ffffff00; }
-        100% { color: #000000; }
+            0% { color: #ffffff00; }
+            100% { color: #000000; }
         }
-
         @keyframes grow-shrink {
-        0% { transform: translate(0px, -10px); }
-        100% { transform: translate(0,0); }
+            0% { transform: translate(0px, -10px); }
+            100% { transform: translate(0,0); }
         }
-
         @keyframes left-slide {
-        0% { transform: translate(-20px, 0px); }
-        100% { transform: translate(0,0); }
+            0% { transform: translate(-20px, 0px); }
+            100% { transform: translate(0,0); }
         }
         @keyframes right-slide {
-        0% { transform: translate(20px, 0px); }
-        100% { transform: translate(0,0); }
+            0% { transform: translate(20px, 0px); }
+            100% { transform: translate(0,0); }
         }
-
         @keyframes zoom {
-        0% { transform: scale(0.9); }
-        100% { transform: scale(1); }
+            0% { transform: scale(0.9); }
+            100% { transform: scale(1); }
         }
-
         .animated-list {
-        font-size: 20px;
-        list-style-type: disc;
+            font-size: 20px;
+            list-style-type: disc;
         }
-
         .animated-list li {
-        opacity: 0;
-        animation-name: fadeIn, left-slide;
-        animation-duration: 1s;
-        animation-fill-mode: forwards;
-        }
-
-        .animated-list li:nth-child(1) {
-        animation-delay: 0s;
-        }
-
-        .animated-list li:nth-child(2) {
-        animation-delay: 0.05s;
-        }
-
-        .animated-list li:nth-child(3) {
-        animation-delay: 0.1s;
-        }
-
-        .animated-list li:nth-child(4) {
-        animation-delay: 0.15s;
-        }
-
-        .animated-list li:nth-child(5) {
-        animation-delay: 0.2s;
-        }
-
-        @keyframes fadeIn {
-        from {
             opacity: 0;
+            animation-name: fadeIn, left-slide;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+            line-height: 1.6; /* Adjust this value to increase space between lines */
         }
-        to {
-            opacity: 1;
+        .animated-list li:nth-child(1) { animation-delay: 0s; }
+        .animated-list li:nth-child(2) { animation-delay: 0.05s; }
+        .animated-list li:nth-child(3) { animation-delay: 0.1s; }
+        .animated-list li:nth-child(4) { animation-delay: 0.15s; }
+        .animated-list li:nth-child(5) { animation-delay: 0.2s; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-        }
-
         .photozoom {
-        animation-name: change-color, zoom;
-        animation-duration: 1.5s;
-        animation-iteration-count: 1;
+            animation-name: change-color, zoom;
+            animation-duration: 1.5s;
+            animation-iteration-count: 1;
+        }
+        /* Default layout for larger screens */
+        .cv-portfolio-container {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+        .cv-portfolio-container figure {
+            text-align: center;
+        }
+        .cv-portfolio-container img {
+            width: 194px;
+            height: 253px;
+        }
+        .cv-portfolio-container figcaption {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 22px;
+            color: black;
+            text-decoration: none;
+            display: block;
+            border: none;
+        }
+        .cv-portfolio-container a {
+            text-decoration: none;
+            color: inherit; /* This ensures the link inherits the color from its parent */
+            font-weight:bold;
+        }
+        .scrollable-content {
+            max-height: 300px; /* Adjust the height as needed */
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
         }
 
-
-	</style>
+        /* Responsive layout for mobile devices */
+        @media (max-width: 768px) {
+            .cv-portfolio-container {
+                flex-direction: column;
+                gap: 20px; /* Adjust gap between items on mobile */
+            }
+            .cv-portfolio-container img {
+                width: 80%; /* Adjust width for mobile */
+                height: auto; /* Maintain aspect ratio */
+            }
+            .cv-portfolio-container figcaption {
+                font-size: 18px; /* Adjust font size for mobile */
+            }
+            .animated-list {
+                font-size: 18px; /* Reduce font size for mobile */
+            }
+            .animated-list li {
+                line-height: 1.8; /* Increase line height for mobile for better readability */
+            }
+        }
+    </style>
 </head>
 <body>
-	<header>
-		<nav>
-			<ul>
-				<li><a href="/info.html">About</a></li>
-				<li><a href="/projects.html">Projects</a></li>
-				<li><a href="/contact.html">Contact</a></li>
-			</ul>
-			<div class="logo">
-				<img src="images/me.jpg" alt="My Profile Picture">
-				<h1>Oskar Gram Nielsen</h1>
-			</div>
-		</nav>
-	</header>
-	
-
-	<main>
-        <h2>About me</h2>
-   
-              <ul class="animated-list">
-                <li>Architectural Engineer from DTU</li>
-                <li>Strong foundation in computational design</li>
-                <li>Developed an LCA tool in collaboration with Rambøll during my Master's thesis</li>
-                <li>Visual programming and environmental simulation experience from two years at Gehl</li>
-                <li>Continuously exploring new technologies to enhance my skillset in the AEC field</li>
-              </ul>
-              
-        <p style="font-size: 20px;color: transparent;">...</p>
-
-        <p style="font-size: 20px;" class="p1">For more information see my CV or Portfolio below.</p>
-              
-
-    <section>
-        <p></p>
-        <div style="padding-top: 50px; padding-bottom: 50px;">
-            <div style="display: flex; justify-content: center; gap: 100px;">
-            <figure style="text-align: center;"class="photozoom">
-                <a href="pdf\CV.pdf">
-                <img src="images\CV_Page.jpg" alt="CV Image" style="width: 194px; height: 253px;">
-                <figcaption style="font-family: 'Source Code Pro', monospace; font-size: 22px; color: black; text-decoration: none; display: block; border: none;">CV</figcaption>
-                </a>
-            </figure>
-            <figure style="text-align: center;" class="photozoom">
-                <a href="pdf\Portfolio.pdf">
-                <img src="images\Portfolio_page.jpg" alt="Portfolio Image" style="width: 194px; height: 253px;">
-                <figcaption style="font-family: 'Source Code Pro', monospace; font-size: 22px; color: black; text-decoration: none; display: block; border: none;">Portfolio</figcaption>
-                </a>
-            </figure>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="images/me.jpg" alt="My Profile Picture">
+                <h1>Oskar Gram Nielsen</h1>
             </div>
-        </div>
+            <ul class="menu-items">
+                <li><a href="/info.html">About</a></li>
+                <li><a href="/projects.html">Projects</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+            </ul>
+            <button class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        </nav>
+    </header>
+    <main>
+        <h2>About me</h2>
+        <ul class="animated-list">
+            <li>Architectural engineer with expertise in computational design and software development.</li>
+            <li>Currently developing tools at CN3, enhancing design processes through automation.</li>
+            <li>Created an LCA tool in collaboration with Rambøll during my Master's thesis.</li>
+            <li>Developed a rainwater simulation tool for BIG in my Bachelor's thesis.</li>
+            <li>Experienced in delivering innovative solutions at Rambøll and Gehl, collaborating with multidisciplinary teams.</li>
+            <li>Dedicated to integrating advanced technologies in architectural design and continuous learning.</li>
+        </ul>
+        <p style="font-size: 20px;color: transparent;">...</p>
+        <p style="font-size: 20px;" class="p1">For more information see my CV or Portfolio below.</p>
+        <section>
+            <div class="cv-portfolio-container">
+                <figure class="photozoom">
+                    <a href="pdf/CV.pdf">
+                        <img src="images/CV_Page.jpg" alt="CV Image">
+                        <figcaption style = "text-decoration: none;">CV</figcaption> 
+                    </a>
+                </figure>
+                <figure class="photozoom">
+                    <a href="pdf/Portfolio.pdf">
+                        <img src="images/Portfolio_page.jpg" alt="Portfolio Image">
+                        <figcaption>Portfolio</figcaption>
+                    </a>
+                </figure>
+            </div>
         </section>
-
-	</body>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const menuToggle = document.querySelector('.menu-toggle');
+          const menuItems = document.querySelector('.menu-items');
+      
+          menuToggle.addEventListener('click', function () {
+            menuItems.classList.toggle('show');
+          });
+        });
+    </script>
+</body>
 </html>
-
-
