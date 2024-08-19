@@ -36,36 +36,30 @@ async function init() {
 
   // Initially hide the header and move it upwards
   header.style.opacity = "0";
-  header.style.transform = "translate(0px, -150px)";
+  header.style.transform = "translateY(-150px)"; // Changed to translateY for clarity
+  header.style.transition = "transform 1.7s ease, opacity 1.7s ease";
 
   await sleep(1000); // Wait for 1 second
 
   node.innerText = ""; // Clear the text
 
-  for await (const _ of (async function* () {
-    while (true) yield null; // Infinite loop for animation
-  })()) {
-    await node.type('Hi. I’m Oskar.');
-    await sleep(700);
-    await node.delete('Hi. I’m Oskar.');
-    await node.type('An architectural engineer.');
-    await sleep(700);
-    await node.delete('An architectural engineer.');
-    await node.type('Welcome to my website.');
+  // Run the animation sequence only once
+  await node.type('Hi. I’m Oskar.');
+  await sleep(700);
+  await node.delete('Hi. I’m Oskar.');
+  await node.type('An architectural engineer.');
+  await sleep(700);
+  await node.delete('An architectural engineer.');
+  await node.type('Welcome to my website.');
 
-    // Make the header visible and move it to its original position
-    header.style.opacity = "1";
-    header.style.transform = "translate(0px, 0px)";
-    header.style.transition = "all 1.7s ease";
+  // Make the header visible and move it to its original position
+  header.style.opacity = "1";
+  header.style.transform = "translateY(0px)"; // Correct the position without zoom effect
 
-    await sleep(1000); // Wait for 5 seconds
-    await node.delete('Welcome to my website.');
-    
-    await sleep(100); // Wait for 2 seconds
-    
-    // Redirect to info.html after deleting the text
-    window.location.href = 'info.html';
-  }
+  await sleep(2000); // Wait for 3 seconds after the final message
+
+  // Redirect to info.html
+  window.location.href = 'info.html';
 
   // Dropdown functionality
   menuToggle.addEventListener('click', () => {
