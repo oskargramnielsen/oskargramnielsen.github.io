@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: linear-gradient(to top, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%);
+            font-family: 'Source Code Pro', monospace; 
+            
+            color: black; /* Set text color to black */
+            /* margin: 0; */
+            /* padding: 0; */
+            /* display: flex; */
+            /* flex-direction: column; */
+            /* min-height: 100vh; */
+            
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+        }
+
+        main {
+            position: absolute;
+            /* margin-left: 0px; */
+            /* margin-right: 0px; */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            /* max-width: 1100px; */
+            border-radius: 10px;
+            padding: 20px; /* Add padding for spacing */
+            margin-top: 50px;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+
+        }
+
+        html, body {
+    height: 100%; /* Ensure HTML and body take up the full viewport height */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    overflow: hidden; /* Prevent scrolling */
+}
+
+
+
+        h2 {
+            animation-name: change-color, grow-shrink;
+            animation-duration: 1.5s;
+            animation-iteration-count: 1;
+        }
+
+        p {
+            animation-name: change-color, fade-in;
+            animation-duration: 1.5s;
+            animation-iteration-count: 1;
+        }
+
+        .carousel {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+            margin: 0;
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease; /* Smooth transition */
+            width: 80%; /* Ensure it takes the full width */
+            padding: 0; /* Remove any padding */
+        }
+
+        .carousel-item {
+            min-width: 39.33%; /* Each item takes 1/3 of the carousel */
+            padding: 20px; /* Add padding for separation */
+            text-align: center; /* Center text */
+            margin: 0 10px; /* Add margin for separation */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Shadow effect for separation */
+            border-radius: 10px; /* Rounded corners */
+            background-color: white; /* Background color for items */
+            animation-name: change-color, up-slide;
+            animation-duration: 1.5s;
+            animation-iteration-count: 1;
+        }
+
+        .carousel-item h2 {
+            font-size: 22px; /* Reduce the font size of the titles */
+            margin-bottom: 10px; /* Optional: Adjust the space below the title */
+            animation-name: change-color, fade-in;
+            animation-duration: 1.5s;
+            animation-iteration-count: 1;
+        }
+
+        .carousel-item a {
+            text-decoration: none; /* Remove underline from links */
+            color: black; /* Ensure the text color remains black */
+        }
+
+        .carousel-item img {
+            width: 100%; /* Image takes full width of the carousel item */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 10px; /* Ensure images have rounded corners */
+        }
+
+        .carousel-buttons {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            transform: translateY(-50%);
+            pointer-events: none; /* Allow clicks through the container */
+        }
+
+        .carousel-button {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            cursor: pointer;
+            padding: 12px;
+            font-size: 24px;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            pointer-events: auto; /* Allow interaction with the buttons */
+            position: absolute;
+        }
+
+        #prevButton {
+            left: -20px; /* Adjust this value to move the button further to the left */
+            color: gray;
+        }
+
+        #nextButton {
+            right: -20px; /* Adjust this value to move the button further to the right */
+            color: gray;
+        }
+
+        .carousel-button:hover {
+            background-color: rgba(255, 255, 255, 1);
+            transform: scale(1.1); /* Slightly enlarge button on hover */
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .carousel-inner {
+                display: flex;
+                transition: transform 0.5s ease; /* Smooth transition */
+                flex-direction: row; /* Ensure items are side by side */
+                flex-wrap: nowrap; /* Prevent items from wrapping to a new line */
+            }
+
+            .carousel-item {
+                min-width: 100%; /* Adjust the width for better mobile display */
+                padding: 10px; /* Reduced padding for mobile */
+                margin: 0 29px; /* Adjust margin for spacing on mobile */
+                box-shadow: none; /* Optional: Remove shadow for a simpler mobile design */
+                scroll-snap-align: start; /* Ensure items snap into place when scrolling */
+            }
+
+            .carousel-inner::-webkit-scrollbar {
+                display: flex; /* Hide scrollbar on mobile for a cleaner look */
+            }
+
+            .carousel-buttons {
+                display: flex; /* Hide navigation buttons on mobile */
+            }
+
+            #prevButton {
+                left: 5px; /* Adjust this value to move the button further to the left */
+                color: gray;
+            }
+
+            #nextButton {
+                right: 5px; /* Adjust this value to move the button further to the right */
+                color: gray;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .carousel-item {
+                padding: 20px; /* More padding for larger screens */
+            }
+        }
+
+        /* Animation Keyframes */
+        @keyframes change-color {
+            0% { color: #ffffff00; }
+            100% { color: #000000; }
+        }
+
+        @keyframes grow-shrink {
+            0% { transform: translate(0px, -20px); }
+            100% { transform: translate(0,0); }
+        }
+
+        @keyframes left-slide {
+            0% { transform: translate(-20px, 0px); }
+            100% { transform: translate(0,0); }
+        }
+
+        @keyframes right-slide {
+            0% { transform: translate(20px, 0px); }
+            100% { transform: translate(0,0); }
+        }
+
+        @keyframes up-slide {
+            0% { transform: translate(0px, 30px); }
+            100% { transform: translate(0,0); }
+        }
+
+        @keyframes zoom {
+            0% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="images/me.jpg" alt="My Profile Picture">
+                <h1 style="font-size: 16px;">Oskar Gram Nielsen</h1>
+            </div>
+            <ul class="menu-items">
+                <li><a href="/info.html">About</a></li>
+                <li><a href="/projects.html">Projects</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+            </ul>
+            <button class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>My Projects</h2>
+            <p style="padding-bottom: 20px;">Here is a selection of projects created during my architectural engineering studies.</p>
+
+            <div class="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item">
+                        <a href="pdf/MasterThesis.pdf" style="color: black;"> <!-- Link color -->
+                            <img src="images/thesis_page.jpg" alt="Thesis" loading="lazy">
+                            <div class="text-container">
+                                <h2>Master Thesis</h2>
+                                <p>System architecture capable of performing LCA calculations.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="carousel-item">
+                        <a href="pdf/BachelorThesis.pdf" style="color: black;"> <!-- Link color -->
+                            <img src="images/bachelor_page.jpg" alt="Bachelor" loading="lazy">
+                            <div class="text-container">
+                                <h2>Bachelor Thesis</h2>
+                                <p>Analysis of urban waterscapes in early design.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="carousel-item">
+                        <a href="pdf/daylightposter.pdf" style="color: black;"> <!-- Link color -->
+                            <img src="images/daylight.jpg" alt="Daylight Poster" loading="lazy">
+                            <div class="text-container">
+                                <h2>Daylight & Glare Analysis</h2>
+                                <p>Shading solutions for daylight, glare, and views.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="carousel-item">
+                        <a href="pdf/indoorclimate.pdf" style="color: black;"> <!-- Link color -->
+                            <img src="images/indoorclimate.jpg" alt="Indoor Climate" loading="lazy">
+                            <div class="text-container">
+                                <h2>Indoor Climate Study</h2>
+                                <p>Improving indoor environments in existing buildings.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="carousel-item">
+                        <a href="pdf/byg127.pdf" style="color: black;"> <!-- Link color -->
+                            <img src="images/127page.jpg" alt="127 Page" loading="lazy">
+                            <div class="text-container">
+                                <h2>Daylight & Economy</h2>
+                                <p>Assessing shading solutions for daylight and cost.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="carousel-item">
+                        <a href="pdf/MEP.pdf" style="color: black;"> <!-- Link color -->
+                            <img src="images/MEP.jpg" alt="MEP" loading="lazy">
+                            <div class="text-container">
+                                <h2>Office Building MEP</h2>
+                                <p>Complete MEP design for an office at DTU.</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+                <div class="carousel-buttons">
+                    <button class="carousel-button" id="prevButton">❮</button>
+                    <button class="carousel-button" id="nextButton">❯</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const menuItems = document.querySelector('.menu-items');
+        
+            menuToggle.addEventListener('click', function () {
+              menuItems.classList.toggle('show');
+            });
+          });
+          
+                const carouselInner = document.querySelector('.carousel-inner');
+                const items = document.querySelectorAll('.carousel-item');
+                const itemCount = items.length;
+                let itemsToShow;
+                let offset;
+                let currentIndex = 0;
+        
+                // Function to update carousel settings based on screen size
+                function updateCarouselSettings() {
+                    if (window.innerWidth <= 768) {
+                        // Mobile settings
+                        itemsToShow = 1;
+                        offset = 126.475;
+                    } else {
+                        // Desktop settings
+                        itemsToShow = 3;
+                        offset = 41.7;
+                    }
+                    updateCarousel(); // Update carousel position after settings change
+                }
+        
+                // Function to update the carousel display
+                function updateCarousel() {
+                    const translateX = -currentIndex * offset;
+                    carouselInner.style.transform = `translateX(${translateX}%)`;
+                }
+        
+                // Event listener for the Next button
+                document.getElementById('nextButton').addEventListener('click', () => {
+                    if (currentIndex < itemCount - itemsToShow) {
+                        currentIndex += 1;
+                    } else {
+                        currentIndex = 0;
+                    }
+                    updateCarousel();
+                });
+        
+                // Event listener for the Previous button
+                document.getElementById('prevButton').addEventListener('click', () => {
+                    if (currentIndex > 0) {
+                        currentIndex -= 1;
+                    } else {
+                        currentIndex = itemCount - itemsToShow;
+                    }
+                    updateCarousel();
+                });
+        
+                // Initial setup
+                updateCarouselSettings();
+        
+                // Update settings on window resize
+                window.addEventListener('resize', updateCarouselSettings);
+            </script>
+            
+        </body>
+        </html>
+        
