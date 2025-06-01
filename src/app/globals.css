@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 255 100% 100%; /* Pure White */
+    --foreground: 0 0% 0%; /* Pure Black */
+
+    --card: 255 100% 100%; 
+    --card-foreground: 0 0% 0%;
+
+    --popover: 255 100% 100%;
+    --popover-foreground: 0 0% 0%;
+
+    --primary: 0 0% 0%; /* Black for primary elements in light mode */
+    --primary-foreground: 255 100% 100%; /* White */
+
+    --secondary: 0 0% 96%; /* Very Light Grey */
+    --secondary-foreground: 0 0% 0%; 
+
+    --muted: 0 0% 90%; /* Light Grey */
+    --muted-foreground: 0 0% 20%; 
+
+    --accent: 0 0% 0%; 
+    --accent-foreground: 255 100% 100%; 
+
+    --destructive: 0 100% 50%; 
+    --destructive-foreground: 255 100% 100%;
+
+    --border: 0 0% 87%; /* Light Grey border */
+    --input: 0 0% 92%; 
+    --ring: 0 0% 0%; 
+
+    --radius: 0rem; /* Sharp corners */
+
+    --chart-1: 0 0% 20%;
+    --chart-2: 0 0% 40%;
+    --chart-3: 0 0% 60%;
+    --chart-4: 0 0% 70%;
+    --chart-5: 0 0% 80%;
+    
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 13%;
+    --sidebar-primary: 0 0% 13%;
+    --sidebar-primary-foreground: 255 100% 100%;
+    --sidebar-accent: 0 0% 90%;
+    --sidebar-accent-foreground: 0 0% 13%;
+    --sidebar-border: 0 0% 85%;
+    --sidebar-ring: 0 0% 13%;
+  }
+
+  .dark {
+    --background: 0 0% 2%; /* Base for components that DO need a solid bg, very dark */
+    --foreground: 0 0% 98%; /* Near White */
+
+    --card: 0 0% 5%; /* Dark card background */
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 3%; 
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%; /* White for primary elements in dark mode */
+    --primary-foreground: 0 0% 2%; /* Black */
+
+    --secondary: 0 0% 10%; /* Dark Grey */
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 15%; /* Medium Dark Grey */
+    --muted-foreground: 0 0% 70%; 
+
+    --accent: 0 0% 98%; 
+    --accent-foreground: 0 0% 2%; 
+
+    --destructive: 0 100% 50%; 
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%; /* Dark Grey border */
+    --input: 0 0% 12%; 
+    --ring: 0 0% 98%; 
+
+    /* Sidebar variables - dark theme */
+    --sidebar-background: 0 0% 5%; 
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 255 100% 100%; 
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 15%; 
+    --sidebar-accent-foreground: 255 100% 100%; 
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 255 100% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply text-foreground;
+    font-family: var(--font-geist-sans);
+  }
+   /* Default to light mode background if .dark is not present */
+  body:not(.dark) {
+    background-color: hsl(var(--background)); /* White for light mode */
+  }
+
+  /* Apply subtle gradient for dark mode body */
+  .dark body {
+    background: linear-gradient(180deg, hsl(0, 0%, 5%) 0%, hsl(0, 0%, 2%) 100%);
+  }
+}
