@@ -12,7 +12,6 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "export": "next export",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d out"
   },
