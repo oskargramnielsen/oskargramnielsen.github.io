@@ -2,14 +2,19 @@
   "name": "nextn",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://oskargramnielsen.github.io",
+
   "scripts": {
     "dev": "next dev --turbopack -p 9002",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
     "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "export": "next export",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d out"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.8.0",
@@ -41,22 +46,15 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "dotenv": "^16.5.0",
-<<<<<<< HEAD
     "embla-carousel": "^8.6.0",
     "embla-carousel-autoplay": "^8.6.0",
-=======
-    "embla-carousel-autoplay": "^8.1.8",
->>>>>>> 44c899e11f44f0abba7f8facab2138082c7d1005
     "embla-carousel-react": "^8.1.8",
     "firebase": "^11.8.1",
     "framer-motion": "^11.3.19",
     "genkit": "^1.8.0",
+    "gh-pages": "^6.3.0",
     "lucide-react": "^0.475.0",
-<<<<<<< HEAD
     "next": "^15.3.3",
-=======
-    "next": "15.2.3",
->>>>>>> 44c899e11f44f0abba7f8facab2138082c7d1005
     "patch-package": "^8.0.0",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
