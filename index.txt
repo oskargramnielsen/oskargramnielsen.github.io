@@ -1,0 +1,25 @@
+1:"$Sreact.fragment"
+2:I[7555,[],""]
+3:I[1295,[],""]
+4:I[7323,["802","static/chunks/802-ed97346efd8c408d.js","845","static/chunks/845-b4e397f2305a586b.js","177","static/chunks/app/layout-5bfc8a2c6f4cf8f7.js"],"Toaster"]
+5:I[7401,["802","static/chunks/802-ed97346efd8c408d.js","315","static/chunks/315-bda2ce7462997551.js","974","static/chunks/app/page-a004ced39fe74acb.js"],"default"]
+6:I[8957,["802","static/chunks/802-ed97346efd8c408d.js","315","static/chunks/315-bda2ce7462997551.js","974","static/chunks/app/page-a004ced39fe74acb.js"],"default"]
+7:I[8403,["802","static/chunks/802-ed97346efd8c408d.js","315","static/chunks/315-bda2ce7462997551.js","974","static/chunks/app/page-a004ced39fe74acb.js"],"default"]
+8:I[357,["802","static/chunks/802-ed97346efd8c408d.js","315","static/chunks/315-bda2ce7462997551.js","974","static/chunks/app/page-a004ced39fe74acb.js"],"default"]
+9:I[3760,["802","static/chunks/802-ed97346efd8c408d.js","315","static/chunks/315-bda2ce7462997551.js","974","static/chunks/app/page-a004ced39fe74acb.js"],"default"]
+a:I[6351,["802","static/chunks/802-ed97346efd8c408d.js","315","static/chunks/315-bda2ce7462997551.js","974","static/chunks/app/page-a004ced39fe74acb.js"],"default"]
+b:I[9665,[],"MetadataBoundary"]
+d:I[9665,[],"OutletBoundary"]
+10:I[4911,[],"AsyncMetadataOutlet"]
+12:I[9665,[],"ViewportBoundary"]
+14:I[6614,[],""]
+:HL["/_next/static/css/5a8c75049150bbfe.css","style"]
+0:{"P":null,"b":"abhyOPqNDP-yb0vp_qmZb","p":"","c":["",""],"i":false,"f":[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/5a8c75049150bbfe.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","className":"dark","children":[" ",["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":[["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}],["$","$L4",null,{}]]}]]}]]}],{"children":["__PAGE__",["$","$1","c",{"children":[["$","div",null,{"className":"flex flex-col min-h-screen","children":[" ",["$","$L5",null,{}],["$","main",null,{"className":"flex-grow container mx-auto px-2 sm:px-6 lg:px-8 py-8","children":[["$","$L6",null,{}],["$","$L7",null,{}],["$","$L8",null,{}],["$","$L9",null,{}],["$","$La",null,{}]]}],["$","footer",null,{"className":"border-t border-border/40 py-12 bg-background","children":["$","div",null,{"className":"container mx-auto px-4 sm:px-6 lg:px-8 text-left text-muted-foreground max-w-3xl","children":["$","p",null,{"className":"text-xs","children":["© ",2025," Oskar Gram Nielsen. All rights reserved."]}]}]}]]}],["$","$Lb",null,{"children":"$Lc"}],null,["$","$Ld",null,{"children":["$Le","$Lf",["$","$L10",null,{"promise":"$@11"}]]}]]}],{},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","tdKbACGV-5C4HuVhmaAMm",{"children":[["$","$L12",null,{"children":"$L13"}],null]}],null]}],false]],"m":"$undefined","G":["$14","$undefined"],"s":false,"S":true}
+15:"$Sreact.suspense"
+16:I[4911,[],"AsyncMetadata"]
+c:["$","$15",null,{"fallback":null,"children":["$","$L16",null,{"promise":"$@17"}]}]
+f:null
+13:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+e:null
+17:{"metadata":[["$","title","0",{"children":"EngiProfile | Professional Portfolio"}],["$","meta","1",{"name":"description","content":"A professional engineering portfolio website."}],["$","link","2",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"16x16"}]],"error":null,"digest":"$undefined"}
+11:{"metadata":"$17:metadata","error":null,"digest":"$undefined"}
