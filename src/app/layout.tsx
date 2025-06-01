@@ -14,8 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'EngiProfile | Professional Portfolio',
-  description: 'A professional engineering portfolio website.',
+  title: 'OGN',
+  description: 'CV and Portfoolio of Oskar Gram Nielsen',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: '/site.webmanifest',  
 };
 
 export default function RootLayout({
@@ -24,7 +29,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark"> {/* Apply dark class here to default to dark mode */}
+    <html lang="en" className="dark"> 
+          <head>
+            <title>OGN</title>
+            <meta name="description" content="Your site description." />
+            <link rel="icon" href="/favicon.ico" />
+            <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+            <link rel="manifest" href="/site.webmanifest" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
         <Toaster />

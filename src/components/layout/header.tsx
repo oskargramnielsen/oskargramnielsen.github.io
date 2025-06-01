@@ -22,7 +22,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-2 mr-6 group">
           <span className="text-2xl font-semibold text-foreground tracking-tight transition-transform duration-200 ease-out group-hover:scale-[1.02]">Oskar Gram Nielsen</span>
         </Link>
-        
+          
         <nav className="hidden md:flex gap-6 items-center">
           {navItems.map((item) => (
             <Link
