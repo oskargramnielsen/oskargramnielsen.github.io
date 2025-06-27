@@ -7,22 +7,72 @@ import { motion } from 'framer-motion';
 interface Skill {
   name: string;
   description?: string; 
-  category: 'Technical' | 'Creative Process' | 'Methodologies';
+  category: 'Programming' | 'Data' | 'Design';
 }
+// const skillsData: Skill[] = [
+//   { name: 'Automation & Scripting', category: 'Technical', description: 'C#, Revit API, Grasshopper, Python' },
+//   { name: 'Full-Stack Development', category: 'Technical', description: 'React, TypeScript, PostgreSQL, REST API' },
+//   { name: 'Data Pipelines', category: 'Technical', description: 'Web Scraping, Excel, Power Automate' },
+//   { name: 'Computational Design', category: 'Creative Process', description: 'Rhino, Dynamo, Parametric Modeling' },
+//   { name: 'Cloud Integration', category: 'Technical', description: 'Power Platform, LCAbyg API, Serverless Tools' },
+//   { name: 'Digital Sustainability', category: 'Methodologies', description: 'LCA Tools, BIM-based analysis' },
+//   { name: 'Problem Solving', category: 'Creative Process', description: 'Analytical thinking, Workflow optimization' },
+//   { name: 'Version Control', category: 'Technical', description: 'Git, GitHub, CI/CD' },
+//   { name: 'Collaboration & Communication', category: 'Methodologies', description: 'Interdisciplinary teamwork, Documentation' },
+// ];
 
 const skillsData: Skill[] = [
-  { name: 'Full-Stack Development', category: 'Technical', description: 'React, Next.js, Node.js, Python' },
-  { name: 'Cloud Architecture', category: 'Technical', description: 'AWS, GCP, Serverless' },
-  { name: 'Database Design', category: 'Technical', description: 'SQL, NoSQL, ORMs' },
-  { name: 'UI/UX Principles', category: 'Creative Process', description: 'User-centric design, Prototyping' },
-  { name: 'Generative AI Integration', category: 'Technical', description: 'Prompt Engineering, LLM APIs' },
-  { name: 'Agile Development', category: 'Methodologies', description: 'Scrum, Kanban' },
-  { name: 'Problem Solving', category: 'Creative Process', description: 'Analytical thinking, Root cause analysis' },
-  { name: 'Version Control', category: 'Technical', description: 'Git, GitHub, CI/CD' },
-  { name: 'Leadership & Mentorship', category: 'Methodologies', description: 'Team building, Knowledge sharing' },
+  {
+    name: 'Desktop Application',
+    category: 'Programming',
+    description: 'C#, Python, Node Based Programming',
+  },
+  {
+    name: 'Full-Stack Development',
+    category: 'Programming',
+    description: 'React, TypeScript, PostgreSQL',
+  },
+  {
+    name: 'Cloud Platform Automation',
+    category: 'Data',
+    description: 'Power Platform, Power Automate',
+  },
+  {
+    name: 'Version Control',
+    category: 'Programming',
+    description: 'Git, GitHub, CI/CD',
+  },
+  {
+    name: 'Data Pipelines & Automation',
+    category: 'Data',
+    description: 'Web Scraping, Excel, Power Automate',
+  },
+  {
+    name: 'Digital Sustainability',
+    category: 'Data',
+    description: 'LCA Tools, BIM-based analysis, Environmental Data',
+  },
+  {
+    name: 'Computational Design',
+    category: 'Design',
+    description: 'Grasshpper, Dynamo, Parametric Modeling',
+  },
+  {
+    name: '3D Modelling',
+    category: 'Design',
+    description: 'Rhino, Revit',
+  },
+  {
+    name: 'Simulations & Analysis',
+    category: 'Design',
+    description: 'Grasshopper, Blender, ENVI-met',
+  },
 ];
 
-const skillCategories: Skill['category'][] = ['Technical', 'Creative Process', 'Methodologies'];
+
+
+
+const skillCategories: Skill['category'][] = ['Programming', 'Data', 'Design'];
 
 export default function SkillsSection() {
   return (
