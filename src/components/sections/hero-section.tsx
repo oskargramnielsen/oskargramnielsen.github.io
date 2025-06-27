@@ -41,7 +41,9 @@ export default function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-          I am a passionate and results-driven engineer with experience in designing, developing, and deploying software solutions. My expertise lies in automation of workflows and data analytics with focus of optimizing the workflow through digital solutions. I thrive in collaborative environments and am dedicated to leveraging technology to solve complex challenges and deliver impactful products. I am always eager to learn and adapt to new technologies and methodologies to drive innovation and efficiency.            </motion.p>
+I am an architectural engineer specialized in software development, automation, and data-driven design. With experience across both public and private sectors, I build digital tools that streamline complex workflows in architecture, engineering, and infrastructure. My work spans custom C# plugins, full-stack web applications, and cloud-based systems integrating Revit, REST APIs, and modern data pipelines. I thrive at the intersection of design and technology—driven by curiosity, committed to collaboration, and always focused on scalable, real-world impact.
+
+            </motion.p>
             <motion.div 
               className="flex flex-col sm:flex-row gap-4"
               initial={{ opacity: 0, y: 20 }}
@@ -49,7 +51,7 @@ export default function HeroSection() {
               transition={{ duration: 0.5, delay: 0.5 }}
             >
               <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-none transition-transform duration-200 ease-out hover:scale-105">
-                <a href="/placeholder-cv.pdf" download>
+                <a href="/pdfs/CV.pdf" download>
                   <DownloadCloud className="mr-2 h-5 w-5" />
                   Download CV
                 </a>

@@ -15,7 +15,7 @@ export default function Home() {
         <HeroSection />
         <SkillsSection />
         <ProjectSection /> 
-        <CollaborationSection /> 
+        {/* <CollaborationSection />  */}
         <ContactSection /> 
       </main>
       <Footer />

@@ -9,30 +9,35 @@ import Autoplay from 'embla-carousel-autoplay';
 
 const projects = [
   {
-    title: "Project Alpha",
-    description: "A cutting-edge solution for modern web challenges, focusing on performance and user experience.",
-    imageUrl: "https://placehold.co/600x400.png",
-    aiHint: "technology abstract",
+    title: "Andelskortet",
+    description:
+      "A web-based platform for exploring cooperative housing opportunities in Copenhagen, built using Python, HTML/CSS and REST API",
+imageUrl: "/images/andel2.png",
+    aiHint: "map housing visualization",
   },
   {
-    title: "Project Beta",
-    description: "An innovative platform leveraging AI to streamline complex workflows and data analysis.",
-    imageUrl: "https://placehold.co/600x399.png",
-    aiHint: "data visualization",
+    title: "Solar Decathlon China",
+    description:
+      "Sustainable housing design project. I optimized roof design to enhance photovoltaic performance and indoor climate systems in an international competition.",
+    imageUrl: "/images/solar.png",
+    aiHint: "solar architecture renewable",
   },
   {
-    title: "Project Gamma",
-    description: "A mobile-first application designed for seamless collaboration and real-time communication.",
-    imageUrl: "https://placehold.co/600x401.png",
-    aiHint: "mobile interface",
+    title: "Cloud-Based LCA & BIM Solution",
+    description:
+      "Master’s thesis project integrating life cycle assessment into BIM workflows using Revit and LCAbyg APIs. Developed with Rambøll.",
+    imageUrl: "/images/master2.png",
+    aiHint: "data model sustainability",
   },
   {
-    title: "Project Delta",
-    description: "An open-source initiative to build community tools for developers.",
-    imageUrl: "https://placehold.co/600x400.png",
-    aiHint: "code screen",
+    title: "Rainwater Simulation Tool",
+    description:
+      "Bachelor thesis project simulating urban rainwater flow using particle systems in Blender. Developed with Bjarke Ingels Group (BIG).",
+    imageUrl: "/images/bachelor2.png",
+    aiHint: "urban water simulation",
   },
 ];
+
 
 export default function ProjectSection() {
       const autoplayPlugin = React.useRef(
