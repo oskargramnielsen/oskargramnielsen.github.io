@@ -1,100 +1,106 @@
-'use client'
+'use client';
 
-import Image from 'next/image';
+import { Magnetic } from '@/components/interactive/magnetic';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, Linkedin, Github, Phone, ArrowRight } from 'lucide-react';
+import { Github, Linkedin, Mail, Phone, Send } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
-import React from 'react';
-import pb from '../../assets/images/Profilbillede_sh_square.jpg';
 
-interface ContactLinkProps {
-  href: string;
-  Icon: React.ElementType;
-  label: string;
-  ariaLabel: string;
-}
+const userEmail = 'oskargram1996@gmail.com';
+const userLinkedIn = 'https://www.linkedin.com/in/oskar-gram-nielsen-462bb3141/';
+const userGitHub = 'https://github.com/oskargramnielsen';
+const userPhone = '+45 24 23 25 17';
 
-const ContactLink: React.FC<ContactLinkProps> = ({ href, Icon, label, ariaLabel }) => (
-  <Button asChild variant="outline" className="w-full justify-start text-left group border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-none transition-transform duration-200 ease-out hover:scale-105">
-    <a href={href} target="_blank" rel="noopener noreferrer" aria-label={ariaLabel} className="flex items-center justify-between">
-      <div className="flex items-center">
-        <Icon className="mr-3 h-5 w-5" />
-        {label}
-      </div>
-      <ArrowRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity" />
-    </a>
-  </Button>
-);
-
-const userEmail = "oskargram1996@gmail.com"; 
-const userLinkedIn = "https://www.linkedin.com/in/oskar-gram-nielsen-462bb3141/"; 
-const userGitHub = "https://github.com/oskargramnielsen"; 
-const userPhone = "+45 24 23 25 17"; 
+const contactItems = [
+  {
+    label: 'Drop an email',
+    value: userEmail,
+    href: `mailto:${userEmail}`,
+    icon: Mail,
+  },
+  {
+    label: 'Call directly',
+    value: userPhone,
+    href: `tel:${userPhone}`,
+    icon: Phone,
+  },
+  {
+    label: 'LinkedIn',
+    value: 'Connect professionally',
+    href: userLinkedIn,
+    icon: Linkedin,
+  },
+  {
+    label: 'GitHub',
+    value: 'Explore code',
+    href: userGitHub,
+    icon: Github,
+  },
+];
 
 export default function ContactSection() {
-  const autoplayPlugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: false, stopOnMouseEnter: true, playOnInit: true })
-  ).current;
-
   return (
-    <motion.section 
-      id="contact" 
-      className="py-20 md:py-32 bg-transparent" // Kept transparent as per minimalist request
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      viewport={{ once: true, amount: 0.05 }}
-    >
+    <section id="contact" className="relative py-24 md:py-32">
+      <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="overflow-hidden rounded-[2.75rem] border border-border/60 bg-background/70 p-10 shadow-[0_32px_80px_-40px_rgba(15,23,42,0.7)] backdrop-blur-2xl"
+        >
+          <div className="grid gap-10 md:grid-cols-[0.55fr_0.45fr] md:items-center">
+            <div>
+              <span className="text-xs uppercase tracking-[0.28em] text-muted-foreground">Collaborate</span>
+              <h2 className="mt-4 text-balance text-4xl font-semibold tracking-tight text-foreground">
+                Let's orchestrate your next intelligent workflow
+              </h2>
+              <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+                Ready for partnerships spanning automation, digital product development, or parametric design. I respond quickly and shape a clear next step within 48 hours.
+              </p>
 
-      
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <Card className="shadow-none border-0 bg-transparent text-left max-w-4xl mx-auto rounded-none">
+              <Magnetic strength={0.15} className="mt-8 inline-block">
+                <Button
+                  asChild
+                  size="lg"
+                  className="group relative inline-flex items-center gap-3 rounded-full border border-primary/60 bg-primary/90 px-6 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-primary-foreground shadow-[0_16px_40px_-20px_rgba(37,99,235,0.7)]"
+                  data-cursor="accent"
+                >
+                  <a href={`mailto:${userEmail}?subject=Project%20collaboration`}>
+                    Initiate project download
+                    <Send className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </a>
+                </Button>
+              </Magnetic>
 
+              <div className="mt-6 text-xs uppercase tracking-[0.28em] text-muted-foreground/70">
+                Currently open for collaborations
+              </div>
+            </div>
 
-          <CardHeader className="p-0 mb-12 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <CardTitle className="text-3xl md:text-4xl px-0 font-medium text-primary ">
-              Get In Touch
-            </CardTitle>
-            <CardDescription className="text-lg text-muted-foreground mt-2">
-              Let's connect. I'm open to collaborations, conversations, or new opportunities. Explore my work and reach out.
-            </CardDescription>
-          </CardHeader>
-         
-          <CardContent className="p-0 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            <ContactLink
-              href={`mailto:${userEmail}`}
-              Icon={Mail}
-              label="oskargram1996@gmail.com"
-              ariaLabel="Send me an email"
-            />
-              <ContactLink
-              href={`tel:${userPhone}`}
-              Icon={Phone}
-              label="+45 24 23 25 17"
-              ariaLabel="Call me"
-            />
-            <ContactLink
-              href={userLinkedIn}
-              Icon={Linkedin}
-              label="LinkedIn Profile"
-              ariaLabel="Visit my LinkedIn"
-            />
-            <ContactLink
-              href={userGitHub}
-              Icon={Github}
-              label="GitHub Profile"
-              ariaLabel="Visit my GitHub"
-            />
-
-          </CardContent>
-
-        </Card>
-        
+            <div className="grid gap-4">
+              {contactItems.map(({ label, value, href, icon: Icon }) => (
+                <Magnetic key={label} strength={0.12}>
+                  <motion.a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ y: -4 }}
+                    transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+                    className="group flex w-full items-center justify-between rounded-3xl border border-border/60 bg-background/70 px-6 py-5 text-left shadow-[0_22px_50px_-40px_rgba(15,23,42,0.6)] backdrop-blur-2xl"
+                    data-cursor="focus"
+                  >
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground/70">{label}</p>
+                      <p className="mt-2 text-sm text-foreground/90">{value}</p>
+                    </div>
+                    <Icon className="h-5 w-5 text-muted-foreground/60 transition-all duration-300 group-hover:text-primary" />
+                  </motion.a>
+                </Magnetic>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }
