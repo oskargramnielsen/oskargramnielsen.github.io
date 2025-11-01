@@ -57,7 +57,7 @@
     "next": "^15.3.3",
     "patch-package": "^8.0.0",
     "react": "^18.3.1",
-    "@react-three/fiber": "^8.15.17",
+    "@react-three/fiber": "8.15.17",
     "three": "^0.171.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
