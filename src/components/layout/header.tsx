@@ -10,6 +10,7 @@ import { useState } from 'react';
 const navItems = [
   { href: '#about', label: 'About' },
   { href: '#skills', label: 'Expertise' },
+  { href: '#projects', label: 'Projects' },
   { href: '#contact', label: 'Get In Touch' }, // Updated label to reflect combined section
 ];
 

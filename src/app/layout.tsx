@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'OGN',
-  description: 'CV and Portfoolio of Oskar Gram Nielsen',
+  description: 'CV and portfolio of Oskar Gram Nielsen — automation, AI and digital solutions.',
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="en" className="dark"> 
           <head>
             <title>OGN</title>
-            <meta name="description" content="Your site description." />
+            <meta name="description" content="CV and portfolio of Oskar Gram Nielsen — automation, AI and digital solutions." />
             <link rel="icon" href="/favicon.ico" />
             <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
             <link rel="manifest" href="/site.webmanifest" />
