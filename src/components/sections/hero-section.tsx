@@ -33,7 +33,7 @@ export default function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              Automation Engineer | Innovator | Problem Solver
+              AI & Automation Engineer | Digital Solutions | Problem Solver
             </motion.p>
             <motion.p 
               className="text-foreground/80 leading-relaxed mb-10 text-lg"
@@ -41,7 +41,7 @@ export default function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-I am an architectural engineer specialized in software development, automation, and data-driven design. With experience across both public and private sectors, I build digital tools that streamline complex workflows in architecture, engineering, and infrastructure. My work spans custom C# plugins, full-stack web applications, and cloud-based systems integrating Revit, REST APIs, and modern data pipelines. I thrive at the intersection of design and technology—driven by curiosity, committed to collaboration, and always focused on scalable, real-world impact.
+I turn manual processes into working digital solutions — automations, internal apps and AI agents. I work hands-on from the business problem to the finished tool, mostly across the Power Platform, the Microsoft ecosystem and code where it adds value.
 
             </motion.p>
             <motion.div 
