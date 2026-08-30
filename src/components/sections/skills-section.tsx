@@ -7,72 +7,58 @@ import { motion } from 'framer-motion';
 interface Skill {
   name: string;
   description?: string; 
-  category: 'Programming' | 'Data' | 'Design';
+  category: 'AI & Automation' | 'Development' | 'Design & Analysis';
 }
-// const skillsData: Skill[] = [
-//   { name: 'Automation & Scripting', category: 'Technical', description: 'C#, Revit API, Grasshopper, Python' },
-//   { name: 'Full-Stack Development', category: 'Technical', description: 'React, TypeScript, PostgreSQL, REST API' },
-//   { name: 'Data Pipelines', category: 'Technical', description: 'Web Scraping, Excel, Power Automate' },
-//   { name: 'Computational Design', category: 'Creative Process', description: 'Rhino, Dynamo, Parametric Modeling' },
-//   { name: 'Cloud Integration', category: 'Technical', description: 'Power Platform, LCAbyg API, Serverless Tools' },
-//   { name: 'Digital Sustainability', category: 'Methodologies', description: 'LCA Tools, BIM-based analysis' },
-//   { name: 'Problem Solving', category: 'Creative Process', description: 'Analytical thinking, Workflow optimization' },
-//   { name: 'Version Control', category: 'Technical', description: 'Git, GitHub, CI/CD' },
-//   { name: 'Collaboration & Communication', category: 'Methodologies', description: 'Interdisciplinary teamwork, Documentation' },
-// ];
 
 const skillsData: Skill[] = [
   {
-    name: 'Desktop Application',
-    category: 'Programming',
-    description: 'C#, Python, Node Based Programming',
+    name: 'AI & LLM Tooling',
+    category: 'AI & Automation',
+    description: 'LLMs, AI agents, prompt-driven workflows',
+  },
+  {
+    name: 'Process Automation',
+    category: 'AI & Automation',
+    description: 'Power Platform, Power Automate, low-code apps',
+  },
+  {
+    name: 'Data Pipelines & Integration',
+    category: 'AI & Automation',
+    description: 'REST APIs, web scraping, Excel, system integrations',
   },
   {
     name: 'Full-Stack Development',
-    category: 'Programming',
+    category: 'Development',
     description: 'React, TypeScript, PostgreSQL',
   },
   {
-    name: 'Cloud Platform Automation',
-    category: 'Data',
-    description: 'Power Platform, Power Automate',
+    name: 'Scripting & Applications',
+    category: 'Development',
+    description: 'C#, Python, node-based programming',
   },
   {
     name: 'Version Control',
-    category: 'Programming',
+    category: 'Development',
     description: 'Git, GitHub, CI/CD',
   },
   {
-    name: 'Data Pipelines & Automation',
-    category: 'Data',
-    description: 'Web Scraping, Excel, Power Automate',
+    name: 'Computational Design',
+    category: 'Design & Analysis',
+    description: 'Grasshopper, Dynamo, parametric modelling',
+  },
+  {
+    name: 'Simulation & Analysis',
+    category: 'Design & Analysis',
+    description: 'Grasshopper, Blender, ENVI-met',
   },
   {
     name: 'Digital Sustainability',
-    category: 'Data',
-    description: 'LCA Tools, BIM-based analysis, Environmental Data',
-  },
-  {
-    name: 'Computational Design',
-    category: 'Design',
-    description: 'Grasshpper, Dynamo, Parametric Modeling',
-  },
-  {
-    name: '3D Modelling',
-    category: 'Design',
-    description: 'Rhino, Revit',
-  },
-  {
-    name: 'Simulations & Analysis',
-    category: 'Design',
-    description: 'Grasshopper, Blender, ENVI-met',
+    category: 'Design & Analysis',
+    description: 'LCA tools, BIM-based analysis, environmental data',
   },
 ];
 
-
-
-
-const skillCategories: Skill['category'][] = ['Programming', 'Data', 'Design'];
+const skillCategories: Skill['category'][] = ['AI & Automation', 'Development', 'Design & Analysis'];
 
 export default function SkillsSection() {
   return (
@@ -87,7 +73,7 @@ export default function SkillsSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-left mb-12 max-w-3xl">
           <h2 className="text-3xl md:text-4xl font-medium text-primary mb-3 tracking-tight">My Expertise</h2>
-          <p className="text-lg text-muted-foreground">A brief overview of my capabilities.</p>
+          <p className="text-lg text-muted-foreground">What I work with.</p>
         </div>
       
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-0"> {/* Removed gap for tighter layout */}
