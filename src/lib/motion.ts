@@ -1,15 +1,16 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  animate,
-  useInView,
   useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
+  useScroll,
   useTransform,
   type MotionValue,
 } from 'motion/react';
+
+type Offset = NonNullable<Parameters<typeof useScroll>[0]>['offset'];
 
 /** 0→1 between a and b, clamped. */
 export function seg(v: number, a: number, b: number) {
@@ -48,34 +49,13 @@ export function useMediaQuery(query: string) {
 }
 
 /**
- * Progress that plays 0→1 over `duration` seconds the first time `ref` is in
- * view. Returns the value and a replay function. Under reduced motion it
- * stays at 1.
+ * Scroll-linked progress for an element as it moves through the viewport.
+ * Default: starts when its top reaches 85% of the viewport and finishes when
+ * its bottom reaches 65%. Under reduced motion it is fixed at 1.
  */
-export function useAutoProgress(ref: React.RefObject<Element | null>, duration: number, enabled = true) {
+export function useViewProgress(ref: React.RefObject<HTMLElement | null>, offset: Offset = ['start 0.85', 'end 0.65']) {
   const reduce = useReducedMotion();
-  const p = useMotionValue(reduce ? 1 : 0);
-  const inView = useInView(ref, { amount: 0.45 });
-  const played = useRef(false);
-  const [done, setDone] = useState(false);
-
-  const play = () => {
-    setDone(false);
-    p.set(0);
-    animate(p, 1, { duration, ease: 'linear', onComplete: () => setDone(true) });
-  };
-
-  useEffect(() => {
-    if (reduce) {
-      p.set(1);
-      return;
-    }
-    if (enabled && inView && !played.current) {
-      played.current = true;
-      play();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView, enabled, reduce]);
-
-  return { p, replay: play, done: done || !!reduce };
+  const { scrollYProgress } = useScroll({ target: ref, offset });
+  const one = useMotionValue(1);
+  return reduce ? one : scrollYProgress;
 }

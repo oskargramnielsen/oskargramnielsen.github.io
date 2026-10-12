@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import type { Dict } from '@/content';
 import { cn } from '@/lib/utils';
+import { revealProject } from './work';
 
 /**
  * A calm status board of the agents described further down. One running
@@ -45,6 +46,10 @@ export default function AgentBoard({ t }: { t: Dict['hero'] }) {
             <li key={a.name}>
               <a
                 href={`#${a.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  revealProject(a.id);
+                }}
                 className="group grid grid-cols-[1fr_auto] gap-x-3 gap-y-0.5 border-b border-hair px-4 py-3 last:border-b-0 hover:bg-bot-soft/50 md:px-5 md:py-3.5"
               >
                 <span className="font-mono text-[13px] text-bot">{a.name}</span>

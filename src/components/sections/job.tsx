@@ -1,8 +1,10 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { useRef } from 'react';
+import { motion, useTransform } from 'motion/react';
 import type { Dict } from '@/content';
 import { site } from '@/content/site';
+import { useViewProgress } from '@/lib/motion';
 
 /** Splits "{{x}}" markers into permanent redaction bars. */
 function Redacted({ text, label }: { text: string; label: string }) {
@@ -16,32 +18,34 @@ function Redacted({ text, label }: { text: string; label: string }) {
   ));
 }
 
+/** A line that starts blacked out and is "declassified" as it scrolls into view. */
+function Item({ i, text, label }: { i: number; text: string; label: string }) {
+  const ref = useRef<HTMLLIElement>(null);
+  const p = useViewProgress(ref, ['start 0.92', 'start 0.55']);
+  const scaleX = useTransform(p, [0, 1], [1, 0]);
+  return (
+    <li ref={ref} className="grid grid-cols-[32px_1fr] border-t border-hair py-5 text-lg leading-snug md:text-xl">
+      <span className="pt-1 font-mono text-[13px] text-muted">{String(i + 1).padStart(2, '0')}</span>
+      <span className="relative">
+        <Redacted text={text} label={label} />
+        <motion.span aria-hidden className="absolute inset-y-0.5 right-0 left-0 origin-right bg-ink" style={{ scaleX }} />
+      </span>
+    </li>
+  );
+}
+
 export default function Job({ t }: { t: Dict['job'] }) {
   return (
-    <section id="me" className="wrap scroll-mt-20 py-24 md:py-32">
+    <section id="work" className="wrap scroll-mt-20 pt-24 pb-8 md:pt-32">
       <div className="grid gap-12 lg:grid-cols-[1.2fr_.8fr] lg:gap-20">
         <div>
           <p className="font-mono text-[13px] text-muted">{t.label}</p>
-          <h2 className="mt-3 text-[clamp(28px,3.4vw,48px)] leading-[1.05] font-semibold tracking-[-0.03em] text-balance">{t.title}</h2>
-          <p className="mt-5 max-w-[620px] text-body">{t.body}</p>
+          <h2 className="mt-3 text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
+          <p className="mt-4 max-w-[620px] text-lg text-body md:text-xl">{t.body}</p>
 
           <ol className="mt-10">
             {t.items.map((item, i) => (
-              <li key={i} className="grid grid-cols-[32px_1fr] border-t border-hair py-5 text-lg leading-snug md:text-xl">
-                <span className="pt-1 font-mono text-[13px] text-muted">{String(i + 1).padStart(2, '0')}</span>
-                {/* The whole line starts blacked out and is "declassified" as it scrolls in. */}
-                <span className="relative">
-                  <Redacted text={item} label={t.redacted} />
-                  <motion.span
-                    aria-hidden
-                    className="absolute inset-y-0.5 left-0 right-0 origin-right bg-ink motion-reduce:hidden"
-                    initial={{ scaleX: 1 }}
-                    whileInView={{ scaleX: 0 }}
-                    viewport={{ once: true, amount: 0.9 }}
-                    transition={{ duration: 0.9, delay: 0.25 + i * 0.25, ease: [0.7, 0, 0.2, 1] }}
-                  />
-                </span>
-              </li>
+              <Item key={i} i={i} text={item} label={t.redacted} />
             ))}
           </ol>
           <p className="border-t border-hair pt-5 text-lg font-medium text-bot">{t.privacy}</p>
