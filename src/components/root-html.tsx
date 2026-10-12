@@ -1,23 +1,26 @@
-import { Inter_Tight, JetBrains_Mono } from 'next/font/google';
+import { IBM_Plex_Mono, Schibsted_Grotesk } from 'next/font/google';
 import type { Lang } from '@/content/site';
 import SmoothScroll from './smooth-scroll';
 import '@/app/globals.css';
 
-const interTight = Inter_Tight({
+const schibsted = Schibsted_Grotesk({
   subsets: ['latin', 'latin-ext'],
-  variable: '--font-inter-tight',
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-schibsted',
   display: 'swap',
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const plexMono = IBM_Plex_Mono({
   subsets: ['latin', 'latin-ext'],
-  variable: '--font-jetbrains-mono',
+  weight: ['400', '500'],
+  variable: '--font-plex-mono',
   display: 'swap',
 });
 
 export default function RootHtml({ lang, children }: { lang: Lang; children: React.ReactNode }) {
   return (
-    <html lang={lang} className={`${interTight.variable} ${jetbrainsMono.variable}`}>
+    <html lang={lang} className={`${schibsted.variable} ${plexMono.variable}`}>
       <body>
         <SmoothScroll>{children}</SmoothScroll>
       </body>
