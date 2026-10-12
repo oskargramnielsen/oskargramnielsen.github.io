@@ -43,3 +43,8 @@ next-env.d.ts
 # firebase
 firebase-debug.log
 firestore-debug.log
+# pnpm
+.pnpm-store/
+
+# local tool caches
+.openvisio/
