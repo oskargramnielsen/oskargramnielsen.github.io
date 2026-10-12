@@ -4,11 +4,13 @@ export const site = {
   email: 'ogn.cph@gmail.com',
   linkedin: 'https://www.linkedin.com/in/oskargramnielsen/', // TODO: confirm profile URL
   cv: '/pdfs/CV.pdf',
-  // Cal.com event slug, e.g. "oskar/30min". Empty until the Cal.com account is set up.
+  // Cal.com event slug, e.g. "oskar/20min". Empty until the Cal.com account is set up.
   calLink: '',
   // Web3Forms access key (public by design). Empty until signed up with site.email.
   web3formsKey: '',
 } as const;
+
+export const bookingHref: string = site.calLink ? `https://cal.com/${site.calLink}` : '#contact';
 
 export type Lang = 'en' | 'da';
 

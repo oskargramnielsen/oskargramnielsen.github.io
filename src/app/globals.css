@@ -1,44 +1,84 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-ink: #000000;
-  --color-paper: #ffffff;
-  --color-muted: #8a8a8a;
-  --color-body: #444444;
-  --color-hair: #e7e7e7;
-  --color-accent: #2b3bff;
-  --color-tint: #f3f4ff;
-  --color-tint-strong: #e2e4fb;
+  --color-paper: #fafaf7;
+  --color-card: #ffffff;
+  --color-ink: #111111;
+  --color-body: #333333;
+  --color-muted: #6b6b6b;
+  --color-faint: #a7a7a2;
+  --color-hair: #e4e2dc;
+  --color-shade: #f4f3ef;
+  /* Blue is reserved for anything done by a program. */
+  --color-bot: #1f3bff;
+  --color-bot-soft: #eef0ff;
 
-  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
   --ease-out-expo: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --ease-in-out-expo: cubic-bezier(0.7, 0, 0.2, 1);
 }
 
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
-    @apply bg-paper text-ink font-sans;
+    @apply bg-paper text-ink font-sans text-[17px] leading-normal md:text-lg;
   }
 
   ::selection {
-    @apply bg-accent text-paper;
+    @apply bg-bot text-card;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-bot);
     outline-offset: 3px;
   }
 }
 
-@utility gutter {
-  padding-inline: max(1.25rem, 3vw);
+@utility wrap {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-inline: 20px;
+  @media (width >= 48rem) {
+    padding-inline: 40px;
+  }
+}
+
+@keyframes drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@utility animate-drop {
+  animation: drop-in 0.7s var(--ease-out-expo);
+}
+
+@utility animate-caret {
+  animation: blink 1s steps(2) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Lenis recommended styles */
