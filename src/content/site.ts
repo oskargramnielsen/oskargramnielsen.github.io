@@ -2,12 +2,12 @@ export const site = {
   name: 'Oskar Gram Nielsen',
   url: 'https://www.oskargramnielsen.info',
   email: 'ogn.cph@gmail.com',
-  linkedin: 'https://www.linkedin.com/in/oskargramnielsen/', // TODO: confirm profile URL
+  linkedin: 'https://www.linkedin.com/in/oskar-gram-nielsen-462bb3141/',
   cv: '/pdfs/CV.pdf',
-  // Cal.com event slug, e.g. "oskar/20min". Empty until the Cal.com account is set up.
-  calLink: '',
-  // Web3Forms access key (public by design). Empty until signed up with site.email.
-  web3formsKey: '',
+  // Cal.com event slug.
+  calLink: 'oskar-nielsen-uukqoh/20min',
+  // Web3Forms access key. Public by design: it only lets the form send mail to site.email.
+  web3formsKey: '4b17ca73-ec43-461f-b533-8fb63b1d2dd2',
 } as const;
 
 export const bookingHref: string = site.calLink ? `https://cal.com/${site.calLink}` : '#contact';

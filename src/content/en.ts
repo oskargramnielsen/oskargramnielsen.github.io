@@ -33,7 +33,7 @@ export const en = {
   job: {
     label: 'At work',
     title: 'The big ones.',
-    body: "By day I'm an automation engineer at CN3. Most of it is private, so this is what I can tell you:",
+    body: "I'm an engineer from DTU who loves solving problems. I make the computer do the boring part, so people can do what they love. By day I'm an automation engineer at CN3. Most of it is private, so this is what I can tell you:",
     items: [
       'A management system for {{x}}, one of the largest construction projects in the world.',
       'Chatbots that let the whole company talk to its building models, running on our own GPUs.',
@@ -108,10 +108,13 @@ export const en = {
       caption: 'andelskortet.dk',
       attribution: 'Map © OpenStreetMap · dots illustrative',
       users: 'users in 21 months',
-      bankApp: 'Mail',
-      bankTime: 'now',
-      bankFrom: 'Jyske Bank',
-      bankMsg: 'Would you like to come by and talk about working together?',
+      mailApp: 'Mail',
+      // Real messages. Private senders are anonymised.
+      mails: [
+        { from: 'A co-op resident', time: 'Sep 2024', msg: 'It’s a brilliant concept. Can you add our co-op?' },
+        { from: 'A visitor', time: 'Mar 2026', msg: 'Great website!' },
+        { from: 'Jyske Bank', time: 'Sep 2024', msg: 'We’ve seen your project and think it’s really good. How about a coffee meeting?' },
+      ],
     },
     bank: {
       tag: 'Personal finance · running now',

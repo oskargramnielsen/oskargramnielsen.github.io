@@ -22,7 +22,7 @@ export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict
   const scanY = useTransform(p, (v) => seg(v, 0.05, 0.6) * H);
   const users = useTransform(p, (v) => Math.round(24485 * seg(v, 0.62, 0.85)).toLocaleString('da-DK'));
   const lines = useStep(p, LOG.map((_, i) => 0.05 + ((i + 1) / LOG.length) * 0.55));
-  const step = useStep(p, [0.62, 0.88]);
+  const step = useStep(p, [0.62, 0.78, 0.84, 0.9]);
 
   return (
     <div className="relative h-[440px] sm:h-[520px] lg:absolute lg:inset-0 lg:h-auto">
@@ -58,11 +58,16 @@ export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict
         ))}
       </div>
 
-      <Appear on={step >= 2} className="absolute top-2 right-3 w-[min(290px,78%)]">
-        <Banner app={t.bankApp} time={t.bankTime} title={t.bankFrom}>
-          {t.bankMsg}
-        </Banner>
-      </Appear>
+      {/* What people wrote, one mail at a time. */}
+      <div className="absolute top-2 right-3 flex w-[min(290px,78%)] flex-col gap-2">
+        {t.mails.map((m, i) => (
+          <Appear key={m.msg} on={step >= 2 + i}>
+            <Banner app={t.mailApp} time={m.time} title={m.from}>
+              {m.msg}
+            </Banner>
+          </Appear>
+        ))}
+      </div>
 
       <div className="absolute right-4 bottom-4 text-right">
         <motion.b className="block text-[44px] leading-none font-semibold tracking-[-0.04em] md:text-[56px]">{users}</motion.b>
