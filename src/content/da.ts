@@ -168,7 +168,15 @@ export const da: Dict = {
   process: {
     title: 'Sådan foregår det',
     steps: ['I fortæller, hvad der tager for lang tid.', 'I får en plan. Gratis.', 'Jeg bygger det. I ejer det.'],
-    promises: ['Plan før kode', 'GDPR, på jeres servere hvis I vil', 'Ingen binding'],
+    promises: ['Plan før kode', 'Åbenhed om jeres data. Sikkerhed fra dag ét', 'Ingen binding'],
+    pricing: {
+      items: [
+        { label: 'Planen', price: 'Gratis', note: 'Helt uforpligtende.' },
+        { label: 'Løsningen', price: 'Fast pris', note: 'Aftales i planen. I betaler, når det kører. Gør det ikke, hvad planen siger, betaler I ikke.' },
+        { label: 'Support', price: '50.000 kr om måneden*', note: 'Valgfrit. Drift, rettelser og små ændringer. Kan opsiges når som helst.' },
+      ],
+      footnote: '* Inden for arbejdstid og over nettet.',
+    },
     thread: {
       status: 'svarer som regel inden for en dag',
       you1: 'Vi kopierer ordrer fra mails ind i e-conomic. Cirka 5 timer om ugen.',

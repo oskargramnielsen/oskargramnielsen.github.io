@@ -94,6 +94,17 @@ export default function Offer({ t }: { t: Dict['process'] }) {
           </Thread>
         </div>
       </div>
+
+      <div className="mt-14 grid gap-px border border-hair bg-hair md:mt-20 md:grid-cols-3">
+        {t.pricing.items.map((it, i) => (
+          <div key={it.label} className="bg-paper p-5 md:p-6">
+            <span className="font-mono text-[12px] text-muted">{it.label}</span>
+            <b className={cn('mt-1 block text-[28px] leading-tight font-semibold tracking-[-0.03em]', i === 0 && 'text-bot')}>{it.price}</b>
+            <p className="mt-2 text-[15px] leading-snug text-body">{it.note}</p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 font-mono text-[11px] text-muted">{t.pricing.footnote}</p>
     </section>
   );
 }
