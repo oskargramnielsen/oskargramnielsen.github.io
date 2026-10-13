@@ -35,7 +35,7 @@ export const da: Dict = {
   job: {
     label: 'På arbejdet',
     title: 'De store.',
-    body: 'Til daglig er jeg automation engineer hos CN3. Det meste er fortroligt, så det her kan jeg fortælle:',
+    body: 'Jeg er ingeniør fra DTU og elsker at løse problemer. Jeg får computeren til at lave det kedelige, så folk kan lave det, de elsker. Til daglig er jeg automation engineer hos CN3. Det meste er fortroligt, så det her kan jeg fortælle:',
     items: [
       'Et styringssystem til {{x}}, et af de største byggeprojekter i verden.',
       'Chatbots, der lader hele virksomheden tale med sine bygningsmodeller, kørt på vores egne GPU’er.',
@@ -110,10 +110,13 @@ export const da: Dict = {
       caption: 'andelskortet.dk',
       attribution: 'Kort © OpenStreetMap · prikker er illustrative',
       users: 'brugere på 21 måneder',
-      bankApp: 'Mail',
-      bankTime: 'nu',
-      bankFrom: 'Jyske Bank',
-      bankMsg: 'Har du lyst til at komme forbi og tale om et samarbejde?',
+      mailApp: 'Mail',
+      // Rigtige beskeder. Private afsendere er anonymiseret.
+      mails: [
+        { from: 'En andelshaver', time: 'sep. 2024', msg: 'Det er et genialt koncept. Kan du tilføje vores forening?' },
+        { from: 'En besøgende', time: 'mar. 2026', msg: 'Super god hjemmeside!' },
+        { from: 'Jyske Bank', time: 'sep. 2024', msg: 'Vi har set jeres projekt og synes, at det er rigtig godt. Kunne det være en idé med et kaffemøde?' },
+      ],
     },
     bank: {
       tag: 'Privatøkonomi · kører nu',

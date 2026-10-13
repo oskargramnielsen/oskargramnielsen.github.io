@@ -102,11 +102,10 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
     }
     setState('sending');
     try {
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ access_key: site.web3formsKey, subject, email, message, from_name: email }),
-      });
+      // Plain form data, so the browser sends it without a CORS preflight.
+      const body = new FormData();
+      Object.entries({ access_key: site.web3formsKey, subject, email, message, from_name: email }).forEach(([k, v]) => body.append(k, v));
+      const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body });
       const json = await res.json();
       setState(json.success ? 'sent' : 'error');
     } catch {
