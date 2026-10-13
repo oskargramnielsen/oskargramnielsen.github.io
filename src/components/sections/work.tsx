@@ -5,13 +5,14 @@ import { useLenis } from 'lenis/react';
 import type { Dict } from '@/content';
 import Andelskortet from '../scenes/andelskortet';
 import Bank from '../scenes/bank';
+import Cars from '../scenes/cars';
 import Housing from '../scenes/housing';
 import Scene from '../scenes/scene';
 import { Artsrig, Hvilkendag } from '../scenes/small';
 import Sneakers from '../scenes/sneakers';
 
 /** Projects behind "show more". */
-const HIDDEN = ['sneakers', 'artsrig', 'hvilkendag'];
+const HIDDEN = ['cars', 'sneakers', 'artsrig', 'hvilkendag'];
 
 /** Ask the projects section to scroll to a project, opening "show more" if needed. */
 export function revealProject(id: string) {
@@ -61,6 +62,9 @@ export default function Work({ t }: { t: Dict['work'] }) {
 
       {open && (
         <>
+          <Scene id="cars" {...shared} {...t.cars}>
+            {(p) => <Cars p={p} t={t.cars} />}
+          </Scene>
           <Scene id="sneakers" {...shared} {...t.sneakers}>
             {(p) => <Sneakers p={p} t={t.sneakers} />}
           </Scene>
@@ -79,7 +83,7 @@ export default function Work({ t }: { t: Dict['work'] }) {
           className="w-full border-y border-hair py-5 text-left font-mono text-sm text-ink transition-colors hover:text-bot"
         >
           {open ? `↑ ${t.less}` : `↓ ${t.more}`}
-          <span className="float-right hidden text-muted sm:inline">sneaker-scraper · artsrig · hvilkendag</span>
+          <span className="float-right hidden text-muted sm:inline">car-scraper · sneaker-scraper · artsrig · hvilkendag</span>
         </button>
       </div>
     </div>

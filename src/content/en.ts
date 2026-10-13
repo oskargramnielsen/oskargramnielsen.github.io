@@ -54,7 +54,7 @@ export const en = {
     title: 'The small ones.',
     intro: 'It started with things that annoyed me. No team, no budget.',
     forBusiness: 'For a business:',
-    more: 'Show 3 more projects',
+    more: 'Show 4 more projects',
     less: 'Show fewer projects',
     housing: {
       tag: 'Housing · a long time ago',
@@ -87,6 +87,18 @@ export const en = {
       mail: 'Worth buying: Nike Dunk Low Midnight Navy. Asking 925 kr, resells for 1.997 kr.',
       seen: 'Seen',
       reply: 'Buying it 👟',
+    },
+    cars: {
+      tag: 'Cars · recently',
+      title: 'Every used car in one database',
+      body: 'A platform that scrapes cars from Marketplace, DBA, Bilbasen and AutoUncle into one database, so the same car can be compared across all of them.',
+      lesson: 'collect what your competitors and suppliers list, and see the whole market in one place.',
+      status: 'reads 4 car sites every morning',
+      car: 'VW Golf 1.5 TSI · 2019 · 98.000 km',
+      listings: 'listings in the database',
+      found: 'Cheapest on DBA: 15.400 kr under market price.',
+      seen: 'Seen',
+      reply: 'Calling the seller 📞',
     },
     andelskortet: {
       tag: 'Andelskortet · still running',
