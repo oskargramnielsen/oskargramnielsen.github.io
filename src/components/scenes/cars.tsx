@@ -37,7 +37,7 @@ function Source({ p, i }: { p: MotionValue<number>; i: number }) {
 
 export default function Cars({ p, t }: { p: MotionValue<number>; t: Dict['work']['cars'] }) {
   const step = useStep(p, [0.04, 0.1, 0.62, 0.7, 0.84]);
-  const rows = useTransform(p, (v) => kr(Math.round(48210 * seg(v, 0.1, 0.6))));
+  const rows = useTransform(p, (v) => kr(Math.round(30000 * seg(v, 0.1, 0.6))));
 
   return (
     <div className="p-4 pt-3 md:p-7">

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Hero option 4 · Sticky notes</title>
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
+<style>
+  .pin { height: 280vh; position: relative; }
+  .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+  .center { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 0 20px; pointer-events: none; }
+  .center > div { max-width: 860px; pointer-events: auto; }
+  .kicker { margin-bottom: 20px; }
+  h1 { font-size: clamp(38px, 6vw, 88px); }
+  .btns { justify-content: center; margin-top: 34px; }
+  .count { margin-top: 18px; font: 13px var(--mono); color: var(--muted); }
+  .count b { color: var(--bot); font-weight: 500; }
+
+  /* A note = an outer box for position and the drop-in, and an inner box the scroll animation moves. */
+  .pos { position: absolute; width: clamp(124px, 12vw, 168px); animation: land .9s cubic-bezier(.25, 1.35, .4, 1) both; filter: drop-shadow(0 12px 10px #00000026); }
+  .note { position: relative; aspect-ratio: 1; padding: 14px 14px 12px; background: var(--c, #fbe98f); border-radius: 2px;
+    font: 600 clamp(19px, 1.9vw, 25px)/1.08 'Caveat', cursive; color: #2a2616;
+    will-change: transform; transition: box-shadow .2s; display: flex; flex-direction: column; justify-content: space-between; }
+  .note::before { content: ''; position: absolute; inset: 0 0 auto; height: 18%; background: #0000000a; }
+  .txt { position: relative; }
+  .txt::after { content: ''; position: absolute; left: -3px; top: 52%; height: 3px; width: calc(var(--s, 0) * (100% + 6px)); background: var(--bot); border-radius: 2px; }
+  .stamp { align-self: flex-start; font: 500 11px var(--mono); color: #fff; background: var(--bot); padding: 3px 6px; opacity: var(--s, 0); transform: scale(calc(.6 + var(--s, 0) * .4)); transform-origin: 0 100%; }
+  .crease { position: absolute; inset: 0; border-radius: inherit; opacity: 0; pointer-events: none;
+    background: radial-gradient(circle at 35% 30%, #ffffff80, transparent 40%), conic-gradient(from 20deg, #0000 0 8%, #00000014 9% 14%, #0000 15% 31%, #0000001f 32% 37%, #0000 38% 55%, #00000014 56% 62%, #0000 63% 80%, #0000001a 81% 87%, #0000 88%),
+      radial-gradient(circle at 70% 75%, #0000002a, transparent 55%); }
+  @keyframes land { from { transform: translateY(-110vh) rotate(var(--r0)); } }
+
+
+  /* The end of the page: the visitor writes their own note. */
+  .turn { padding-top: 120px; padding-bottom: 160px; display: grid; justify-items: center; text-align: center; gap: 28px; }
+  .turn h2 { font-size: clamp(32px, 4.2vw, 62px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.02; }
+  .blank { width: min(340px, 86vw); aspect-ratio: 1; background: #fbe98f; transform: rotate(-2deg); box-shadow: 0 1px 1px #0000000d, 0 24px 34px -20px #0000004d; position: relative; padding: 22px; }
+  .blank::before { content: ''; position: absolute; inset: 0 0 auto; height: 18%; background: #0000000a; }
+  .blank textarea { position: relative; width: 100%; height: 100%; border: 0; outline: 0; resize: none; background: transparent; font: 600 30px/1.1 'Caveat', cursive; color: #2a2616; }
+  .blank textarea::placeholder { color: #2a261666; }
+</style>
+</head>
+<body>
+<nav><div class="wrap"><b style="font-weight:500">Oskar Gram Nielsen</b><div class="r"><a class="hide">Work</a><span class="lang">EN · DA</span><a class="w">Write to me</a></div></div></nav>
+
+<section class="pin" id="pin">
+  <div class="stage" id="stage">
+    <div class="center"><div>
+      <p class="kicker">Oskar Gram Nielsen. Engineer in Copenhagen.</p>
+      <h1>I build programs that do <em>the boring part</em> of your job.</h1>
+      <div class="btns"><a class="btn dark" href="#turn">Tell me what takes too long →</a><a class="btn" href="#">Book 20 minutes</a></div>
+      <p class="count"><b id="done">0</b> of <span id="all">12</span> done by a program</p>
+    </div></div>
+  </div>
+</section>
+
+<section class="wrap turn" id="turn">
+  <p class="mono" style="font-size:12px;color:var(--muted)">↑ the rest of the page (work, how it works, examples) goes here</p>
+  <h2>Your turn.</h2>
+  <div class="blank"><textarea placeholder="What takes too long?"></textarea></div>
+  <a class="btn dark" href="#">Get my free plan →</a>
+</section>
+
+<div class="switch"><a href="hero-1.html">1</a><a href="hero-2.html">2</a><a href="hero-3.html">3</a><a href="hero-4.html?mode=crumple" id="m-crumple">4A Crumple</a><a href="hero-4.html?mode=drop" id="m-drop">4B Drop</a></div>
+
+<script>
+const mode = new URLSearchParams(location.search).get('mode') === 'drop' ? 'drop' : 'crumple';
+document.getElementById('m-' + mode).classList.add('on');
+
+// [task, desktop left %, top %, mobile left %, top % (null = hidden on mobile)]
+const NOTES = [
+  ['Copy orders into e-conomic', 4, 13, 3, 9],
+  ['Monday report!!', 22, 8, 36, 7],
+  ['Answer the same customer emails', 87, 80, null],
+  ['Find latest drawing rev.', 60, 8, 67, 10],
+  ['Type in invoices', 79, 13, null],
+  ['Chase unpaid invoices', 2, 42, null],
+  ['Reply to new leads', 85, 38, null],
+  ['Merge the 5 spreadsheets', 6, 66, 4, 74],
+  ['Update price list', 83, 63, 67, 75],
+  ['Sort the shared inbox', 18, 79, null],
+  ['Check supplier prices', 42, 83, 36, 82],
+  ['Book meetings', 66, 80, null],
+];
+const COLORS = ['#fbe98f', '#fbe98f', '#f9e27a', '#fdf0b0'];
+// Outline of the note as 12 points: a square, and a crumpled ball.
+const ANG = [...Array(12)].map((_, j) => (j / 12) * Math.PI * 2 + 0.26);
+const SQUARE = ANG.map((a) => [Math.cos(a), Math.sin(a)].map((v) => 50 + (50 * v) / Math.max(Math.abs(Math.cos(a)), Math.abs(Math.sin(a)))));
+const BALL = ANG.map((a, j) => [Math.cos(a), Math.sin(a)].map((v) => 50 + v * (34 + ((j * 7) % 5) * 3.4)));
+const outline = (c) => `polygon(${SQUARE.map(([x, y], j) => `${x + (BALL[j][0] - x) * c}% ${y + (BALL[j][1] - y) * c}%`).join(',')})`;
+const ORDER = [3, 7, 0, 10, 5, 1, 8, 11, 2, 6, 9, 4]; // the order they get done in
+const stage = document.getElementById('stage');
+const mobile = matchMedia('(max-width: 760px)').matches;
+const rand = (i) => ((Math.sin(i * 91.7) * 43758.5) % 1 + 1) % 1;
+
+const notes = [];
+NOTES.forEach(([text, x, y, mx, my], i) => {
+  if (mobile && mx === null) return;
+  const r0 = (rand(i) - 0.5) * 12;
+  const pos = document.createElement('div');
+  pos.className = 'pos';
+  pos.style.cssText = `left:${mobile ? mx : x}%;top:${mobile ? my : y}%;--r0:${r0}deg;animation-delay:${i * 70}ms`;
+  pos.innerHTML = `<div class="note" style="--c:${COLORS[i % 4]}"><span class="txt">${text}</span><span class="stamp">✓ bot</span><div class="crease"></div></div>`;
+  stage.appendChild(pos);
+  notes.push({ el: pos.querySelector('.note'), pos, r0, drift: rand(i + 7) - 0.5, rank: ORDER.indexOf(i) });
+});
+// Re-rank only the notes that are visible, so the sequence has no gaps on mobile.
+notes.sort((a, b) => a.rank - b.rank).forEach((n, k) => (n.rank = k));
+document.getElementById('all').textContent = notes.length;
+
+const pin = document.getElementById('pin');
+const done = document.getElementById('done');
+const clamp = (v) => Math.max(0, Math.min(1, v));
+const win = 0.26;
+
+function frame() {
+  const r = pin.getBoundingClientRect();
+  const p = clamp(-r.top / (r.height - innerHeight));
+  const W = stage.clientWidth, H = stage.clientHeight;
+  let n = 0;
+  notes.forEach((note, i) => {
+    const start = 0.03 + (note.rank / notes.length) * (0.92 - win);
+    const k = clamp((p - start) / win);
+    const s = clamp(k / 0.3);
+    note.el.style.setProperty('--s', s);
+    if (s === 1) n++;
+    let t = `rotate(${note.r0}deg)`;
+    if (mode === 'crumple') {
+      // Crumple into a ball, then roll into the pile under the buttons.
+      const c = clamp((k - 0.32) / 0.3), m = clamp((k - 0.55) / 0.45);
+      const w = note.pos.offsetWidth;
+      const tx = W / 2 + (note.rank - notes.length / 2) * (mobile ? 16 : 22) - (note.pos.offsetLeft + w / 2);
+      const ty = H - 130 - (note.rank % 3) * 14 - (note.pos.offsetTop + w / 2);
+      const e = m * m * (3 - 2 * m);
+      t = `translate(${tx * e}px, ${ty * e}px) rotate(${note.r0 + c * 220 + m * 140}deg) scale(${1 - c * 0.7})`;
+      note.el.style.clipPath = c > 0 ? outline(c) : 'none';
+      note.el.querySelector('.crease').style.opacity = c;
+      note.el.querySelector('.txt').style.opacity = 1 - c * 0.85;
+      note.el.querySelector('.stamp').style.visibility = c > 0.5 ? 'hidden' : 'visible';
+    } else {
+      // Come loose at one corner, swing, then fall down the page.
+      const sw = clamp((k - 0.32) / 0.2), f = clamp((k - 0.5) / 0.5);
+      note.el.style.transformOrigin = note.drift > 0 ? '0 0' : '100% 0';
+      t = `translate(${note.drift * f * 260}px, ${f * f * H * 1.25}px) rotate(${note.r0 + Math.sign(note.drift) * (sw * 22 + f * 70)}deg)`;
+    }
+    note.el.style.transform = t;
+  });
+  done.textContent = n;
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body>
+</html>

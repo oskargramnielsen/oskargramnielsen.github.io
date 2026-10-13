@@ -166,7 +166,15 @@ export const en = {
   process: {
     title: 'How it works',
     steps: ['You tell me what takes too long.', 'You get a plan. Free.', 'I build it. You own it.'],
-    promises: ['Plan before code', 'GDPR, on your servers if you like', 'No lock-in'],
+    promises: ['Plan before code', 'Open about your data. Security from day one', 'No lock-in'],
+    pricing: {
+      items: [
+        { label: 'The plan', price: 'Free', note: 'No strings attached.' },
+        { label: 'The build', price: 'Fixed price', note: 'Agreed in the plan. You pay when it runs. If it doesn’t do what the plan says, you don’t pay.' },
+        { label: 'Support', price: '50.000 kr a month*', note: 'Optional. Hosting, fixes and small changes. Cancel anytime.' },
+      ],
+      footnote: '* Within working hours, remotely.',
+    },
     thread: {
       status: 'usually replies within a day',
       you1: 'We copy orders from emails into e-conomic. About 5 hours a week.',
