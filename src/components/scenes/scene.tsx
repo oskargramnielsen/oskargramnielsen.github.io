@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { motion, useMotionValue, useReducedMotion, useScroll, type MotionValue } from 'motion/react';
 import { useMediaQuery } from '@/lib/motion';
+import { cn } from '@/lib/utils';
 
 type Props = {
   id: string;
@@ -11,7 +12,8 @@ type Props = {
   body: string;
   forBusiness: string;
   lesson: string;
-  caption: string;
+  /** Shown on framed canvases, like the map. Chat scenes bring their own frame. */
+  caption?: string;
   /** Section height on large screens; more height = slower scrub. */
   tall?: 'normal' | 'long';
   children: (p: MotionValue<number>) => React.ReactNode;
@@ -38,7 +40,7 @@ export default function Scene({ id, tag, title, body, forBusiness, lesson, capti
       ref={section}
       className={
         'relative scroll-mt-14 py-12 lg:py-0 motion-reduce:lg:h-auto motion-reduce:lg:py-24 ' +
-        (tall === 'long' ? 'lg:h-[320vh]' : 'lg:h-[260vh]')
+        (tall === 'long' ? 'lg:h-[250vh]' : 'lg:h-[210vh]')
       }
     >
       <div className="wrap grid items-center gap-8 lg:sticky lg:top-0 lg:h-svh lg:grid-cols-[.85fr_1.15fr] lg:gap-16 motion-reduce:lg:static motion-reduce:lg:h-auto">
@@ -58,9 +60,9 @@ export default function Scene({ id, tag, title, body, forBusiness, lesson, capti
 
         <div
           ref={canvas}
-          className="relative overflow-hidden border border-hair bg-card lg:flex lg:h-[min(600px,74svh)] lg:flex-col"
+          className={cn('relative lg:flex lg:h-[min(640px,80svh)] lg:flex-col', caption && 'overflow-hidden border border-hair bg-card')}
         >
-          <p className="px-4 pt-3 font-mono text-[11px] text-faint">{caption}</p>
+          {caption && <p className="px-4 pt-3 font-mono text-[11px] text-faint">{caption}</p>}
           <div className="lg:flex lg:flex-1 lg:flex-col lg:justify-center">{children(p)}</div>
         </div>
       </div>

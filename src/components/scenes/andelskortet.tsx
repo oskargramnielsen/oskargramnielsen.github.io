@@ -5,7 +5,7 @@ import type { Dict } from '@/content';
 import { mapDots, mapPath, mapViewBox } from '@/content/map';
 import { seg, useStep } from '@/lib/motion';
 import { cn } from '@/lib/utils';
-import { Appear } from './bits';
+import { Appear, Banner } from './bits';
 
 const LOG = [
   'GET cvr.dk  type=andelsboligforening',
@@ -42,6 +42,10 @@ export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict
           {open.map(([x, y], i) => (
             <circle key={i} cx={x} cy={y} r="4" />
           ))}
+          {step >= 1 &&
+            open.slice(0, 12).map(([x, y], i) => (
+              <circle key={i} cx={x} cy={y} r="4" className="animate-ping-dot" style={{ animationDelay: `${(i % 6) * 0.35}s` }} />
+            ))}
         </g>
         <motion.line x1="0" x2="600" y1={scanY} y2={scanY} className="stroke-bot" strokeWidth="1" opacity={step >= 1 ? 0 : 0.6} />
       </svg>
@@ -54,11 +58,10 @@ export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict
         ))}
       </div>
 
-      <Appear on={step >= 2} className="absolute top-2 right-4 w-[min(270px,70%)]">
-        <div className="border border-hair bg-card p-3 text-[13px] shadow-sm">
-          <p className="mb-1 font-mono text-[11px] text-muted">{t.bankLabel}</p>
+      <Appear on={step >= 2} className="absolute top-2 right-3 w-[min(290px,78%)]">
+        <Banner app={t.bankApp} time={t.bankTime} title={t.bankFrom}>
           {t.bankMsg}
-        </div>
+        </Banner>
       </Appear>
 
       <div className="absolute right-4 bottom-4 text-right">

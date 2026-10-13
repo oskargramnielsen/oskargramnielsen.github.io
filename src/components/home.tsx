@@ -19,8 +19,8 @@ export default function Home({ lang }: { lang: Lang }) {
         <Hero t={t.hero} />
         <Job t={t.job} />
         <Work t={t.work} />
-        <Examples t={t.examples} cta={t.hero.cta} />
         <Offer t={t.process} />
+        <Examples t={t.examples} />
         <Contact t={t.contact} lang={lang} />
       </main>
       <Footer t={t.footer} />

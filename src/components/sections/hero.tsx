@@ -1,9 +1,6 @@
 import type { Dict } from '@/content';
-import { bookingHref } from '@/content/site';
 import AgentBoard from './agent-board';
-
-const button =
-  'group inline-flex items-center justify-center gap-3 border-[1.5px] border-ink px-5.5 py-4 text-[17px] font-medium transition-colors duration-300';
+import CtaDock from './cta-dock';
 
 export default function Hero({ t }: { t: Dict['hero'] }) {
   return (
@@ -14,17 +11,7 @@ export default function Hero({ t }: { t: Dict['hero'] }) {
           {t.before} <em className="font-normal text-bot">{t.highlight}</em> {t.after}
         </h1>
         <p className="mt-6 mb-9 max-w-[520px] text-lg text-body md:mt-7 md:mb-10 md:text-xl">{t.lede}</p>
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <a href="#contact" className={`${button} bg-ink text-paper hover:border-bot hover:bg-bot`}>
-            {t.cta}
-            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
-              →
-            </span>
-          </a>
-          <a href={bookingHref} className={`${button} text-ink hover:border-bot hover:text-bot`}>
-            {t.book}
-          </a>
-        </div>
+        <CtaDock cta={t.cta} book={t.book} />
       </div>
       <AgentBoard t={t} />
     </section>
