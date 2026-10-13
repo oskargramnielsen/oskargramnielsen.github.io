@@ -8,54 +8,36 @@
 <link rel="stylesheet" href="mock.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
 <style>
-  .pin { height: 340vh; position: relative; }
+  .pin { height: 460vh; position: relative; }
   .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
   .center { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 0 20px; pointer-events: none; }
   .center > div { max-width: 860px; pointer-events: auto; }
   .kicker { margin-bottom: 20px; }
   h1 { font-size: clamp(38px, 6vw, 84px); }
   .btns { justify-content: center; margin-top: 30px; }
-  .count { margin-top: 14px; font: 13px var(--mono); color: var(--muted); }
-  .count b { color: var(--bot); font-weight: 500; display: inline-block; }
-  #slot { display: grid; justify-items: center; margin-top: 22px; }
 
   .pos { position: absolute; width: clamp(112px, 10vw, 148px); aspect-ratio: 1; animation: land .9s cubic-bezier(.25, 1.35, .4, 1) both; filter: drop-shadow(0 12px 10px #00000026); }
-  .note { position: absolute; inset: 0; will-change: transform, opacity, filter; }
+  .note { position: absolute; inset: 0; will-change: transform, opacity; }
   .face { position: absolute; inset: 0; padding: 14px 14px 12px; background: var(--c); border-radius: 2px; overflow: hidden;
-    font: 600 clamp(18px, 1.65vw, 23px)/1.08 'Caveat', cursive; color: #2a2616; display: flex; flex-direction: column; justify-content: space-between; }
+    font: 600 clamp(18px, 1.65vw, 23px)/1.08 'Caveat', cursive; color: #2a2616; }
   .band { position: absolute; inset: 0 0 auto; height: 18%; background: #0000000a; }
   .txt { position: relative; }
   .face svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
   .face path { fill: none; stroke: var(--bot); stroke-width: 3.2; stroke-linecap: round; }
   @keyframes land { from { transform: translateY(-110vh) rotate(var(--r0)); } }
-  @keyframes blink { 50% { opacity: .25; } }
-  #fx { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
 
-  /* What the smoke turns into */
-  .appear { opacity: 0; will-change: transform, opacity, filter; }
-  .ico { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 9px; background: linear-gradient(160deg, #4a63ff, var(--bot)); font-size: 17px; box-shadow: inset 0 0 0 1px #ffffff2a; }
-
-  /* 1. Notifications in the corner */
-  #stack { position: absolute; z-index: 6; bottom: 24px; right: 20px; width: min(330px, calc(100vw - 24px)); }
+  /* Notifications, in the same style as the cards on the rest of the site */
+  #stack { position: absolute; z-index: 6; bottom: 24px; right: 24px; width: min(300px, calc(100vw - 24px)); }
+  .notif { position: absolute; inset: auto 0 0; padding: 12px; border-radius: 14px; border: 1px solid var(--hair); background: #fffffff2; backdrop-filter: blur(10px);
+    box-shadow: 0 12px 30px -12px #00000033; text-align: left; font-size: 13px; line-height: 1.35; transform-origin: 50% 100%; opacity: 0; will-change: transform, opacity, filter; }
+  .notif .hd { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font: 10.5px var(--mono); color: var(--muted); }
+  .notif .ic { display: grid; place-items: center; width: 16px; height: 16px; border-radius: 4px; background: var(--bot); color: #fff; font-size: 9px; }
+  .notif .hd span:last-child { margin-left: auto; }
+  .notif b { display: block; font-weight: 500; color: var(--ink); }
   @media (max-width: 760px) { #stack { bottom: 76px; right: 12px; } }
-  .notif { position: absolute; inset: auto 0 0; display: flex; gap: 11px; align-items: flex-start; padding: 11px 13px; border-radius: 16px; background: #ffffffe8; backdrop-filter: blur(14px);
-    border: 1px solid var(--hair); box-shadow: 0 16px 34px -18px #00000040; text-align: left; transform-origin: 50% 100%; }
-  .notif .top { display: flex; justify-content: space-between; font: 11px var(--mono); color: var(--muted); }
-  .notif b { display: block; font-size: 14px; font-weight: 500; line-height: 1.25; }
-  .notif .msg { font-size: 14px; line-height: 1.3; color: var(--body); }
-  .notif .body { flex: 1; min-width: 0; }
 
-  /* 2. App icons in a dock */
-  .dock { display: flex; align-items: center; gap: 0; min-width: 210px; height: 64px; padding: 0 10px; border-radius: 20px; background: #ffffffb3; border: 1px solid var(--hair);
-    box-shadow: 0 18px 40px -24px #00000059; backdrop-filter: blur(12px); position: relative; justify-content: center; }
-  .dock .empty { position: absolute; font: 12px var(--mono); color: var(--faint); transition: opacity .4s; }
-  .app { display: grid; place-items: center; height: 46px; overflow: visible; }
-  .app .ico { width: 46px; height: 46px; border-radius: 12px; font-size: 22px; position: relative; }
-  .app .ico::after { content: ''; position: absolute; right: -2px; top: -2px; width: 9px; height: 9px; border-radius: 50%; background: #7dffb0; border: 2px solid #fff; animation: blink 1.4s infinite; }
-
-  /* 3. A program label where the note was */
-  .chip { position: absolute; z-index: 4; display: flex; align-items: center; gap: 8px; padding: 9px 15px; border-radius: 999px; background: var(--bot); color: #fff; font: 500 12px var(--mono); white-space: nowrap; box-shadow: 0 12px 26px -14px #1f3bffaa; }
-  .chip i { width: 6px; height: 6px; border-radius: 50%; background: #7dffb0; animation: blink 1.4s infinite; }
+  /* Above the notifications, so the smoke is never hidden behind them */
+  #fx { position: absolute; inset: 0; pointer-events: none; z-index: 7; }
 
   .turn { padding-top: 120px; padding-bottom: 160px; display: grid; justify-items: center; text-align: center; gap: 28px; }
   .turn h2 { font-size: clamp(32px, 4.2vw, 62px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.02; }
@@ -64,7 +46,6 @@
   .blank textarea { position: relative; width: 100%; height: 100%; border: 0; outline: 0; resize: none; background: transparent; font: 600 30px/1.1 'Caveat', cursive; color: #2a2616; }
   .blank textarea::placeholder { color: #2a261666; }
   .switch .sep { color: #fff5; padding: 7px 2px; }
-  .switch { max-width: calc(100vw - 16px); overflow-x: auto; }
 </style>
 </head>
 <body>
@@ -74,10 +55,10 @@
   <div class="stage" id="stage">
     <div class="center"><div>
       <p class="kicker">Oskar Gram Nielsen. Engineer in Copenhagen.</p>
-      <h1>I build programs that do <em id="em">the boring part</em> of your job.</h1>
+      <h1>I build programs that do <em>the boring part</em> of your job.</h1>
       <div class="btns"><a class="btn dark" href="#turn">Tell me what takes too long →</a><a class="btn" href="#">Book 20 minutes</a></div>
-      <div id="slot"></div>
     </div></div>
+    <div id="stack"></div>
     <canvas id="fx"></canvas>
   </div>
 </section>
@@ -89,89 +70,51 @@
   <a class="btn dark" href="#">Get my free plan →</a>
 </section>
 
-<div class="switch" id="switch"><a href="hero-1.html">1–3</a><a href="hero-4.html">4</a><a href="hero-5.html">5</a><span class="sep">|</span></div>
+<div class="switch"><a href="hero-1.html">1–3</a><a href="hero-4.html">4</a><a href="hero-5.html">5</a><span class="sep">|</span><a class="on">6</a></div>
 
 <script>
-const MODES = { notify: 'Notification', dock: 'App', inplace: 'Program' };
-const q = new URLSearchParams(location.search).get('mode');
-const mode = MODES[q] ? q : 'notify';
-document.getElementById('switch').insertAdjacentHTML('beforeend',
-  Object.entries(MODES).map(([k, v]) => `<a href="?mode=${k}"${k === mode ? ' class="on"' : ''}>${v}</a>`).join(''));
-
-// [task, desktop left %, top %, mobile left %, top % (null = hidden on mobile), program, what it reports, icon]
+// [task, desktop left %, top %, mobile left %, top % (null = hidden on mobile), program, what it reports]
 const NOTES = [
-  ['Copy orders into e-conomic', 4, 11, 3, 9, 'order-bot', '37 orders booked in e-conomic', '📦'],
-  ['Monday report!!', 17, 21, 36, 7, 'report-bot', 'Monday report sent to the team', '📊'],
-  ['Answer the same customer emails', 87, 77, null, null, 'mail-bot', '12 customer emails answered', '✉️'],
-  ['Find latest drawing rev.', 74, 10, 67, 10, 'drawing-search', 'Latest is rev. C, from 3 Oct', '📐'],
-  ['Type in invoices', 87, 18, null, null, 'invoice-bot', '8 invoices read and entered', '🧾'],
-  ['Chase unpaid invoices', 3, 42, null, null, 'reminder-bot', '3 payment reminders sent', '⏰'],
-  ['Reply to new leads', 77, 39, null, null, 'lead-bot', 'New lead answered in 1 min', '💬'],
-  ['Merge the 5 spreadsheets', 4, 72, 4, 78, 'sheet-bot', '5 spreadsheets merged into 1', '🔗'],
-  ['Update price list', 88, 49, 67, 79, 'price-bot', 'Price list updated, 214 items', '🏷️'],
-  ['Sort the shared inbox', 18, 77, null, null, 'inbox-bot', '41 mails sorted, 2 need you', '📥'],
-  ['Check supplier prices', 15, 52, 36, 86, 'supplier-bot', 'Steel is 4% cheaper at supplier B', '🔎'],
-  ['Book meetings', 72, 72, null, null, 'calendar-bot', 'Meeting booked Thu 10:00', '📅'],
+  ['Copy orders into e-conomic', 4, 11, 3, 9, 'order-bot', '37 orders booked in e-conomic'],
+  ['Monday report!!', 17, 21, 36, 7, 'report-bot', 'Monday report sent to the team'],
+  ['Answer the same customer emails', 87, 77, null, null, 'mail-bot', '12 customer emails answered'],
+  ['Find latest drawing rev.', 74, 10, 67, 10, 'drawing-search', 'Latest is rev. C, from 3 Oct'],
+  ['Type in invoices', 87, 18, null, null, 'invoice-bot', '8 invoices read and entered'],
+  ['Chase unpaid invoices', 3, 42, null, null, 'reminder-bot', '3 payment reminders sent'],
+  ['Reply to new leads', 77, 39, null, null, 'lead-bot', 'New lead answered in 1 min'],
+  ['Merge the 5 spreadsheets', 4, 72, 4, 78, 'sheet-bot', '5 spreadsheets merged into 1'],
+  ['Update price list', 88, 49, 67, 79, 'price-bot', 'Price list updated, 214 items'],
+  ['Sort the shared inbox', 18, 77, null, null, 'inbox-bot', '41 mails sorted, 2 need you'],
+  ['Check supplier prices', 15, 52, 36, 86, 'supplier-bot', 'Steel is 4% cheaper at supplier B'],
+  ['Book meetings', 72, 72, null, null, 'calendar-bot', 'Meeting booked Thu 10:00'],
 ];
 const COLORS = ['#fbe98f', '#fbe98f', '#f9e27a', '#fdf0b0'];
-const BOT = '#1f3bff';
 // The bottom-right notes go first, so the notifications never cover a note that is still waiting.
 const ORDER = [2, 11, 8, 10, 7, 9, 6, 4, 3, 1, 0, 5];
 const stage = document.getElementById('stage');
-const slot = document.getElementById('slot');
+const stack = document.getElementById('stack');
 const mobile = matchMedia('(max-width: 760px)').matches;
 const rand = (i) => ((Math.sin(i * 91.7) * 43758.5) % 1 + 1) % 1;
 const clamp = (v) => Math.max(0, Math.min(1, v));
 const ease = (v) => v * v * (3 - 2 * v);
 const lerp = (a, b, t) => a + (b - a) * t;
-const box = (el) => { const r = el.getBoundingClientRect(), s = stage.getBoundingClientRect(); return { x: r.left - s.left + r.width / 2, y: r.top - s.top + r.height / 2, w: r.width, h: r.height }; };
 
 const notes = [];
-NOTES.forEach(([text, x, y, mx, my, app, msg, icon], i) => {
+NOTES.forEach(([text, x, y, mx, my, app, msg], i) => {
   if (mobile && mx === null) return;
   const r0 = (rand(i) - 0.5) * 12;
   const pos = document.createElement('div');
   pos.className = 'pos';
   pos.style.cssText = `left:${mobile ? mx : x}%;top:${mobile ? my : y}%;--r0:${r0}deg;animation-delay:${i * 70}ms`;
   pos.innerHTML = `<div class="note"><div class="face" style="--c:${COLORS[i % 4]}"><div class="band"></div><svg></svg><span class="txt">${text}</span></div></div>`;
-  stage.insertBefore(pos, document.getElementById('fx'));
-  notes.push({ i, text, app, msg, icon, pos, el: pos.querySelector('.note'), face: pos.querySelector('.face'), svg: pos.querySelector('svg'), r0, rank: ORDER.indexOf(i) });
+  stage.insertBefore(pos, stack);
+  const out = document.createElement('div');
+  out.className = 'notif';
+  out.innerHTML = `<div class="hd"><span class="ic">${app[0].toUpperCase()}</span>${app}<span>now</span></div><b>${msg}</b>`;
+  stack.appendChild(out);
+  notes.push({ i, pos, out, el: pos.querySelector('.note'), face: pos.querySelector('.face'), svg: pos.querySelector('svg'), r0, rank: ORDER.indexOf(i) });
 });
 notes.sort((a, b) => a.rank - b.rank).forEach((n, k) => (n.rank = k));
-
-// What each note becomes.
-let doneEl = null, dock = null, stack = null;
-if (mode === 'notify') {
-  stack = document.createElement('div');
-  stack.id = 'stack';
-  stage.appendChild(stack);
-  notes.forEach((n) => {
-    n.out = document.createElement('div');
-    n.out.className = 'notif appear';
-    n.out.innerHTML = `<span class="ico">${n.icon}</span><span class="body"><span class="top"><span>${n.app}</span><span>now</span></span><span class="msg">${n.msg}</span></span>`;
-    stack.appendChild(n.out);
-  });
-} else if (mode === 'dock') {
-  slot.innerHTML = `<div class="dock" id="dock"><span class="empty">your programs</span></div><p class="count"><b id="done">0</b> of ${notes.length} running</p>`;
-  dock = document.getElementById('dock');
-  notes.forEach((n) => {
-    n.out = document.createElement('div');
-    n.out.className = 'app';
-    n.out.style.width = '0px';
-    n.out.innerHTML = `<span class="ico appear" title="${n.app}">${n.icon}</span>`;
-    n.inner = n.out.firstChild;
-    dock.appendChild(n.out);
-  });
-} else {
-  slot.innerHTML = `<p class="count"><b id="done">0</b> of ${notes.length} done by a program</p>`;
-  notes.forEach((n) => {
-    n.out = document.createElement('div');
-    n.out.className = 'chip appear';
-    n.out.innerHTML = `<i></i>${n.app}`;
-    stage.insertBefore(n.out, document.getElementById('fx'));
-  });
-}
-doneEl = document.getElementById('done');
 
 // One hand-drawn stroke per line of text, measured on an untransformed copy of the face.
 function drawStrokes(n) {
@@ -194,14 +137,14 @@ function drawStrokes(n) {
   n.lines = [...n.svg.querySelectorAll('path')].map((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; return [p, L]; });
 }
 
-/* ---------- Canvas: smoke ---------- */
+/* ---------- Smoke ---------- */
 const fx = document.getElementById('fx');
 const ctx = fx.getContext('2d');
 const DPR = Math.min(2, devicePixelRatio || 1);
 function sizeFx() { fx.width = stage.clientWidth * DPR; fx.height = stage.clientHeight * DPR; }
 sizeFx(); addEventListener('resize', sizeFx);
 
-// Soft, wispy puffs made from value noise, tinted blue.
+// Soft, wispy puffs made from value noise, tinted blue. They fade fully to nothing before the edge of the texture.
 const PUFFS = (() => {
   const hash = (x, y, s) => { const v = Math.sin(x * 127.1 + y * 311.7 + s * 74.7) * 43758.5453; return v - Math.floor(v); };
   const vn = (x, y, s) => { const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
@@ -211,9 +154,10 @@ const PUFFS = (() => {
     const S = 128, cv = document.createElement('canvas'); cv.width = cv.height = S;
     const g = cv.getContext('2d'), img = g.createImageData(S, S);
     for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
-      const dx = (x - S / 2) / (S / 2), dy = (y - S / 2) / (S / 2);
+      const dx = (x - S / 2) / (S / 2), dy = (y - S / 2) / (S / 2), r = Math.hypot(dx, dy);
       const n = fbm(x / 26, y / 26, s * 13 + 1), n2 = fbm(x / 13 + 9, y / 13, s * 7 + 3);
-      const a = Math.pow(clamp(1 - Math.hypot(dx, dy) * (0.7 + 0.6 * n2)), 1.6) * clamp((n - 0.28) * 2.2);
+      const edge = ease(clamp((0.96 - r) / 0.4));
+      const a = Math.pow(clamp(1 - r * (0.7 + 0.6 * n2)), 1.6) * clamp((n - 0.28) * 2.2) * edge;
       const k = (y * S + x) * 4; img.data[k] = c[0]; img.data[k + 1] = c[1]; img.data[k + 2] = c[2]; img.data[k + 3] = a * 255;
     }
     g.putImageData(img, 0, 0);
@@ -221,32 +165,34 @@ const PUFFS = (() => {
   });
 })();
 
-// The last bright dot of the switched-off note.
-function dot(c, a) {
-  const g = ctx.createRadialGradient(c.x * DPR, c.y * DPR, 0, c.x * DPR, c.y * DPR, 10 * DPR);
-  g.addColorStop(0, `rgba(255,255,255,${a})`); g.addColorStop(0.4, `rgba(140,160,255,${a * 0.6})`); g.addColorStop(1, 'rgba(140,160,255,0)');
-  ctx.fillStyle = g; ctx.fillRect((c.x - 10) * DPR, (c.y - 10) * DPR, 20 * DPR, 20 * DPR);
-}
-
-// Smoke that travels from the note to what it becomes. Positions come from scroll, so it plays backwards too.
-const PUFF_N = mobile ? 26 : 38;
-function stream(n, e, from, to, now) {
+// Smoke rises from where the note switched off, hangs there for a moment, then drifts to its notification.
+// Positions come from scroll, so it also plays backwards.
+const PUFF_N = mobile ? 26 : 36;
+const TOP = 96; // keep the smoke below the nav bar and away from the screen edges
+function smoke(n, t, from, to, now) {
   const w = n.pos.offsetWidth;
   for (let j = 0; j < PUFF_N; j++) {
     const r1 = rand(n.i * 97 + j), r2 = rand(n.i * 53 + j * 7), r3 = rand(j * 13 + n.i);
-    const d = 0.1 + r1 * 0.22, u = clamp((e - d) / 0.45);
+    const u = clamp((t - r1 * 0.18) / 0.82);
     if (u <= 0 || u >= 1) continue;
-    const sx = from.x + (r2 - 0.5) * w * 0.25, sy = from.y + (r3 - 0.5) * w * 0.12;
-    // Rises first, then is pulled to the target.
-    const cx = lerp(sx, to.x, 0.3) + (r2 - 0.5) * 100, cy = Math.min(sy, to.y) - 40 - r3 * 70;
-    const v = ease(u), a1 = 1 - v;
-    let x = a1 * a1 * sx + 2 * a1 * v * cx + v * v * to.x, y = a1 * a1 * sy + 2 * a1 * v * cy + v * v * to.y;
-    const sw = Math.sin(Math.PI * u);
-    x += Math.sin(now * 0.0016 + j * 1.7) * 14 * sw; y += Math.cos(now * 0.0013 + j) * 8 * sw;
-    const size = w * (0.12 + 0.5 * sw * (0.6 + r1 * 0.6)) * (1 - 0.7 * v * v);
+    const sx = from.x + (r2 - 0.5) * w * 0.3, sy = from.y + (r3 - 0.5) * w * 0.1;
+    // 1) rise and spread slowly
+    const W = stage.clientWidth, side = w * 0.7, rx = Math.max(side, Math.min(W - side, sx + (r2 - 0.5) * w * 0.7)), ry = Math.max(TOP + w * 0.3, sy - w * (0.35 + r3 * 0.35));
+    const rise = ease(clamp(u / 0.45));
+    let x = lerp(sx, rx, rise), y = lerp(sy, ry, rise);
+    // 2) drift to the notification
+    const go = ease(clamp((u - 0.4) / 0.6));
+    if (go > 0) {
+      const cx = Math.max(side, Math.min(W - side, lerp(rx, to.x, 0.5) + (r1 - 0.5) * 120)), cy = Math.max(TOP, Math.min(ry, to.y) - 40 - r2 * 60), a1 = 1 - go;
+      x = a1 * a1 * rx + 2 * a1 * go * cx + go * go * Math.min(W - side * 0.6, to.x + (r3 - 0.5) * 60);
+      y = a1 * a1 * ry + 2 * a1 * go * cy + go * go * to.y;
+    }
+    // A slow curl, so it never looks like it moves on rails.
+    x += Math.sin(now * 0.0009 + j * 1.7) * 10; y += Math.cos(now * 0.0007 + j) * 6;
+    const size = w * (0.18 + 0.55 * ease(clamp(u / 0.4)) * (0.6 + r1 * 0.6)) * (1 - 0.6 * go * go);
     ctx.save();
-    ctx.globalAlpha = (0.12 + r3 * 0.12) * Math.min(1, u * 6) * (1 - Math.pow(u, 3));
-    ctx.translate(x * DPR, y * DPR); ctx.rotate(r1 * 6.28 + u * (r2 - 0.5) * 3);
+    ctx.globalAlpha = (0.1 + r3 * 0.1) * ease(clamp(u / 0.12)) * (1 - ease(clamp((u - 0.82) / 0.18)));
+    ctx.translate(x * DPR, y * DPR); ctx.rotate(r1 * 6.28 + u * (r2 - 0.5) * 2);
     ctx.drawImage(PUFFS[j % 4], (-size / 2) * DPR, (-size / 2) * DPR, size * DPR, size * DPR);
     ctx.restore();
   }
@@ -254,83 +200,53 @@ function stream(n, e, from, to, now) {
 
 /* ---------- The scroll-driven frame ---------- */
 const pin = document.getElementById('pin');
-const win = 0.24;
-let last = -1;
+const win = 0.34;
 const MAX_STACK = mobile ? 2 : 3;
 
 function frame(now) {
   const r = pin.getBoundingClientRect();
   const p = clamp(-r.top / (r.height - innerHeight));
   ctx.clearRect(0, 0, fx.width, fx.height);
-  let done = 0;
 
-  // Phase per note: cross out, switch off (e 0–0.14), smoke travels, then the new thing condenses (0.5–0.8).
+  // Per note, through its own window k: cross out (0–0.25), switch off (0.28–0.36), smoke (0.34–0.92), notification (0.78–0.94).
   notes.forEach((n) => {
-    const start = 0.03 + (n.rank / notes.length) * (0.9 - win);
-    const k = clamp((p - start) / win);
-    const s = clamp(k / 0.34);
-    n.lines.forEach(([path, L], j) => (path.style.strokeDashoffset = L * (1 - clamp(s * n.lines.length - j))));
-    n.e = clamp((k - 0.42) / 0.58);
-    n.show = ease(clamp((n.e - 0.5) / 0.3));
-    if (n.show > 0.5) done++;
+    const start = 0.02 + (n.rank / notes.length) * (0.96 - win);
+    n.k = clamp((p - start) / win);
+    n.show = ease(clamp((n.k - 0.78) / 0.16));
   });
 
-  // Notifications: newest at the bottom, older ones slide up and fade after a few.
-  if (mode === 'notify') {
-    const shown = notes.filter((n) => n.show > 0).sort((a, b) => b.rank - a.rank);
-    let y = 0;
-    const newest = shown[0] ? shown[0].show : 0;
-    shown.forEach((n, idx) => {
-      n.ty = y;
-      y += (n.out.offsetHeight + 8) * n.show;
-      // The oldest visible one fades out while the newest comes in.
-      n.fade = clamp(MAX_STACK - idx + 1 - newest);
-    });
-  }
+  // Newest notification at the bottom; older ones slide up and the oldest fades out.
+  const shown = notes.filter((n) => n.show > 0).sort((a, b) => b.rank - a.rank);
+  const newest = shown[0] ? shown[0].show : 0;
+  let y = 0;
+  shown.forEach((n, idx) => {
+    n.ty = y;
+    y += (n.out.offsetHeight + 8) * n.show;
+    n.fade = clamp(MAX_STACK - idx + 1 - newest);
+  });
+  const sb = stack.getBoundingClientRect(), st = stage.getBoundingClientRect();
+  const to = { x: sb.left - st.left + sb.width / 2, y: sb.top - st.top - 34 };
 
   notes.forEach((n) => {
-    const e = n.e, w = n.pos.offsetWidth, home = { x: n.pos.offsetLeft + w / 2, y: n.pos.offsetTop + w / 2 };
-    // Where the smoke goes.
-    let to;
-    if (mode === 'notify') { const sb = box(stack); to = { x: sb.x, y: sb.y - 30 }; }
-    else if (mode === 'dock') { to = box(n.out); to.y = box(dock).y; }
-    else to = home;
+    const k = n.k, w = n.pos.offsetWidth, home = { x: n.pos.offsetLeft + w / 2, y: n.pos.offsetTop + w / 2 };
+    n.lines.forEach(([path, L], j) => (path.style.strokeDashoffset = L * (1 - clamp((k / 0.25) * n.lines.length - j))));
 
-    // Switches off like an old TV: squashes to a bright line, the line shrinks to a dot, the dot fades.
-    const v = clamp(e / 0.14), sy = 1 - 0.985 * ease(clamp(v / 0.5)), sx = v < 0.5 ? 1 + 0.06 * ease(v / 0.5) : 1.06 * (1 - ease((v - 0.5) / 0.4));
+    // TV switch-off: the note squashes to a thin line, the line shrinks to nothing.
+    const v = clamp((k - 0.28) / 0.08);
+    const sy = Math.max(2 / w, 1 - ease(clamp(v / 0.5))), sx = 1 - ease(clamp((v - 0.5) / 0.5));
     n.el.style.transform = `rotate(${n.r0 * (1 - ease(clamp(v / 0.5)))}deg) scale(${Math.max(sx, 0.001)}, ${sy})`;
-    n.el.style.filter = v > 0 && v < 1 ? `brightness(${1 + 1.4 * ease(clamp(v / 0.5))}) saturate(${1 - 0.8 * clamp(v / 0.5)})` : 'none';
-    n.el.style.opacity = v >= 0.9 ? 1 - clamp((v - 0.9) / 0.1) : 1;
-    if (e > 0.1 && e < 1) stream(n, e, home, to, now);
-    if (v > 0.5 && v < 1) dot(home, 1 - clamp((v - 0.5) / 0.5));
+    n.el.style.opacity = v >= 1 ? 0 : 1;
 
-    // Condense into the new thing: out of a blur, with a little overshoot.
-    const a = n.show, pop = 1 + Math.sin(Math.PI * a) * 0.06;
-    if (mode === 'notify') {
-      n.out.style.opacity = a * (n.fade ?? 1);
-      n.out.style.filter = `blur(${(1 - a) * 10}px)`;
-      n.out.style.transform = `translateY(${-(n.ty || 0)}px) scale(${(0.9 + 0.1 * a) * pop})`;
-      n.out.style.zIndex = 100 - n.rank;
-    } else if (mode === 'dock') {
-      n.out.style.width = `${a * 56}px`;
-      n.inner.style.opacity = a;
-      n.inner.style.filter = `blur(${(1 - a) * 8}px)`;
-      n.inner.style.transform = `scale(${a * pop})`;
-    } else {
-      const cw = n.out.offsetWidth, ch = n.out.offsetHeight;
-      n.out.style.left = `${Math.max(8, Math.min(stage.clientWidth - cw - 8, home.x - cw / 2))}px`; n.out.style.top = `${home.y - ch / 2}px`;
-      n.out.style.opacity = a;
-      n.out.style.filter = `blur(${(1 - a) * 10}px)`;
-      n.out.style.transform = `scale(${(0.85 + 0.15 * a) * pop})`;
-    }
+    const t = clamp((k - 0.34) / 0.58);
+    if (t > 0 && t < 1) smoke(n, t, home, to, now);
+
+    // The notification condenses out of a blur.
+    const a = n.show;
+    n.out.style.opacity = a * (n.fade ?? 1);
+    n.out.style.filter = a < 1 ? `blur(${(1 - a) * 8}px)` : 'none';
+    n.out.style.transform = `translateY(${-(n.ty || 0)}px) scale(${0.94 + 0.06 * a})`;
+    n.out.style.zIndex = 100 - n.rank;
   });
-  if (dock) dock.querySelector('.empty').style.opacity = done ? 0 : 1;
-
-  if (doneEl && done !== last) {
-    doneEl.textContent = done;
-    if (last >= 0) doneEl.animate([{ transform: 'scale(1.5)' }, { transform: 'none' }], { duration: 300, easing: 'ease-out' });
-    last = done;
-  }
   requestAnimationFrame(frame);
 }
 document.fonts.ready.then(() => setTimeout(() => { notes.forEach(drawStrokes); requestAnimationFrame(frame); }, 50));
