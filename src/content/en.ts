@@ -171,9 +171,9 @@ export const en = {
       items: [
         { label: 'The plan', price: 'Free', note: 'No strings attached.' },
         { label: 'The build', price: 'Fixed price', note: 'Agreed in the plan. You pay when it runs. If it doesn’t do what the plan says, you don’t pay.' },
-        { label: 'Support', price: '50.000 kr a month*', note: 'Optional. Hosting, fixes and small changes. Cancel anytime.' },
+        { label: 'Support', price: 'Monthly*', note: 'Optional. Price agreed in the plan. Hosting, fixes and small changes. Cancel anytime.' },
       ],
-      footnote: '* Within working hours, remotely.',
+      footnote: '* Within working hours, remotely and in writing, with answers within one working day. New features are quoted separately.',
     },
     thread: {
       status: 'usually replies within a day',

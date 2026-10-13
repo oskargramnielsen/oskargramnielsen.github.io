@@ -173,9 +173,9 @@ export const da: Dict = {
       items: [
         { label: 'Planen', price: 'Gratis', note: 'Helt uforpligtende.' },
         { label: 'Løsningen', price: 'Fast pris', note: 'Aftales i planen. I betaler, når det kører. Gør det ikke, hvad planen siger, betaler I ikke.' },
-        { label: 'Support', price: '50.000 kr om måneden*', note: 'Valgfrit. Drift, rettelser og små ændringer. Kan opsiges når som helst.' },
+        { label: 'Support', price: 'Månedlig*', note: 'Valgfrit. Prisen aftales i planen. Drift, rettelser og små ændringer. Kan opsiges når som helst.' },
       ],
-      footnote: '* Inden for arbejdstid og over nettet.',
+      footnote: '* Inden for arbejdstid, over nettet og på skrift, med svar inden for en arbejdsdag. Nye funktioner prissættes for sig.',
     },
     thread: {
       status: 'svarer som regel inden for en dag',
