@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Hero option 6 · Switch off, smoke, notification</title>
+<title>Hero option 6 · Smoke and notifications</title>
 <link rel="stylesheet" href="mock.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
 <style>
-  .pin { height: 460vh; position: relative; }
+  .pin { height: 420vh; position: relative; }
   .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
   .center { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 0 20px; pointer-events: none; }
   .center > div { max-width: 860px; pointer-events: auto; }
@@ -17,7 +17,7 @@
   .btns { justify-content: center; margin-top: 30px; }
 
   .pos { position: absolute; width: clamp(112px, 10vw, 148px); aspect-ratio: 1; animation: land .9s cubic-bezier(.25, 1.35, .4, 1) both; filter: drop-shadow(0 12px 10px #00000026); }
-  .note { position: absolute; inset: 0; will-change: transform, opacity; }
+  .note { position: absolute; inset: 0; will-change: transform, opacity, filter; }
   .face { position: absolute; inset: 0; padding: 14px 14px 12px; background: var(--c); border-radius: 2px; overflow: hidden;
     font: 600 clamp(18px, 1.65vw, 23px)/1.08 'Caveat', cursive; color: #2a2616; }
   .band { position: absolute; inset: 0 0 auto; height: 18%; background: #0000000a; }
@@ -26,18 +26,17 @@
   .face path { fill: none; stroke: var(--bot); stroke-width: 3.2; stroke-linecap: round; }
   @keyframes land { from { transform: translateY(-110vh) rotate(var(--r0)); } }
 
-  /* Notifications, in the same style as the cards on the rest of the site */
-  #stack { position: absolute; z-index: 6; bottom: 24px; right: 24px; width: min(300px, calc(100vw - 24px)); }
-  .notif { position: absolute; inset: auto 0 0; padding: 12px; border-radius: 14px; border: 1px solid var(--hair); background: #fffffff2; backdrop-filter: blur(10px);
-    box-shadow: 0 12px 30px -12px #00000033; text-align: left; font-size: 13px; line-height: 1.35; transform-origin: 50% 100%; opacity: 0; will-change: transform, opacity, filter; }
-  .notif .hd { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font: 10.5px var(--mono); color: var(--muted); }
-  .notif .ic { display: grid; place-items: center; width: 16px; height: 16px; border-radius: 4px; background: var(--bot); color: #fff; font-size: 9px; }
-  .notif .hd span:last-child { margin-left: auto; }
-  .notif b { display: block; font-weight: 500; color: var(--ink); }
-  @media (max-width: 760px) { #stack { bottom: 76px; right: 12px; } }
+  /* Smoke sits above the notes, below the notifications */
+  #fx { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
 
-  /* Above the notifications, so the smoke is never hidden behind them */
-  #fx { position: absolute; inset: 0; pointer-events: none; z-index: 7; }
+  /* Notifications: app logo, what happened, "now". Same card style as the rest of the site. */
+  #stack { position: absolute; z-index: 6; bottom: 24px; right: 24px; width: min(320px, calc(100vw - 24px)); }
+  .notif { position: absolute; inset: auto 0 0; display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--hair);
+    background: #fffffff2; backdrop-filter: blur(10px); box-shadow: 0 12px 30px -12px #00000033; text-align: left; transform-origin: 50% 100%; opacity: 0; will-change: transform, opacity, filter; }
+  .notif img { width: 26px; height: 26px; object-fit: contain; flex: none; }
+  .notif b { flex: 1; min-width: 0; font-size: 14px; font-weight: 500; line-height: 1.3; color: var(--ink); }
+  .notif span { align-self: flex-start; font: 10.5px var(--mono); color: var(--muted); }
+  @media (max-width: 760px) { #stack { bottom: 76px; right: 12px; } }
 
   .turn { padding-top: 120px; padding-bottom: 160px; display: grid; justify-items: center; text-align: center; gap: 28px; }
   .turn h2 { font-size: clamp(32px, 4.2vw, 62px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.02; }
@@ -53,13 +52,13 @@
 
 <section class="pin" id="pin">
   <div class="stage" id="stage">
-    <div class="center"><div>
+    <div class="center"><div id="content">
       <p class="kicker">Oskar Gram Nielsen. Engineer in Copenhagen.</p>
       <h1>I build programs that do <em>the boring part</em> of your job.</h1>
       <div class="btns"><a class="btn dark" href="#turn">Tell me what takes too long →</a><a class="btn" href="#">Book 20 minutes</a></div>
     </div></div>
-    <div id="stack"></div>
     <canvas id="fx"></canvas>
+    <div id="stack"></div>
   </div>
 </section>
 
@@ -73,26 +72,27 @@
 <div class="switch"><a href="hero-1.html">1–3</a><a href="hero-4.html">4</a><a href="hero-5.html">5</a><span class="sep">|</span><a class="on">6</a></div>
 
 <script>
-// [task, desktop left %, top %, mobile left %, top % (null = hidden on mobile), program, what it reports]
+// [task, desktop left %, top %, mobile left %, top % (null = hidden on mobile), app logo, what happened]
 const NOTES = [
-  ['Copy orders into e-conomic', 4, 11, 3, 9, 'order-bot', '37 orders booked in e-conomic'],
-  ['Monday report!!', 17, 21, 36, 7, 'report-bot', 'Monday report sent to the team'],
-  ['Answer the same customer emails', 87, 77, null, null, 'mail-bot', '12 customer emails answered'],
-  ['Find latest drawing rev.', 74, 10, 67, 10, 'drawing-search', 'Latest is rev. C, from 3 Oct'],
-  ['Type in invoices', 87, 18, null, null, 'invoice-bot', '8 invoices read and entered'],
-  ['Chase unpaid invoices', 3, 42, null, null, 'reminder-bot', '3 payment reminders sent'],
-  ['Reply to new leads', 77, 39, null, null, 'lead-bot', 'New lead answered in 1 min'],
-  ['Merge the 5 spreadsheets', 4, 72, 4, 78, 'sheet-bot', '5 spreadsheets merged into 1'],
-  ['Update price list', 88, 49, 67, 79, 'price-bot', 'Price list updated, 214 items'],
-  ['Sort the shared inbox', 18, 77, null, null, 'inbox-bot', '41 mails sorted, 2 need you'],
-  ['Check supplier prices', 15, 52, 36, 86, 'supplier-bot', 'Steel is 4% cheaper at supplier B'],
-  ['Book meetings', 72, 72, null, null, 'calendar-bot', 'Meeting booked Thu 10:00'],
+  ['Copy orders into e-conomic', 4, 11, 3, 9, 'outlook', '37 orders from your inbox booked in e-conomic'],
+  ['Monday report!!', 16, 22, 36, 7, 'teams', 'Monday report shared with the team'],
+  ['Answer the same customer emails', 87, 76, null, null, 'gmail', '12 customer emails answered'],
+  ['Find latest drawing rev.', 76, 9, 67, 10, 'drive', 'Latest drawing is rev. C, from 3 Oct'],
+  ['Type in invoices', 88, 20, null, null, 'excel', '8 invoices read and entered'],
+  ['Chase unpaid invoices', 3, 42, null, null, 'outlook', '3 payment reminders sent'],
+  ['Reply to new leads', 80, 41, null, null, 'slack', 'New lead answered in 1 min'],
+  ['Merge the 5 spreadsheets', 4, 72, 4, 78, 'excel', '5 spreadsheets merged into 1'],
+  ['Update price list', 89, 52, 67, 79, 'sheets', 'Price list updated, 214 items'],
+  ['Sort the shared inbox', 17, 78, null, null, 'outlook', '41 mails sorted, 2 need you'],
+  ['Check supplier prices', 15, 54, 36, 86, 'slack', 'Steel is 4% cheaper at supplier B'],
+  ['Book meetings', 73, 72, null, null, 'calendar', 'Meeting booked Thursday 10:00'],
 ];
 const COLORS = ['#fbe98f', '#fbe98f', '#f9e27a', '#fdf0b0'];
 // The bottom-right notes go first, so the notifications never cover a note that is still waiting.
 const ORDER = [2, 11, 8, 10, 7, 9, 6, 4, 3, 1, 0, 5];
 const stage = document.getElementById('stage');
 const stack = document.getElementById('stack');
+const content = document.getElementById('content');
 const mobile = matchMedia('(max-width: 760px)').matches;
 const rand = (i) => ((Math.sin(i * 91.7) * 43758.5) % 1 + 1) % 1;
 const clamp = (v) => Math.max(0, Math.min(1, v));
@@ -100,21 +100,65 @@ const ease = (v) => v * v * (3 - 2 * v);
 const lerp = (a, b, t) => a + (b - a) * t;
 
 const notes = [];
-NOTES.forEach(([text, x, y, mx, my, app, msg], i) => {
+NOTES.forEach(([text, x, y, mx, my, logo, msg], i) => {
   if (mobile && mx === null) return;
   const r0 = (rand(i) - 0.5) * 12;
   const pos = document.createElement('div');
   pos.className = 'pos';
-  pos.style.cssText = `left:${mobile ? mx : x}%;top:${mobile ? my : y}%;--r0:${r0}deg;animation-delay:${i * 70}ms`;
+  pos.style.cssText = `--r0:${r0}deg;animation-delay:${i * 70}ms`;
   pos.innerHTML = `<div class="note"><div class="face" style="--c:${COLORS[i % 4]}"><div class="band"></div><svg></svg><span class="txt">${text}</span></div></div>`;
-  stage.insertBefore(pos, stack);
+  stage.insertBefore(pos, document.getElementById('fx'));
   const out = document.createElement('div');
   out.className = 'notif';
-  out.innerHTML = `<div class="hd"><span class="ic">${app[0].toUpperCase()}</span>${app}<span>now</span></div><b>${msg}</b>`;
+  out.innerHTML = `<img src="logos/${logo}.svg" alt=""><b>${msg}</b><span>now</span>`;
   stack.appendChild(out);
-  notes.push({ i, pos, out, el: pos.querySelector('.note'), face: pos.querySelector('.face'), svg: pos.querySelector('svg'), r0, rank: ORDER.indexOf(i) });
+  notes.push({ i, pos, out, x: mobile ? mx : x, y: mobile ? my : y, el: pos.querySelector('.note'), face: pos.querySelector('.face'), svg: pos.querySelector('svg'), r0, rank: ORDER.indexOf(i) });
 });
 notes.sort((a, b) => a.rank - b.rank).forEach((n, k) => (n.rank = k));
+
+// Keep every note clear of the text and of each other: the free space around the text is cut into slots,
+// and each note takes the free slot closest to where it would like to be. Notes that get no slot are left out.
+function placeNotes() {
+  const W = stage.clientWidth, H = stage.clientHeight, s = stage.getBoundingClientRect(), pad = 20;
+  // The actual lines of text and the buttons, not the whole (wider) text column.
+  const rects = [];
+  content.querySelectorAll('.kicker, h1, .btn').forEach((el) => {
+    const rg = document.createRange(); rg.selectNodeContents(el);
+    (el.classList.contains('btn') ? [el.getBoundingClientRect()] : [...rg.getClientRects()]).forEach((r) => rects.push({ l: r.left - s.left - pad, r: r.right - s.left + pad, t: r.top - s.top - pad, b: r.bottom - s.top + pad }));
+  });
+  const NAV = 70, w = notes[0].pos.offsetWidth, cell = w + (mobile ? 8 : 16);
+  const cols = Math.floor((W - 8) / cell), ox = (W - cols * cell) / 2;
+  // Rows in the top half hang from the nav bar, rows in the bottom half stand on the bottom edge.
+  const ys = [];
+  for (let y = NAV; y + cell <= H / 2 + cell / 2; y += cell) ys.push(y);
+  for (let y = H - 8 - cell; y >= H / 2 - cell / 2; y -= cell) if (!ys.some((t) => Math.abs(t - y) < cell)) ys.push(y);
+  const free = [];
+  ys.forEach((y) => { for (let q = 0; q < cols; q++) {
+    const x = ox + q * cell;
+    if (!rects.some((b) => x < b.r && x + cell > b.l && y < b.b && y + cell > b.t)) free.push({ x, y });
+  } });
+  notes.forEach((n) => (n.hidden = true));
+  [...notes].sort((a, b) => a.i - b.i).forEach((n) => {
+    const want = { x: (n.x / 100) * W, y: (n.y / 100) * H };
+    let best = -1, bd = Infinity;
+    free.forEach((f, k) => { const d = Math.hypot(f.x - want.x, f.y - want.y); if (d < bd) { bd = d; best = k; } });
+    if (best < 0) return;
+    const f = free.splice(best, 1)[0], j = 6;
+    n.hidden = false;
+    n.pos.style.left = `${f.x + (cell - w) / 2 + (rand(n.i + 3) - 0.5) * j}px`;
+    n.pos.style.top = `${f.y + (cell - w) / 2 + (rand(n.i + 5) - 0.5) * j}px`;
+  });
+  notes.forEach((n) => { n.pos.style.display = n.out.style.display = n.hidden ? 'none' : ''; });
+  // On phones the notifications are full width, so they sit in the gap above the bottom row of notes instead of on top of them.
+  if (mobile) {
+    const low = notes.filter((n) => !n.hidden && parseFloat(n.pos.style.top) > H / 2).map((n) => parseFloat(n.pos.style.top));
+    stack.style.bottom = `${low.length ? H - Math.min(...low) + 10 : 76}px`;
+  }
+  // The order only counts the notes that are shown.
+  live = notes.filter((n) => !n.hidden).sort((a, b) => a.rank - b.rank);
+  live.forEach((n, k) => (n.slot = k));
+}
+let live = notes;
 
 // One hand-drawn stroke per line of text, measured on an untransformed copy of the face.
 function drawStrokes(n) {
@@ -142,7 +186,6 @@ const fx = document.getElementById('fx');
 const ctx = fx.getContext('2d');
 const DPR = Math.min(2, devicePixelRatio || 1);
 function sizeFx() { fx.width = stage.clientWidth * DPR; fx.height = stage.clientHeight * DPR; }
-sizeFx(); addEventListener('resize', sizeFx);
 
 // Soft, wispy puffs made from value noise, tinted blue. They fade fully to nothing before the edge of the texture.
 const PUFFS = (() => {
@@ -156,8 +199,7 @@ const PUFFS = (() => {
     for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
       const dx = (x - S / 2) / (S / 2), dy = (y - S / 2) / (S / 2), r = Math.hypot(dx, dy);
       const n = fbm(x / 26, y / 26, s * 13 + 1), n2 = fbm(x / 13 + 9, y / 13, s * 7 + 3);
-      const edge = ease(clamp((0.96 - r) / 0.4));
-      const a = Math.pow(clamp(1 - r * (0.7 + 0.6 * n2)), 1.6) * clamp((n - 0.28) * 2.2) * edge;
+      const a = Math.pow(clamp(1 - r * (0.7 + 0.6 * n2)), 1.6) * clamp((n - 0.28) * 2.2) * ease(clamp((0.96 - r) / 0.4));
       const k = (y * S + x) * 4; img.data[k] = c[0]; img.data[k + 1] = c[1]; img.data[k + 2] = c[2]; img.data[k + 3] = a * 255;
     }
     g.putImageData(img, 0, 0);
@@ -165,58 +207,65 @@ const PUFFS = (() => {
   });
 })();
 
-// Smoke rises from where the note switched off, hangs there for a moment, then drifts to its notification.
-// Positions come from scroll, so it also plays backwards.
-const PUFF_N = mobile ? 26 : 36;
-const TOP = 96; // keep the smoke below the nav bar and away from the screen edges
-function smoke(n, t, from, to, now) {
-  const w = n.pos.offsetWidth;
-  for (let j = 0; j < PUFF_N; j++) {
-    const r1 = rand(n.i * 97 + j), r2 = rand(n.i * 53 + j * 7), r3 = rand(j * 13 + n.i);
-    const u = clamp((t - r1 * 0.18) / 0.82);
-    if (u <= 0 || u >= 1) continue;
-    const sx = from.x + (r2 - 0.5) * w * 0.3, sy = from.y + (r3 - 0.5) * w * 0.1;
-    // 1) rise and spread slowly
-    const W = stage.clientWidth, side = w * 0.7, rx = Math.max(side, Math.min(W - side, sx + (r2 - 0.5) * w * 0.7)), ry = Math.max(TOP + w * 0.3, sy - w * (0.35 + r3 * 0.35));
-    const rise = ease(clamp(u / 0.45));
-    let x = lerp(sx, rx, rise), y = lerp(sy, ry, rise);
-    // 2) drift to the notification
-    const go = ease(clamp((u - 0.4) / 0.6));
-    if (go > 0) {
-      const cx = Math.max(side, Math.min(W - side, lerp(rx, to.x, 0.5) + (r1 - 0.5) * 120)), cy = Math.max(TOP, Math.min(ry, to.y) - 40 - r2 * 60), a1 = 1 - go;
-      x = a1 * a1 * rx + 2 * a1 * go * cx + go * go * Math.min(W - side * 0.6, to.x + (r3 - 0.5) * 60);
-      y = a1 * a1 * ry + 2 * a1 * go * cy + go * go * to.y;
-    }
-    // A slow curl, so it never looks like it moves on rails.
-    x += Math.sin(now * 0.0009 + j * 1.7) * 10; y += Math.cos(now * 0.0007 + j) * 6;
-    const size = w * (0.18 + 0.55 * ease(clamp(u / 0.4)) * (0.6 + r1 * 0.6)) * (1 - 0.6 * go * go);
+// Free-flowing smoke: puffs are born across the note, rise slowly and curl in a swirl that all of them share.
+const parts = [];
+function emit(n, count) {
+  const w = n.pos.offsetWidth, x0 = n.pos.offsetLeft, y0 = n.pos.offsetTop;
+  for (let k = 0; k < count && parts.length < 1400; k++) {
+    parts.push({
+      x: x0 + Math.random() * w, y: y0 + Math.random() * w,
+      vx: (Math.random() - 0.5) * 10, vy: -(8 + Math.random() * 14),
+      s: w * (0.14 + Math.random() * 0.16), grow: w * (0.45 + Math.random() * 0.7),
+      rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.4, age: 0, life: 3.6 + Math.random() * 2.4,
+      a: 0.07 + Math.random() * 0.09, tex: (Math.random() * 4) | 0, ph: Math.random() * 6.28,
+    });
+  }
+}
+let clock = 0;
+function drawSmoke(dt) {
+  clock += dt;
+  for (let k = parts.length - 1; k >= 0; k--) {
+    const p = parts[k];
+    p.age += dt;
+    if (p.age >= p.life) { parts.splice(k, 1); continue; }
+    p.vy -= 3 * dt;
+    p.vx += (Math.sin(p.y * 0.018 + clock * 0.6) + 0.6 * Math.sin(p.y * 0.041 - clock * 1.1 + p.ph * 0.3)) * 22 * dt;
+    p.vy += Math.cos(p.x * 0.016 + clock * 0.5) * 8 * dt;
+    p.vx *= 0.985; p.vy *= 0.99;
+    p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt;
+    const u = p.age / p.life;
+    // Fades in fast, out slowly, and thins out before it reaches the nav bar so it is never cut off.
+    const life = Math.min(1, u / 0.06) * Math.pow(1 - u, 1.3) * clamp((p.y - 64) / 120);
+    const s = (p.s + p.grow * Math.sqrt(u)) * DPR;
     ctx.save();
-    ctx.globalAlpha = (0.1 + r3 * 0.1) * ease(clamp(u / 0.12)) * (1 - ease(clamp((u - 0.82) / 0.18)));
-    ctx.translate(x * DPR, y * DPR); ctx.rotate(r1 * 6.28 + u * (r2 - 0.5) * 2);
-    ctx.drawImage(PUFFS[j % 4], (-size / 2) * DPR, (-size / 2) * DPR, size * DPR, size * DPR);
+    ctx.translate(p.x * DPR, p.y * DPR); ctx.rotate(p.rot);
+    ctx.globalAlpha = p.a * life;
+    ctx.drawImage(PUFFS[p.tex], -s / 2, -s / 2, s, s);
     ctx.restore();
   }
 }
 
 /* ---------- The scroll-driven frame ---------- */
 const pin = document.getElementById('pin');
-const win = 0.34;
+const win = 0.3;
 const MAX_STACK = mobile ? 2 : 3;
+let prevT = performance.now();
 
 function frame(now) {
+  const dt = Math.min(0.05, (now - prevT) / 1000); prevT = now;
   const r = pin.getBoundingClientRect();
   const p = clamp(-r.top / (r.height - innerHeight));
   ctx.clearRect(0, 0, fx.width, fx.height);
 
-  // Per note, through its own window k: cross out (0–0.25), switch off (0.28–0.36), smoke (0.34–0.92), notification (0.78–0.94).
-  notes.forEach((n) => {
-    const start = 0.02 + (n.rank / notes.length) * (0.96 - win);
+  // Per note, through its own window k: cross out (0–0.3), turn into smoke (0.34–0.44), notification (0.5–0.66).
+  live.forEach((n) => {
+    const start = 0.02 + (n.slot / live.length) * (0.94 - win);
     n.k = clamp((p - start) / win);
-    n.show = ease(clamp((n.k - 0.78) / 0.16));
+    n.show = ease(clamp((n.k - 0.5) / 0.16));
   });
 
   // Newest notification at the bottom; older ones slide up and the oldest fades out.
-  const shown = notes.filter((n) => n.show > 0).sort((a, b) => b.rank - a.rank);
+  const shown = live.filter((n) => n.show > 0).sort((a, b) => b.slot - a.slot);
   const newest = shown[0] ? shown[0].show : 0;
   let y = 0;
   shown.forEach((n, idx) => {
@@ -224,32 +273,31 @@ function frame(now) {
     y += (n.out.offsetHeight + 8) * n.show;
     n.fade = clamp(MAX_STACK - idx + 1 - newest);
   });
-  const sb = stack.getBoundingClientRect(), st = stage.getBoundingClientRect();
-  const to = { x: sb.left - st.left + sb.width / 2, y: sb.top - st.top - 34 };
 
-  notes.forEach((n) => {
-    const k = n.k, w = n.pos.offsetWidth, home = { x: n.pos.offsetLeft + w / 2, y: n.pos.offsetTop + w / 2 };
-    n.lines.forEach(([path, L], j) => (path.style.strokeDashoffset = L * (1 - clamp((k / 0.25) * n.lines.length - j))));
+  live.forEach((n) => {
+    const k = n.k;
+    n.lines.forEach(([path, L], j) => (path.style.strokeDashoffset = L * (1 - clamp((k / 0.3) * n.lines.length - j))));
 
-    // TV switch-off: the note squashes to a thin line, the line shrinks to nothing.
-    const v = clamp((k - 0.28) / 0.08);
-    const sy = Math.max(2 / w, 1 - ease(clamp(v / 0.5))), sx = 1 - ease(clamp((v - 0.5) / 0.5));
-    n.el.style.transform = `rotate(${n.r0 * (1 - ease(clamp(v / 0.5)))}deg) scale(${Math.max(sx, 0.001)}, ${sy})`;
-    n.el.style.opacity = v >= 1 ? 0 : 1;
+    // Straight to smoke: the paper goes soft and fades as the smoke takes its place.
+    const d = clamp((k - 0.34) / 0.1);
+    if (d > (n.pd || 0)) emit(n, Math.round((d - (n.pd || 0)) * (mobile ? 90 : 130)));
+    n.pd = d;
+    n.el.style.opacity = 1 - ease(d);
+    n.el.style.filter = d > 0 && d < 1 ? `blur(${d * 6}px)` : 'none';
+    n.el.style.transform = `translateY(${-d * 8}px) rotate(${n.r0}deg) scale(${1 + d * 0.04})`;
 
-    const t = clamp((k - 0.34) / 0.58);
-    if (t > 0 && t < 1) smoke(n, t, home, to, now);
-
-    // The notification condenses out of a blur.
     const a = n.show;
     n.out.style.opacity = a * (n.fade ?? 1);
-    n.out.style.filter = a < 1 ? `blur(${(1 - a) * 8}px)` : 'none';
-    n.out.style.transform = `translateY(${-(n.ty || 0)}px) scale(${0.94 + 0.06 * a})`;
-    n.out.style.zIndex = 100 - n.rank;
+    n.out.style.filter = a < 1 ? `blur(${(1 - a) * 6}px)` : 'none';
+    n.out.style.transform = `translateY(${-(n.ty || 0) + (1 - a) * 12}px)`;
+    n.out.style.zIndex = 100 - n.slot;
   });
+  drawSmoke(dt);
   requestAnimationFrame(frame);
 }
-document.fonts.ready.then(() => setTimeout(() => { notes.forEach(drawStrokes); requestAnimationFrame(frame); }, 50));
+
+addEventListener('resize', () => { sizeFx(); placeNotes(); });
+document.fonts.ready.then(() => setTimeout(() => { sizeFx(); placeNotes(); notes.forEach(drawStrokes); requestAnimationFrame(frame); }, 50));
 </script>
 </body>
 </html>
