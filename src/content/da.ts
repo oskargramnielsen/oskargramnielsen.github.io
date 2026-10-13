@@ -56,7 +56,7 @@ export const da: Dict = {
     title: 'De små.',
     intro: 'Det startede med ting, der irriterede mig. Intet team, intet budget.',
     forBusiness: 'For en virksomhed:',
-    more: 'Vis 3 projekter mere',
+    more: 'Vis 4 projekter mere',
     less: 'Vis færre projekter',
     housing: {
       tag: 'Bolig · for længe siden',
@@ -89,6 +89,18 @@ export const da: Dict = {
       mail: 'Værd at købe: Nike Dunk Low Midnight Navy. Udbudt til 925 kr, videresælges for 1.997 kr.',
       seen: 'Set',
       reply: 'Jeg køber den 👟',
+    },
+    cars: {
+      tag: 'Biler · for nylig',
+      title: 'Alle brugte biler i én database',
+      body: 'En platform, der scraper biler fra Marketplace, DBA, Bilbasen og AutoUncle ind i én database, så den samme bil kan sammenlignes på tværs af dem alle.',
+      lesson: 'saml det, jeres konkurrenter og leverandører sætter til salg, og se hele markedet ét sted.',
+      status: 'læser 4 bilsider hver morgen',
+      car: 'VW Golf 1.5 TSI · 2019 · 98.000 km',
+      listings: 'annoncer i databasen',
+      found: 'Billigst på DBA: 15.400 kr under markedsprisen.',
+      seen: 'Set',
+      reply: 'Jeg ringer til sælgeren 📞',
     },
     andelskortet: {
       tag: 'Andelskortet · kører stadig',
