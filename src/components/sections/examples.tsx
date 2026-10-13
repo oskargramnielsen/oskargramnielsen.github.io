@@ -32,7 +32,7 @@ function Row({ before, after }: { before: string; after: string }) {
   );
 }
 
-export default function Examples({ t, cta }: { t: Dict['examples']; cta: string }) {
+export default function Examples({ t }: { t: Dict['examples'] }) {
   return (
     <section id="examples" className="wrap scroll-mt-20 pt-24 pb-8 md:pt-36">
       <h2 className="text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
@@ -42,18 +42,7 @@ export default function Examples({ t, cta }: { t: Dict['examples']; cta: string 
           <Row key={item.before} {...item} />
         ))}
       </ul>
-      <div className="flex flex-col gap-5 border-t border-hair pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-lg font-medium md:text-xl">{t.outro}</p>
-        <a
-          href="#contact"
-          className="group inline-flex shrink-0 items-center justify-center gap-3 border-[1.5px] border-ink bg-ink px-5.5 py-4 text-[17px] font-medium text-paper transition-colors duration-300 hover:border-bot hover:bg-bot"
-        >
-          {cta}
-          <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
-            →
-          </span>
-        </a>
-      </div>
+      <p className="border-t border-hair pt-6 text-lg font-medium md:text-xl">{t.outro}</p>
     </section>
   );
 }

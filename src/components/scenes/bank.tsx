@@ -4,89 +4,81 @@ import { motion, useTransform, type MotionValue } from 'motion/react';
 import type { Dict } from '@/content';
 import { seg, useStep } from '@/lib/motion';
 import { cn } from '@/lib/utils';
-import { Appear } from './bits';
+import { Bubble, Thread, ThreadHead, Typing } from './bits';
 
-type Cat = keyof Dict['work']['bank']['categories'];
+type B = Dict['work']['bank'];
+type Cat = keyof B['categories'];
 
-// Illustrative transactions; amounts in kr.
-const TX: { text: string; amount: number; cat: Cat; conf: number }[] = [
-  { text: 'NETTO 2300 KBH S', amount: -186.5, cat: 'groceries', conf: 99 },
-  { text: 'DSB APP', amount: -48, cat: 'transport', conf: 97 },
-  { text: 'SPOTIFY P3A1C', amount: -119, cat: 'subscriptions', conf: 99 },
-  { text: 'REMA 1000 ISLANDS BRYGGE', amount: -312.25, cat: 'groceries', conf: 98 },
-  { text: 'BAR 7 NØRREBRO', amount: -142, cat: 'eating', conf: 93 },
-  { text: 'OVERFØRSEL NORDNET', amount: -2000, cat: 'savings', conf: 100 },
+// Illustrative transactions; amounts in kr. `flag` marks what the bank agent points out.
+const TX: { text: string; amount: number; cat: Cat; flag?: keyof B['flags'] }[] = [
+  { text: 'NETTO 2300 KBH S', amount: -186.5, cat: 'groceries' },
+  { text: 'PARKERING KBH', amount: -38, cat: 'transport', flag: 'twice' },
+  { text: 'PARKERING KBH', amount: -38, cat: 'transport', flag: 'twice' },
+  { text: 'MOBILABONNEMENT', amount: -299, cat: 'bills', flag: 'cheaper' },
+  { text: 'INDBOFORSIKRING', amount: -214, cat: 'bills', flag: 'cheaper' },
+  { text: 'OVERFØRSEL NORDNET', amount: -2000, cat: 'savings' },
 ];
-const BUDGETS: { cat: Cat; used: number }[] = [
-  { cat: 'groceries', used: 0.62 },
-  { cat: 'transport', used: 0.35 },
-  { cat: 'eating', used: 0.81 },
-  { cat: 'savings', used: 1 },
-];
+const SAVED = 4860;
 const kr = (n: number) => n.toLocaleString('da-DK', { minimumFractionDigits: 2 });
 
-function Budget({ p, i, label, used }: { p: MotionValue<number>; i: number; label: string; used: number }) {
-  const width = useTransform(p, (v) => `${used * 100 * seg(v, 0.62 + i * 0.04, 0.82 + i * 0.04)}%`);
-  return (
-    <div className="grid grid-cols-[96px_1fr] items-center gap-3 font-mono text-[11px] md:text-xs">
-      <span className="text-muted">{label}</span>
-      <div className="h-2 bg-[#ecece7]">
-        <motion.div className="h-full bg-bot" style={{ width }} />
-      </div>
-    </div>
-  );
-}
-
-export default function Bank({ p, t }: { p: MotionValue<number>; t: Dict['work']['bank'] }) {
-  const rows = useStep(p, TX.map((_, i) => 0.05 + i * 0.08));
-  const sorted = useStep(p, TX.map((_, i) => 0.1 + i * 0.08));
-  const step = useStep(p, [0.6, 0.88]);
-  const line = useTransform(p, (v) => seg(v, 0.84, 0.98));
+export default function Bank({ p, t }: { p: MotionValue<number>; t: B }) {
+  const rows = useStep(p, TX.map((_, i) => 0.03 + i * 0.045));
+  const sorted = useStep(p, TX.map((_, i) => 0.06 + i * 0.045));
+  const step = useStep(p, [0.34, 0.38, 0.43, 0.5, 0.55, 0.62, 0.67, 0.74, 0.79, 0.88]);
+  const saved = useTransform(p, (v) => Math.round(SAVED * seg(v, 0.6, 0.86)).toLocaleString('da-DK'));
+  const flagged = step >= 1;
 
   return (
-    <div className="grid gap-5 p-4 pt-2 md:p-7 md:pt-3 lg:grid-cols-[1.3fr_1fr]">
-      <ul className="font-mono text-[11px] md:text-[12px]">
-        {TX.map((tx, i) => (
-          <li
-            key={tx.text}
-            className={cn(
-              'grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 border-b border-hair py-2.5 transition-opacity duration-300',
-              rows > i ? 'opacity-100' : 'opacity-0',
-            )}
-          >
-            <span className="truncate">{tx.text}</span>
-            <span className="text-right tabular-nums">{kr(tx.amount)}</span>
-            <span
+    <div className="grid items-center gap-5 p-4 pt-2 md:p-7 lg:grid-cols-[1fr_1.1fr]">
+      <div>
+        <ul className="font-mono text-[11px] md:text-[12px]">
+          {TX.map((tx, i) => (
+            <li
+              key={i}
               className={cn(
-                'col-span-2 justify-self-start px-1.5 py-px text-[10px] transition-colors duration-300 md:text-[11px]',
-                sorted > i ? 'bg-bot-soft text-bot' : 'bg-shade text-faint',
+                'grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 border-b border-hair py-2 transition-opacity duration-300',
+                rows > i ? 'opacity-100' : 'opacity-0',
               )}
             >
-              {sorted > i ? `${t.categories[tx.cat]} · ${tx.conf}%` : '…'}
-            </span>
-          </li>
-        ))}
-      </ul>
-
-      <Appear on={step >= 1} className="space-y-3 self-start">
-        <p className="font-mono text-[11px] text-muted">{t.budgets}</p>
-        {BUDGETS.map((b, i) => (
-          <Budget key={b.cat} p={p} i={i} label={t.categories[b.cat]} used={b.used} />
-        ))}
-        <div className="pt-3">
-          <svg viewBox="0 0 200 60" className="h-14 w-full" aria-hidden>
-            <path d="M0 50 L200 10" className="stroke-hair" strokeDasharray="3 3" fill="none" />
-            <motion.path
-              d="M0 52 C30 48 40 40 60 41 S90 32 110 30 S150 20 170 17 S190 12 200 10"
-              className="stroke-bot"
-              strokeWidth="2"
-              fill="none"
-              style={{ pathLength: line }}
-            />
-          </svg>
-          <p className={cn('font-mono text-[11px] transition-colors md:text-xs', step >= 2 ? 'text-bot' : 'text-faint')}>✓ {t.plan}</p>
+              <span className="truncate">{tx.text}</span>
+              <span className="text-right">{kr(tx.amount)}</span>
+              <span className="col-span-2 flex gap-1.5 text-[10px] md:text-[11px]">
+                <span className={cn('px-1.5 py-px transition-colors duration-300', sorted > i ? 'bg-bot-soft text-bot' : 'bg-shade text-faint')}>
+                  {sorted > i ? t.categories[tx.cat] : '…'}
+                </span>
+                {tx.flag && (
+                  <span className={cn('bg-bot px-1.5 py-px text-card transition-opacity duration-300', flagged ? 'opacity-100' : 'opacity-0')}>
+                    {t.flags[tx.flag]}
+                  </span>
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div className={cn('mt-4 transition-opacity duration-500', step >= 6 ? 'opacity-100' : 'opacity-0')}>
+          <motion.b className="block text-[40px] leading-none font-semibold tracking-[-0.04em] text-bot md:text-[48px]">{saved}</motion.b>
+          <span className="font-mono text-[11px] text-muted md:text-xs">{t.saved}</span>
         </div>
-      </Appear>
+      </div>
+
+      <div className="overflow-hidden rounded-[22px] border border-hair bg-card">
+        <ThreadHead name="bank" status={t.status} initials="B" bot />
+        <Thread className="h-[320px] md:h-[360px]">
+          {step === 2 && <Typing key="t1" side="left" bot />}
+          {step >= 3 && <Bubble key="m1" side="left" bot>{t.messages[0]}</Bubble>}
+          {step === 4 && <Typing key="t2" side="left" bot />}
+          {step >= 5 && <Bubble key="m2" side="left" bot>{t.messages[1]}</Bubble>}
+          {step === 6 && <Typing key="t3" side="left" bot />}
+          {step >= 7 && <Bubble key="m3" side="left" bot>{t.messages[2]}</Bubble>}
+          {step === 8 && <Typing key="t4" side="left" bot />}
+          {step >= 9 && <Bubble key="m4" side="left" bot>{t.messages[3]}</Bubble>}
+          {step >= 10 && (
+            <Bubble key="me" side="right" meta={t.seen}>
+              {t.reply}
+            </Bubble>
+          )}
+        </Thread>
+      </div>
     </div>
   );
 }

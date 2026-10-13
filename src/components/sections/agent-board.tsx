@@ -83,10 +83,6 @@ export default function AgentBoard({ t }: { t: Dict['hero'] }) {
           ))}
         </ul>
       </div>
-      <p className="mt-3.5 flex gap-2 font-mono text-xs leading-relaxed text-muted">
-        <span className="mt-1.5 size-[7px] shrink-0 rounded-full bg-bot" />
-        {t.legend}
-      </p>
     </div>
   );
 }

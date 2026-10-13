@@ -4,6 +4,7 @@ import { motion, useTransform, type MotionValue } from 'motion/react';
 import type { Dict } from '@/content';
 import { seg, useStep } from '@/lib/motion';
 import { cn } from '@/lib/utils';
+import { Bubble, Divider, Thread, ThreadHead, Typing } from './bits';
 
 // From the scraper's result emails: [model, colourway, asking price, resale price].
 const DEALS = [
@@ -12,12 +13,12 @@ const DEALS = [
   ['Nike Dunk Low', 'Midnight Navy', 925, 1997],
   ['New Balance 2002R', 'Rain Cloud', 1400, 1180],
 ] as const;
-const MAX = 2200;
+const MAX = 2000;
 const kr = (n: number) => n.toLocaleString('da-DK');
 
 function Row({ p, i, t }: { p: MotionValue<number>; i: number; t: Dict['work']['sneakers'] }) {
   const [name, colour, ask, resale] = DEALS[i];
-  const k = useTransform(p, (v) => seg(v, 0.08 + i * 0.15, 0.25 + i * 0.15));
+  const k = useTransform(p, (v) => seg(v, 0.14 + i * 0.12, 0.3 + i * 0.12));
   const askW = useTransform(k, (v) => `${(ask / MAX) * 100 * v}%`);
   const resW = useTransform(k, (v) => `${(resale / MAX) * 100 * seg(v, 0.3, 1)}%`);
   const gain = useTransform(k, (v) => {
@@ -29,24 +30,25 @@ function Row({ p, i, t }: { p: MotionValue<number>; i: number; t: Dict['work']['
   const good = resale > ask;
 
   return (
-    <motion.li style={{ opacity }} className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 border-b border-hair py-3.5 text-[12px] sm:grid-cols-[150px_1fr_72px] sm:items-center md:text-[13px]">
-      <div className="font-mono">
-        <b className="block text-[13px] font-semibold md:text-sm">{name}</b>
-        {colour}
+    <motion.li style={{ opacity }} className={cn('border-t border-bot/15 py-2 first:border-t-0', good && 'text-ink')}>
+      <div className="flex items-baseline justify-between gap-3 text-[12px]">
+        <span className="truncate">
+          <b className="font-semibold">{name}</b> <span className="text-muted">{colour}</span>
+        </span>
+        <motion.b className={cn('font-mono text-[13px]', good ? 'text-bot' : 'text-faint')}>{gain}</motion.b>
       </div>
-      <motion.div className={cn('row-span-2 self-center text-right font-mono text-[15px] font-semibold sm:order-last sm:row-span-1', good ? 'text-bot' : 'text-faint')}>
-        {gain}
-      </motion.div>
-      <div className="grid gap-1.5 font-mono">
-        {[
-          [askW, `${t.asking} ${kr(ask)} kr`, 'bg-ink'],
-          [resW, `${t.resells} ${kr(resale)} kr`, 'bg-bot'],
-        ].map(([w, label, color]) => (
-          <div key={label as string} className="grid grid-cols-[1fr_96px] items-center gap-2.5">
-            <div className="relative h-3 bg-[#ecece7] md:h-3.5">
-              <motion.i className={cn('absolute inset-y-0 left-0', color as string)} style={{ width: w as MotionValue<string> }} />
+      <div className="mt-1.5 grid gap-1">
+        {(
+          [
+            [askW, `${t.asking} ${kr(ask)}`, 'bg-ink'],
+            [resW, `${t.resells} ${kr(resale)}`, 'bg-bot'],
+          ] as const
+        ).map(([w, label, color]) => (
+          <div key={label} className="grid grid-cols-[1fr_92px] items-center gap-2 font-mono text-[10.5px] text-muted">
+            <div className="relative h-2 rounded-full bg-card">
+              <motion.i className={cn('absolute inset-y-0 left-0 rounded-full', color)} style={{ width: w }} />
             </div>
-            <span className="text-[11px] whitespace-nowrap text-muted">{label as string}</span>
+            <span className="whitespace-nowrap">{label} kr</span>
           </div>
         ))}
       </div>
@@ -55,24 +57,37 @@ function Row({ p, i, t }: { p: MotionValue<number>; i: number; t: Dict['work']['
 }
 
 export default function Sneakers({ p, t }: { p: MotionValue<number>; t: Dict['work']['sneakers'] }) {
-  const step = useStep(p, [0.8]);
+  const step = useStep(p, [0.04, 0.1, 0.66, 0.72, 0.84]);
+
   return (
-    <div className="flex h-full flex-col p-4 pt-1 md:p-7 md:pt-2">
-      <ul>
-        {DEALS.map((_, i) => (
-          <Row key={i} p={p} i={i} t={t} />
-        ))}
-      </ul>
-      <div className="mt-auto overflow-hidden pt-5">
-        <div
-          className={cn(
-            'border border-bot bg-bot-soft p-3.5 font-mono text-[12px] transition-transform duration-700 ease-out-expo md:text-[13px]',
-            step >= 1 ? 'translate-y-0' : 'translate-y-[140%]',
+    <div className="p-4 pt-3 md:p-7">
+      <div className="mx-auto max-w-[460px] overflow-hidden rounded-[22px] border border-hair bg-card">
+        <ThreadHead name="sneaker-scraper" status={t.status} initials="S" bot />
+        <Thread className="h-[440px] md:h-[470px]">
+          {step >= 1 && <Divider key="time">14:12</Divider>}
+          {step === 1 && <Typing key="t1" side="left" bot />}
+          {step >= 2 && (
+            <Bubble key="table" side="left" bot className="w-[300px] max-w-full md:w-[340px]">
+              <p className="mb-1 text-[13px]">{t.checked}</p>
+              <ul className="text-ink">
+                {DEALS.map((_, i) => (
+                  <Row key={i} p={p} i={i} t={t} />
+                ))}
+              </ul>
+            </Bubble>
           )}
-        >
-          <p className="mb-1 text-[11px] text-bot">{t.mailLabel}</p>
-          {t.mail}
-        </div>
+          {step === 3 && <Typing key="t2" side="left" bot />}
+          {step >= 4 && (
+            <Bubble key="deal" side="left" bot>
+              {t.mail}
+            </Bubble>
+          )}
+          {step >= 5 && (
+            <Bubble key="me" side="right" meta={t.seen}>
+              {t.reply}
+            </Bubble>
+          )}
+        </Thread>
       </div>
     </div>
   );
