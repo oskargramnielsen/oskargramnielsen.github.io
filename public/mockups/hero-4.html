@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="mock.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
 <style>
-  .pin { height: 280vh; position: relative; }
+  .pin { height: 300vh; position: relative; }
   .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
   .center { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 0 20px; pointer-events: none; }
   .center > div { max-width: 860px; pointer-events: auto; }
@@ -16,22 +16,23 @@
   h1 { font-size: clamp(38px, 6vw, 88px); }
   .btns { justify-content: center; margin-top: 34px; }
   .count { margin-top: 18px; font: 13px var(--mono); color: var(--muted); }
-  .count b { color: var(--bot); font-weight: 500; }
+  .count b { color: var(--bot); font-weight: 500; display: inline-block; }
 
-  /* A note = an outer box for position and the drop-in, and an inner box the scroll animation moves. */
-  .pos { position: absolute; width: clamp(124px, 12vw, 168px); animation: land .9s cubic-bezier(.25, 1.35, .4, 1) both; filter: drop-shadow(0 12px 10px #00000026); }
-  .note { position: relative; aspect-ratio: 1; padding: 14px 14px 12px; background: var(--c, #fbe98f); border-radius: 2px;
-    font: 600 clamp(19px, 1.9vw, 25px)/1.08 'Caveat', cursive; color: #2a2616;
-    will-change: transform; transition: box-shadow .2s; display: flex; flex-direction: column; justify-content: space-between; }
-  .note::before { content: ''; position: absolute; inset: 0 0 auto; height: 18%; background: #0000000a; }
+  /* A note: .pos places it and drops it in on load, .note is what the scroll animation moves. */
+  .pos { position: absolute; width: clamp(124px, 12vw, 168px); aspect-ratio: 1; animation: land .9s cubic-bezier(.25, 1.35, .4, 1) both; filter: drop-shadow(0 12px 10px #00000026); }
+  .note { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform, opacity; }
+  .face { position: absolute; inset: 0; padding: 14px 14px 12px; background: var(--c, #fbe98f); border-radius: 2px; backface-visibility: hidden;
+    font: 600 clamp(19px, 1.9vw, 25px)/1.08 'Caveat', cursive; color: #2a2616; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+  .face::before { content: ''; position: absolute; inset: 0 0 auto; height: 18%; background: #0000000a; }
   .txt { position: relative; }
-  .txt::after { content: ''; position: absolute; left: -3px; top: 52%; height: 3px; width: calc(var(--s, 0) * (100% + 6px)); background: var(--bot); border-radius: 2px; }
-  .stamp { align-self: flex-start; font: 500 11px var(--mono); color: #fff; background: var(--bot); padding: 3px 6px; opacity: var(--s, 0); transform: scale(calc(.6 + var(--s, 0) * .4)); transform-origin: 0 100%; }
-  .crease { position: absolute; inset: 0; border-radius: inherit; opacity: 0; pointer-events: none;
-    background: radial-gradient(circle at 35% 30%, #ffffff80, transparent 40%), conic-gradient(from 20deg, #0000 0 8%, #00000014 9% 14%, #0000 15% 31%, #0000001f 32% 37%, #0000 38% 55%, #00000014 56% 62%, #0000 63% 80%, #0000001a 81% 87%, #0000 88%),
-      radial-gradient(circle at 70% 75%, #0000002a, transparent 55%); }
+  .face svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .face path { fill: none; stroke: var(--bot); stroke-width: 3.2; stroke-linecap: round; }
+  .stamp { position: relative; align-self: flex-start; font: 500 11px var(--mono); color: #fff; background: var(--bot); padding: 3px 6px; opacity: 0; transform-origin: 0 100%; }
+  .shade { position: absolute; inset: 0; background: linear-gradient(135deg, #0000 40%, #0000002e); opacity: 0; pointer-events: none; }
+  .back { visibility: hidden; backface-visibility: visible; transform: rotateY(180deg); background: var(--bot); color: #fff; display: grid; place-items: center; font: 500 13px var(--mono); }
+  .back::before { display: none; }
+  .strip { position: absolute; inset: 0; display: none; }
   @keyframes land { from { transform: translateY(-110vh) rotate(var(--r0)); } }
-
 
   /* The end of the page: the visitor writes their own note. */
   .turn { padding-top: 120px; padding-bottom: 160px; display: grid; justify-items: center; text-align: center; gap: 28px; }
@@ -40,6 +41,8 @@
   .blank::before { content: ''; position: absolute; inset: 0 0 auto; height: 18%; background: #0000000a; }
   .blank textarea { position: relative; width: 100%; height: 100%; border: 0; outline: 0; resize: none; background: transparent; font: 600 30px/1.1 'Caveat', cursive; color: #2a2616; }
   .blank textarea::placeholder { color: #2a261666; }
+  .switch .sep { color: #fff5; padding: 7px 2px; }
+  .switch { max-width: calc(100vw - 16px); overflow-x: auto; }
 </style>
 </head>
 <body>
@@ -63,11 +66,13 @@
   <a class="btn dark" href="#">Get my free plan →</a>
 </section>
 
-<div class="switch"><a href="hero-1.html">1</a><a href="hero-2.html">2</a><a href="hero-3.html">3</a><a href="hero-4.html?mode=crumple" id="m-crumple">4A Crumple</a><a href="hero-4.html?mode=drop" id="m-drop">4B Drop</a></div>
+<div class="switch" id="switch"><a href="hero-1.html">1–3</a><span class="sep">|</span></div>
 
 <script>
-const mode = new URLSearchParams(location.search).get('mode') === 'drop' ? 'drop' : 'crumple';
-document.getElementById('m-' + mode).classList.add('on');
+const MODES = { peel: 'Peel off', flip: 'Flip', wind: 'Blow away', shred: 'Shred', collect: 'Collect' };
+const mode = MODES[new URLSearchParams(location.search).get('mode')] ? new URLSearchParams(location.search).get('mode') : 'peel';
+document.getElementById('switch').insertAdjacentHTML('beforeend',
+  Object.entries(MODES).map(([k, v]) => `<a href="?mode=${k}"${k === mode ? ' class="on"' : ''}>${v}</a>`).join(''));
 
 // [task, desktop left %, top %, mobile left %, top % (null = hidden on mobile)]
 const NOTES = [
@@ -85,15 +90,14 @@ const NOTES = [
   ['Book meetings', 66, 80, null],
 ];
 const COLORS = ['#fbe98f', '#fbe98f', '#f9e27a', '#fdf0b0'];
-// Outline of the note as 12 points: a square, and a crumpled ball.
-const ANG = [...Array(12)].map((_, j) => (j / 12) * Math.PI * 2 + 0.26);
-const SQUARE = ANG.map((a) => [Math.cos(a), Math.sin(a)].map((v) => 50 + (50 * v) / Math.max(Math.abs(Math.cos(a)), Math.abs(Math.sin(a)))));
-const BALL = ANG.map((a, j) => [Math.cos(a), Math.sin(a)].map((v) => 50 + v * (34 + ((j * 7) % 5) * 3.4)));
-const outline = (c) => `polygon(${SQUARE.map(([x, y], j) => `${x + (BALL[j][0] - x) * c}% ${y + (BALL[j][1] - y) * c}%`).join(',')})`;
 const ORDER = [3, 7, 0, 10, 5, 1, 8, 11, 2, 6, 9, 4]; // the order they get done in
+const STRIPS = 7;
 const stage = document.getElementById('stage');
+const doneEl = document.getElementById('done');
 const mobile = matchMedia('(max-width: 760px)').matches;
 const rand = (i) => ((Math.sin(i * 91.7) * 43758.5) % 1 + 1) % 1;
+const clamp = (v) => Math.max(0, Math.min(1, v));
+const ease = (v) => v * v * (3 - 2 * v);
 
 const notes = [];
 NOTES.forEach(([text, x, y, mx, my], i) => {
@@ -102,55 +106,127 @@ NOTES.forEach(([text, x, y, mx, my], i) => {
   const pos = document.createElement('div');
   pos.className = 'pos';
   pos.style.cssText = `left:${mobile ? mx : x}%;top:${mobile ? my : y}%;--r0:${r0}deg;animation-delay:${i * 70}ms`;
-  pos.innerHTML = `<div class="note" style="--c:${COLORS[i % 4]}"><span class="txt">${text}</span><span class="stamp">✓ bot</span><div class="crease"></div></div>`;
+  pos.innerHTML = `<div class="note"><div class="face" style="--c:${COLORS[i % 4]}"><svg></svg><span class="txt">${text}</span><span class="stamp">✓ bot</span><div class="shade"></div></div><div class="face back">✓ done by a bot</div></div>`;
   stage.appendChild(pos);
-  notes.push({ el: pos.querySelector('.note'), pos, r0, drift: rand(i + 7) - 0.5, rank: ORDER.indexOf(i) });
+  notes.push({ pos, el: pos.querySelector('.note'), face: pos.querySelector('.face'), stamp: pos.querySelector('.stamp'), shade: pos.querySelector('.shade'), back: pos.querySelector('.back'),
+    r0, rnd: rand(i + 7), dir: (mobile ? mx : x) < 45 ? -1 : 1, rank: ORDER.indexOf(i) });
 });
-// Re-rank only the notes that are visible, so the sequence has no gaps on mobile.
 notes.sort((a, b) => a.rank - b.rank).forEach((n, k) => (n.rank = k));
 document.getElementById('all').textContent = notes.length;
 
+// One hand-drawn stroke per line of text. Lines are measured on the face before it is transformed.
+function drawStrokes(n) {
+  const fw = n.face.offsetWidth;
+  const m = n.face.cloneNode(true);
+  m.style.cssText = `position:fixed;left:-9999px;top:0;width:${fw}px;height:${fw}px`;
+  document.body.appendChild(m);
+  const box = m.getBoundingClientRect();
+  const rects = lineRects(m.querySelector('.txt'));
+  m.remove();
+  const svg = n.face.querySelector('svg');
+  svg.setAttribute('viewBox', `0 0 ${fw} ${fw}`);
+  svg.innerHTML = rects.map((r, j) => {
+    const x0 = r.left - box.left - 4, x1 = r.right - box.left + 4;
+    const y = r.top - box.top + r.height * 0.58, w = (rand(j + n.rank) - 0.5) * 5;
+    return `<path d="M${x0} ${y + w * 0.4} Q${(x0 + x1) / 2} ${y - 3 + w} ${x1} ${y - w * 0.5}"/>`;
+  }).join('');
+  n.lines = [...svg.querySelectorAll('path')].map((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; return [p, L]; });
+}
+// A single inline box only gives one rect, so split it by the line height.
+function lineRects(txt) {
+  const range = document.createRange(); range.selectNodeContents(txt);
+  const rs = [...range.getClientRects()].filter((r) => r.width > 2);
+  const out = [];
+  rs.forEach((r) => { const last = out[out.length - 1]; if (last && Math.abs(last.top - r.top) < 4) { last.right = Math.max(last.right, r.right); last.left = Math.min(last.left, r.left); } else out.push({ left: r.left, right: r.right, top: r.top, height: r.height }); });
+  return out;
+}
+
+// Shred: copies of the face, each clipped to one vertical strip.
+function makeStrips(n) {
+  n.strips = [...Array(STRIPS)].map((_, j) => {
+    const s = document.createElement('div');
+    s.className = 'strip';
+    s.appendChild(n.face.cloneNode(true));
+    s.style.clipPath = `inset(0 ${100 - ((j + 1) * 100) / STRIPS}% 0 ${(j * 100) / STRIPS}%)`;
+    n.el.appendChild(s);
+    return s;
+  });
+}
+
 const pin = document.getElementById('pin');
-const done = document.getElementById('done');
-const clamp = (v) => Math.max(0, Math.min(1, v));
 const win = 0.26;
+let last = -1;
 
 function frame() {
   const r = pin.getBoundingClientRect();
   const p = clamp(-r.top / (r.height - innerHeight));
   const W = stage.clientWidth, H = stage.clientHeight;
-  let n = 0;
-  notes.forEach((note, i) => {
-    const start = 0.03 + (note.rank / notes.length) * (0.92 - win);
+  const cnt = doneEl.getBoundingClientRect(), st = stage.getBoundingClientRect();
+  let done = 0;
+  notes.forEach((n) => {
+    const start = 0.03 + (n.rank / notes.length) * (0.92 - win);
     const k = clamp((p - start) / win);
-    const s = clamp(k / 0.3);
-    note.el.style.setProperty('--s', s);
-    if (s === 1) n++;
-    let t = `rotate(${note.r0}deg)`;
-    if (mode === 'crumple') {
-      // Crumple into a ball, then roll into the pile under the buttons.
-      const c = clamp((k - 0.32) / 0.3), m = clamp((k - 0.55) / 0.45);
-      const w = note.pos.offsetWidth;
-      const tx = W / 2 + (note.rank - notes.length / 2) * (mobile ? 16 : 22) - (note.pos.offsetLeft + w / 2);
-      const ty = H - 130 - (note.rank % 3) * 14 - (note.pos.offsetTop + w / 2);
-      const e = m * m * (3 - 2 * m);
-      t = `translate(${tx * e}px, ${ty * e}px) rotate(${note.r0 + c * 220 + m * 140}deg) scale(${1 - c * 0.7})`;
-      note.el.style.clipPath = c > 0 ? outline(c) : 'none';
-      note.el.querySelector('.crease').style.opacity = c;
-      note.el.querySelector('.txt').style.opacity = 1 - c * 0.85;
-      note.el.querySelector('.stamp').style.visibility = c > 0.5 ? 'hidden' : 'visible';
-    } else {
-      // Come loose at one corner, swing, then fall down the page.
-      const sw = clamp((k - 0.32) / 0.2), f = clamp((k - 0.5) / 0.5);
-      note.el.style.transformOrigin = note.drift > 0 ? '0 0' : '100% 0';
-      t = `translate(${note.drift * f * 260}px, ${f * f * H * 1.25}px) rotate(${note.r0 + Math.sign(note.drift) * (sw * 22 + f * 70)}deg)`;
+    // 1) cross out, one line after the other
+    const s = clamp(k / 0.34);
+    n.lines.forEach(([path, L], j) => (path.style.strokeDashoffset = L * (1 - clamp(s * n.lines.length - j))));
+    const st1 = clamp((k - 0.3) / 0.08);
+    n.stamp.style.opacity = st1;
+    n.stamp.style.transform = `scale(${0.6 + st1 * 0.4})`;
+    if (s === 1) done++;
+    // 2) remove it
+    const e = clamp((k - 0.42) / 0.58);
+    let t = `rotate(${n.r0}deg)`, o = 1, origin = '50% 50%';
+    const w = n.pos.offsetWidth, cx = n.pos.offsetLeft + w / 2, cy = n.pos.offsetTop + w / 2;
+
+    if (mode === 'peel') {
+      // The bottom corner lifts off the wall, then the note is pulled away.
+      const lift = ease(clamp(e / 0.45)), away = clamp((e - 0.35) / 0.65);
+      origin = n.dir < 0 ? '0% 0%' : '100% 0%';
+      t = `perspective(700px) translate(${n.dir * away * away * 160}px, ${-away * away * 260}px) rotate(${n.r0 + n.dir * lift * 8}deg) rotate3d(1, ${-n.dir}, 0, ${-lift * 55 - away * 40}deg)`;
+      n.shade.style.opacity = lift;
+      o = 1 - clamp((e - 0.6) / 0.4);
+    } else if (mode === 'flip') {
+      // Turns over to its blue side, then shrinks away.
+      const f = ease(clamp(e / 0.4)), g = ease(clamp((e - 0.55) / 0.45));
+      t = `perspective(700px) rotate(${n.r0 * (1 - f)}deg) rotateY(${f * 180}deg) scale(${1 + f * 0.06 - g * 1.06})`;
+      // Swap faces at the halfway turn instead of relying on backface-visibility.
+      n.face.style.visibility = f > 0.5 ? 'hidden' : 'visible';
+      n.back.style.visibility = f > 0.5 ? 'visible' : 'hidden';
+    } else if (mode === 'wind') {
+      // A gust takes it off the nearest edge, fluttering.
+      const g = e * e;
+      t = `perspective(700px) translate(${n.dir * g * W * 0.75}px, ${-e * 120 + Math.sin(e * 9) * 22}px) rotate(${n.r0 + n.dir * e * 120}deg) rotateY(${Math.sin(e * 11 + n.rnd * 3) * 55 * Math.min(1, e * 4)}deg)`;
+    } else if (mode === 'shred') {
+      // Cut into strips that fall one by one.
+      if (!n.strips && e > 0) makeStrips(n);
+      if (n.strips) {
+        n.face.style.visibility = e > 0 ? 'hidden' : 'visible';
+        n.strips.forEach((sp, j) => {
+          const d = clamp((e - j * 0.035) / 0.75);
+          const rr = rand(j * 3 + n.rank);
+          sp.style.display = e > 0 ? 'block' : 'none';
+          sp.style.transform = `translate(${(j - STRIPS / 2) * d * 6}px, ${d * d * H * (0.8 + rr * 0.5)}px) rotate(${(rr - 0.5) * d * 30}deg)`;
+        });
+      }
+    } else if (mode === 'collect') {
+      // Folds small and flies into the counter, which ticks up.
+      const f = ease(e);
+      const tx = cnt.left - st.left + cnt.width / 2 - cx, ty = cnt.top - st.top + cnt.height / 2 - cy;
+      t = `translate(${tx * f}px, ${ty * f - Math.sin(Math.PI * f) * 140}px) rotate(${n.r0 + f * n.dir * 200}deg) scale(${1 - f * 0.94})`;
+      o = e >= 1 ? 0 : 1;
     }
-    note.el.style.transform = t;
+    n.el.style.transformOrigin = origin;
+    n.el.style.transform = t;
+    n.el.style.opacity = o;
   });
-  done.textContent = n;
+  if (done !== last) {
+    doneEl.textContent = done;
+    if (last >= 0) doneEl.animate([{ transform: 'scale(1.6)' }, { transform: 'none' }], { duration: 300, easing: 'ease-out' });
+    last = done;
+  }
   requestAnimationFrame(frame);
 }
-frame();
+document.fonts.ready.then(() => setTimeout(() => { notes.forEach(drawStrokes); frame(); }, 50));
 </script>
 </body>
 </html>
