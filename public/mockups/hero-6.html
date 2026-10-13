@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Hero option 6 · Zap, smoke, program</title>
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
+<style>
+  .pin { height: 340vh; position: relative; }
+  .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+  .center { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 0 20px; pointer-events: none; }
+  .center > div { max-width: 860px; pointer-events: auto; }
+  .kicker { margin-bottom: 20px; }
+  h1 { font-size: clamp(38px, 6vw, 84px); }
+  .btns { justify-content: center; margin-top: 30px; }
+  .count { margin-top: 14px; font: 13px var(--mono); color: var(--muted); }
+  .count b { color: var(--bot); font-weight: 500; display: inline-block; }
+  #slot { display: grid; justify-items: center; margin-top: 22px; }
+
+  .pos { position: absolute; width: clamp(112px, 10vw, 148px); aspect-ratio: 1; animation: land .9s cubic-bezier(.25, 1.35, .4, 1) both; filter: drop-shadow(0 12px 10px #00000026); }
+  .note { position: absolute; inset: 0; will-change: transform, opacity, filter; }
+  .face { position: absolute; inset: 0; padding: 14px 14px 12px; background: var(--c); border-radius: 2px; overflow: hidden;
+    font: 600 clamp(18px, 1.65vw, 23px)/1.08 'Caveat', cursive; color: #2a2616; display: flex; flex-direction: column; justify-content: space-between; }
+  .band { position: absolute; inset: 0 0 auto; height: 18%; background: #0000000a; }
+  .txt { position: relative; }
+  .face svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .face path { fill: none; stroke: var(--bot); stroke-width: 3.2; stroke-linecap: round; }
+  .stamp { position: relative; align-self: flex-start; font: 500 11px var(--mono); color: #fff; background: var(--bot); padding: 3px 6px; opacity: 0; transform-origin: 0 100%; }
+  @keyframes land { from { transform: translateY(-110vh) rotate(var(--r0)); } }
+  @keyframes blink { 50% { opacity: .25; } }
+  #fx { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+
+  /* What the smoke turns into */
+  .appear { opacity: 0; will-change: transform, opacity, filter; }
+  .ico { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 9px; background: linear-gradient(160deg, #4a63ff, var(--bot)); font-size: 17px; box-shadow: inset 0 0 0 1px #ffffff2a; }
+
+  /* 1. Notifications in the corner */
+  #stack { position: absolute; z-index: 6; top: 78px; right: 20px; width: min(330px, calc(100vw - 24px)); }
+  .notif { position: absolute; inset: 0 0 auto; display: flex; gap: 11px; align-items: flex-start; padding: 11px 13px; border-radius: 16px; background: #ffffffe8; backdrop-filter: blur(14px);
+    border: 1px solid var(--hair); box-shadow: 0 16px 34px -18px #00000040; text-align: left; transform-origin: 50% 0; }
+  .notif .top { display: flex; justify-content: space-between; font: 11px var(--mono); color: var(--muted); }
+  .notif b { display: block; font-size: 14px; font-weight: 500; line-height: 1.25; }
+  .notif .msg { font-size: 14px; line-height: 1.3; color: var(--body); }
+  .notif .body { flex: 1; min-width: 0; }
+
+  /* 2. App icons in a dock */
+  .dock { display: flex; align-items: center; gap: 0; min-width: 210px; height: 64px; padding: 0 10px; border-radius: 20px; background: #ffffffb3; border: 1px solid var(--hair);
+    box-shadow: 0 18px 40px -24px #00000059; backdrop-filter: blur(12px); position: relative; justify-content: center; }
+  .dock .empty { position: absolute; font: 12px var(--mono); color: var(--faint); transition: opacity .4s; }
+  .app { display: grid; place-items: center; height: 46px; overflow: visible; }
+  .app .ico { width: 46px; height: 46px; border-radius: 12px; font-size: 22px; position: relative; }
+  .app .ico::after { content: ''; position: absolute; right: -2px; top: -2px; width: 9px; height: 9px; border-radius: 50%; background: #7dffb0; border: 2px solid #fff; animation: blink 1.4s infinite; }
+
+  /* 3. A program label where the note was */
+  .chip { position: absolute; z-index: 4; display: flex; align-items: center; gap: 8px; padding: 9px 15px; border-radius: 999px; background: var(--bot); color: #fff; font: 500 12px var(--mono); white-space: nowrap; box-shadow: 0 12px 26px -14px #1f3bffaa; }
+  .chip i { width: 6px; height: 6px; border-radius: 50%; background: #7dffb0; animation: blink 1.4s infinite; }
+
+  .turn { padding-top: 120px; padding-bottom: 160px; display: grid; justify-items: center; text-align: center; gap: 28px; }
+  .turn h2 { font-size: clamp(32px, 4.2vw, 62px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.02; }
+  .blank { width: min(340px, 86vw); aspect-ratio: 1; background: #fbe98f; transform: rotate(-2deg); box-shadow: 0 1px 1px #0000000d, 0 24px 34px -20px #0000004d; position: relative; padding: 22px; }
+  .blank::before { content: ''; position: absolute; inset: 0 0 auto; height: 18%; background: #0000000a; }
+  .blank textarea { position: relative; width: 100%; height: 100%; border: 0; outline: 0; resize: none; background: transparent; font: 600 30px/1.1 'Caveat', cursive; color: #2a2616; }
+  .blank textarea::placeholder { color: #2a261666; }
+  .switch .sep { color: #fff5; padding: 7px 2px; }
+  .switch { max-width: calc(100vw - 16px); overflow-x: auto; }
+</style>
+</head>
+<body>
+<nav><div class="wrap"><b style="font-weight:500">Oskar Gram Nielsen</b><div class="r"><a class="hide">Work</a><span class="lang">EN · DA</span><a class="w">Write to me</a></div></div></nav>
+
+<section class="pin" id="pin">
+  <div class="stage" id="stage">
+    <div class="center"><div>
+      <p class="kicker">Oskar Gram Nielsen. Engineer in Copenhagen.</p>
+      <h1>I build programs that do <em id="em">the boring part</em> of your job.</h1>
+      <div class="btns"><a class="btn dark" href="#turn">Tell me what takes too long →</a><a class="btn" href="#">Book 20 minutes</a></div>
+      <div id="slot"></div>
+    </div></div>
+    <canvas id="fx"></canvas>
+  </div>
+</section>
+
+<section class="wrap turn" id="turn">
+  <p class="mono" style="font-size:12px;color:var(--muted)">↑ the rest of the page (work, how it works, examples) goes here</p>
+  <h2>Your turn.</h2>
+  <div class="blank"><textarea placeholder="What takes too long?"></textarea></div>
+  <a class="btn dark" href="#">Get my free plan →</a>
+</section>
+
+<div class="switch" id="switch"><a href="hero-1.html">1–3</a><a href="hero-4.html">4</a><a href="hero-5.html">5</a><span class="sep">|</span></div>
+
+<script>
+const MODES = { notify: 'Zap → notification', dock: 'Zap → app', inplace: 'Zap → program' };
+const q = new URLSearchParams(location.search).get('mode');
+const mode = MODES[q] ? q : 'notify';
+document.getElementById('switch').insertAdjacentHTML('beforeend',
+  Object.entries(MODES).map(([k, v]) => `<a href="?mode=${k}"${k === mode ? ' class="on"' : ''}>${v}</a>`).join(''));
+
+// [task, desktop left %, top %, mobile left %, top % (null = hidden on mobile), program, what it reports, icon]
+const NOTES = [
+  ['Copy orders into e-conomic', 4, 11, 3, 9, 'order-bot', '37 orders booked in e-conomic', '📦'],
+  ['Monday report!!', 17, 21, 36, 7, 'report-bot', 'Monday report sent to the team', '📊'],
+  ['Answer the same customer emails', 87, 77, null, null, 'mail-bot', '12 customer emails answered', '✉️'],
+  ['Find latest drawing rev.', 74, 10, 67, 10, 'drawing-search', 'Latest is rev. C, from 3 Oct', '📐'],
+  ['Type in invoices', 87, 18, null, null, 'invoice-bot', '8 invoices read and entered', '🧾'],
+  ['Chase unpaid invoices', 3, 42, null, null, 'reminder-bot', '3 payment reminders sent', '⏰'],
+  ['Reply to new leads', 77, 39, null, null, 'lead-bot', 'New lead answered in 1 min', '💬'],
+  ['Merge the 5 spreadsheets', 4, 72, 4, 78, 'sheet-bot', '5 spreadsheets merged into 1', '🔗'],
+  ['Update price list', 88, 49, 67, 79, 'price-bot', 'Price list updated, 214 items', '🏷️'],
+  ['Sort the shared inbox', 18, 77, null, null, 'inbox-bot', '41 mails sorted, 2 need you', '📥'],
+  ['Check supplier prices', 15, 52, 36, 86, 'supplier-bot', 'Steel is 4% cheaper at supplier B', '🔎'],
+  ['Book meetings', 72, 72, null, null, 'calendar-bot', 'Meeting booked Thu 10:00', '📅'],
+];
+const COLORS = ['#fbe98f', '#fbe98f', '#f9e27a', '#fdf0b0'];
+const BOT = '#1f3bff';
+// The corner notes go first, so the notifications never cover a note that is still waiting.
+const ORDER = [3, 4, 6, 1, 0, 7, 10, 5, 8, 11, 2, 9];
+const stage = document.getElementById('stage');
+const slot = document.getElementById('slot');
+const mobile = matchMedia('(max-width: 760px)').matches;
+const rand = (i) => ((Math.sin(i * 91.7) * 43758.5) % 1 + 1) % 1;
+const clamp = (v) => Math.max(0, Math.min(1, v));
+const ease = (v) => v * v * (3 - 2 * v);
+const lerp = (a, b, t) => a + (b - a) * t;
+const box = (el) => { const r = el.getBoundingClientRect(), s = stage.getBoundingClientRect(); return { x: r.left - s.left + r.width / 2, y: r.top - s.top + r.height / 2, w: r.width, h: r.height }; };
+
+const notes = [];
+NOTES.forEach(([text, x, y, mx, my, app, msg, icon], i) => {
+  if (mobile && mx === null) return;
+  const r0 = (rand(i) - 0.5) * 12;
+  const pos = document.createElement('div');
+  pos.className = 'pos';
+  pos.style.cssText = `left:${mobile ? mx : x}%;top:${mobile ? my : y}%;--r0:${r0}deg;animation-delay:${i * 70}ms`;
+  pos.innerHTML = `<div class="note"><div class="face" style="--c:${COLORS[i % 4]}"><div class="band"></div><svg></svg><span class="txt">${text}</span><span class="stamp">✓ bot</span></div></div>`;
+  stage.insertBefore(pos, document.getElementById('fx'));
+  notes.push({ i, text, app, msg, icon, pos, el: pos.querySelector('.note'), face: pos.querySelector('.face'), svg: pos.querySelector('svg'), stamp: pos.querySelector('.stamp'), r0, rank: ORDER.indexOf(i) });
+});
+notes.sort((a, b) => a.rank - b.rank).forEach((n, k) => (n.rank = k));
+
+// What each note becomes.
+let doneEl = null, dock = null, stack = null;
+if (mode === 'notify') {
+  stack = document.createElement('div');
+  stack.id = 'stack';
+  stage.appendChild(stack);
+  notes.forEach((n) => {
+    n.out = document.createElement('div');
+    n.out.className = 'notif appear';
+    n.out.innerHTML = `<span class="ico">${n.icon}</span><span class="body"><span class="top"><span>${n.app}</span><span>now</span></span><span class="msg">${n.msg}</span></span>`;
+    stack.appendChild(n.out);
+  });
+} else if (mode === 'dock') {
+  slot.innerHTML = `<div class="dock" id="dock"><span class="empty">your programs</span></div><p class="count"><b id="done">0</b> of ${notes.length} running</p>`;
+  dock = document.getElementById('dock');
+  notes.forEach((n) => {
+    n.out = document.createElement('div');
+    n.out.className = 'app';
+    n.out.style.width = '0px';
+    n.out.innerHTML = `<span class="ico appear" title="${n.app}">${n.icon}</span>`;
+    n.inner = n.out.firstChild;
+    dock.appendChild(n.out);
+  });
+} else {
+  slot.innerHTML = `<p class="count"><b id="done">0</b> of ${notes.length} done by a program</p>`;
+  notes.forEach((n) => {
+    n.out = document.createElement('div');
+    n.out.className = 'chip appear';
+    n.out.innerHTML = `<i></i>${n.app}`;
+    stage.insertBefore(n.out, document.getElementById('fx'));
+  });
+}
+doneEl = document.getElementById('done');
+
+// One hand-drawn stroke per line of text, measured on an untransformed copy of the face.
+function drawStrokes(n) {
+  const fw = n.face.offsetWidth, m = n.face.cloneNode(true);
+  m.style.cssText = `position:fixed;left:-9999px;top:0;width:${fw}px;height:${fw}px`;
+  document.body.appendChild(m);
+  const b = m.getBoundingClientRect(), range = document.createRange();
+  range.selectNodeContents(m.querySelector('.txt'));
+  const rects = [];
+  [...range.getClientRects()].filter((r) => r.width > 2).forEach((r) => {
+    const l = rects[rects.length - 1];
+    if (l && Math.abs(l.top - r.top) < 4) { l.right = Math.max(l.right, r.right); l.left = Math.min(l.left, r.left); } else rects.push({ left: r.left, right: r.right, top: r.top, height: r.height });
+  });
+  m.remove();
+  n.svg.setAttribute('viewBox', `0 0 ${fw} ${fw}`);
+  n.svg.innerHTML = rects.map((r, j) => {
+    const x0 = r.left - b.left - 4, x1 = r.right - b.left + 4, y = r.top - b.top + r.height * 0.58, w = (rand(j + n.rank) - 0.5) * 5;
+    return `<path d="M${x0} ${y + w * 0.4} Q${(x0 + x1) / 2} ${y - 3 + w} ${x1} ${y - w * 0.5}"/>`;
+  }).join('');
+  n.lines = [...n.svg.querySelectorAll('path')].map((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; return [p, L]; });
+}
+
+/* ---------- Canvas: bolts and smoke ---------- */
+const fx = document.getElementById('fx');
+const ctx = fx.getContext('2d');
+const DPR = Math.min(2, devicePixelRatio || 1);
+function sizeFx() { fx.width = stage.clientWidth * DPR; fx.height = stage.clientHeight * DPR; }
+sizeFx(); addEventListener('resize', sizeFx);
+
+// Soft, wispy puffs made from value noise, tinted blue.
+const PUFFS = (() => {
+  const hash = (x, y, s) => { const v = Math.sin(x * 127.1 + y * 311.7 + s * 74.7) * 43758.5453; return v - Math.floor(v); };
+  const vn = (x, y, s) => { const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+    return lerp(lerp(hash(xi, yi, s), hash(xi + 1, yi, s), u), lerp(hash(xi, yi + 1, s), hash(xi + 1, yi + 1, s), u), v); };
+  const fbm = (x, y, s) => { let a = 0, amp = 0.5, f = 1; for (let o = 0; o < 5; o++) { a += amp * vn(x * f, y * f, s + o); f *= 2.03; amp *= 0.5; } return a; };
+  return [[52, 86, 235], [112, 138, 222], [150, 168, 232], [70, 100, 210]].map((c, s) => {
+    const S = 128, cv = document.createElement('canvas'); cv.width = cv.height = S;
+    const g = cv.getContext('2d'), img = g.createImageData(S, S);
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+      const dx = (x - S / 2) / (S / 2), dy = (y - S / 2) / (S / 2);
+      const n = fbm(x / 26, y / 26, s * 13 + 1), n2 = fbm(x / 13 + 9, y / 13, s * 7 + 3);
+      const a = Math.pow(clamp(1 - Math.hypot(dx, dy) * (0.7 + 0.6 * n2)), 1.6) * clamp((n - 0.28) * 2.2);
+      const k = (y * S + x) * 4; img.data[k] = c[0]; img.data[k + 1] = c[1]; img.data[k + 2] = c[2]; img.data[k + 3] = a * 255;
+    }
+    g.putImageData(img, 0, 0);
+    return cv;
+  });
+})();
+
+// A jagged bolt by midpoint displacement. New shape every frame, so it flickers.
+function bolt(x0, y0, x1, y1, power) {
+  let pts = [[x0, y0], [x1, y1]];
+  let d = Math.hypot(x1 - x0, y1 - y0) * 0.22;
+  for (let l = 0; l < 6; l++, d *= 0.55) {
+    const out = [pts[0]];
+    for (let k = 1; k < pts.length; k++) {
+      const [ax, ay] = pts[k - 1], [bx, by] = pts[k], len = Math.hypot(bx - ax, by - ay) || 1, off = (Math.random() - 0.5) * d;
+      out.push([(ax + bx) / 2 - ((by - ay) / len) * off, (ay + by) / 2 + ((bx - ax) / len) * off], pts[k]);
+    }
+    pts = out;
+  }
+  const path = (w, color, blur, a) => {
+    ctx.save(); ctx.globalAlpha = a * power; ctx.strokeStyle = color; ctx.lineWidth = w * DPR; ctx.lineJoin = 'round'; ctx.shadowColor = BOT; ctx.shadowBlur = blur * DPR;
+    ctx.beginPath(); pts.forEach(([x, y], k) => (k ? ctx.lineTo(x * DPR, y * DPR) : ctx.moveTo(x * DPR, y * DPR))); ctx.stroke(); ctx.restore();
+  };
+  path(7, '#5b74ff', 24, 0.35);
+  path(2.6, BOT, 10, 0.9);
+  path(1.1, '#fff', 4, 1);
+  // A glow where it hits.
+  const g = ctx.createRadialGradient(x1 * DPR, y1 * DPR, 0, x1 * DPR, y1 * DPR, 70 * DPR);
+  g.addColorStop(0, `rgba(120,145,255,${0.55 * power})`); g.addColorStop(1, 'rgba(120,145,255,0)');
+  ctx.fillStyle = g; ctx.fillRect((x1 - 70) * DPR, (y1 - 70) * DPR, 140 * DPR, 140 * DPR);
+}
+
+// Smoke that travels from the note to what it becomes. Positions come from scroll, so it plays backwards too.
+const PUFF_N = mobile ? 26 : 38;
+function stream(n, e, from, to, now) {
+  const w = n.pos.offsetWidth;
+  for (let j = 0; j < PUFF_N; j++) {
+    const r1 = rand(n.i * 97 + j), r2 = rand(n.i * 53 + j * 7), r3 = rand(j * 13 + n.i);
+    const d = 0.12 + r1 * 0.3, u = clamp((e - d) / 0.42);
+    if (u <= 0 || u >= 1) continue;
+    const sx = from.x + (r2 - 0.5) * w * 0.9, sy = from.y + (r3 - 0.5) * w * 0.9;
+    // Rises first, then is pulled to the target.
+    const cx = lerp(sx, to.x, 0.3) + (r2 - 0.5) * 140, cy = Math.min(sy, to.y) - 60 - r3 * 90;
+    const v = ease(u), a1 = 1 - v;
+    let x = a1 * a1 * sx + 2 * a1 * v * cx + v * v * to.x, y = a1 * a1 * sy + 2 * a1 * v * cy + v * v * to.y;
+    const sw = Math.sin(Math.PI * u);
+    x += Math.sin(now * 0.0016 + j * 1.7) * 14 * sw; y += Math.cos(now * 0.0013 + j) * 8 * sw;
+    const size = w * (0.22 + 0.55 * sw * (0.6 + r1 * 0.6)) * (1 - 0.7 * v * v);
+    ctx.save();
+    ctx.globalAlpha = (0.16 + r3 * 0.16) * Math.min(1, u * 6) * (1 - Math.pow(u, 3));
+    ctx.translate(x * DPR, y * DPR); ctx.rotate(r1 * 6.28 + u * (r2 - 0.5) * 3);
+    ctx.drawImage(PUFFS[j % 4], (-size / 2) * DPR, (-size / 2) * DPR, size * DPR, size * DPR);
+    ctx.restore();
+    // A few sparks ride along.
+    if (j % 6 === 0) {
+      ctx.save(); ctx.globalAlpha = sw * (0.5 + 0.5 * Math.sin(now * 0.02 + j)); ctx.fillStyle = j % 12 ? '#8fa3ff' : BOT; ctx.shadowColor = BOT; ctx.shadowBlur = 8 * DPR;
+      ctx.beginPath(); ctx.arc((x + (r2 - 0.5) * 30) * DPR, (y + (r1 - 0.5) * 30) * DPR, 1.6 * DPR, 0, 6.28); ctx.fill(); ctx.restore();
+    }
+  }
+}
+
+// One dissolve filter per note: noise eats the paper away, with a blue edge.
+const defs = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+defs.setAttribute('width', 0); defs.setAttribute('height', 0); defs.style.position = 'absolute';
+defs.innerHTML = notes.map((n) => `<filter id="dz${n.i}" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+  <feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="3" seed="${n.i + 2}" result="n"/>
+  <feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G" result="d"/>
+  <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  5 0 0 0 1" result="m"/>
+  <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  5 0 0 0 1" result="m2"/>
+  <feComposite in="d" in2="m" operator="in" result="main"/>
+  <feFlood flood-color="#3f5cff" result="rc"/><feComposite in="rc" in2="d" operator="in" result="rd"/><feComposite in="rd" in2="m2" operator="in" result="rim"/>
+  <feGaussianBlur in="rim" stdDeviation="1.4" result="rb"/>
+  <feMerge><feMergeNode in="rb"/><feMergeNode in="main"/></feMerge></filter>`).join('');
+document.body.appendChild(defs);
+notes.forEach((n) => { const f = defs.querySelector('#dz' + n.i); n.fz = { disp: f.querySelector('feDisplacementMap'), m: f.querySelectorAll('feColorMatrix') }; });
+
+/* ---------- The scroll-driven frame ---------- */
+const pin = document.getElementById('pin');
+const em = document.getElementById('em');
+const win = 0.24;
+let last = -1;
+const MAX_STACK = mobile ? 2 : 3;
+
+function frame(now) {
+  const r = pin.getBoundingClientRect();
+  const p = clamp(-r.top / (r.height - innerHeight));
+  ctx.clearRect(0, 0, fx.width, fx.height);
+  let done = 0;
+
+  // Phase per note: cross out, then zap (e 0–0.14), burn to smoke (0.08–0.55), smoke travels, then the new thing condenses (0.6–0.9).
+  notes.forEach((n) => {
+    const start = 0.03 + (n.rank / notes.length) * (0.9 - win);
+    const k = clamp((p - start) / win);
+    const s = clamp(k / 0.34);
+    n.lines.forEach(([path, L], j) => (path.style.strokeDashoffset = L * (1 - clamp(s * n.lines.length - j))));
+    const st1 = clamp((k - 0.3) / 0.08);
+    n.stamp.style.opacity = st1;
+    n.stamp.style.transform = `scale(${0.6 + st1 * 0.4})`;
+    n.e = clamp((k - 0.42) / 0.58);
+    n.show = ease(clamp((n.e - 0.6) / 0.3));
+    if (n.show > 0.5) done++;
+  });
+
+  // Notifications: newest on top, older ones slide down and fade after a few.
+  if (mode === 'notify') {
+    const shown = notes.filter((n) => n.show > 0).sort((a, b) => b.rank - a.rank);
+    let y = 0;
+    const newest = shown[0] ? shown[0].show : 0;
+    shown.forEach((n, idx) => {
+      n.ty = y;
+      y += (n.out.offsetHeight + 8) * n.show;
+      // The oldest visible one fades out while the newest comes in.
+      n.fade = clamp(MAX_STACK - idx + 1 - newest);
+    });
+  }
+
+  notes.forEach((n) => {
+    const e = n.e, w = n.pos.offsetWidth, home = { x: n.pos.offsetLeft + w / 2, y: n.pos.offsetTop + w / 2 };
+    // Where the smoke goes, and where the bolt comes from.
+    let to, from;
+    if (mode === 'notify') { const sb = box(stack); to = { x: sb.x, y: sb.y + 30 }; from = to; }
+    else if (mode === 'dock') { to = box(n.out); to.y = box(dock).y; from = box(dock); }
+    else { to = home; from = box(em); }
+
+    // Zap
+    const z = clamp(e / 0.14);
+    if (z > 0 && z < 1) bolt(from.x, from.y, home.x + (rand(n.i) - 0.5) * 20, home.y, Math.sin(Math.PI * z));
+    const flash = Math.max(0, 1 - Math.abs(z - 0.45) / 0.45) * (z < 1 ? 1 : 0);
+
+    // Burn to smoke
+    const f = ease(clamp((e - 0.08) / 0.47)), c = 1 - 4.6 * f;
+    if (e > 0 && e < 0.6) {
+      n.fz.disp.setAttribute('scale', (f * 34).toFixed(1));
+      n.fz.m[0].setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  5 0 0 0 ${c.toFixed(3)}`);
+      n.fz.m[1].setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  5 0 0 0 ${(c + 0.35).toFixed(3)}`);
+      n.el.style.filter = `url(#dz${n.i}) brightness(${1 + flash * 0.5}) drop-shadow(0 0 ${flash * 18}px #3f5cff)`;
+    } else n.el.style.filter = 'none';
+    n.el.style.opacity = e >= 0.6 ? 0 : 1;
+    n.el.style.transform = `translate(${flash ? (Math.random() - 0.5) * 4 * flash : 0}px, ${-f * 10}px) rotate(${n.r0}deg)`;
+    if (e > 0.1 && e < 1) stream(n, e, home, to, now);
+
+    // Condense into the new thing: out of a blur, with a little overshoot.
+    const a = n.show, pop = 1 + Math.sin(Math.PI * a) * 0.06;
+    if (mode === 'notify') {
+      n.out.style.opacity = a * (n.fade ?? 1);
+      n.out.style.filter = `blur(${(1 - a) * 10}px)`;
+      n.out.style.transform = `translateY(${n.ty || 0}px) scale(${(0.9 + 0.1 * a) * pop})`;
+      n.out.style.zIndex = 100 - n.rank;
+    } else if (mode === 'dock') {
+      n.out.style.width = `${a * 56}px`;
+      n.inner.style.opacity = a;
+      n.inner.style.filter = `blur(${(1 - a) * 8}px)`;
+      n.inner.style.transform = `scale(${a * pop})`;
+    } else {
+      const cw = n.out.offsetWidth, ch = n.out.offsetHeight;
+      n.out.style.left = `${Math.max(8, Math.min(stage.clientWidth - cw - 8, home.x - cw / 2))}px`; n.out.style.top = `${home.y - ch / 2}px`;
+      n.out.style.opacity = a;
+      n.out.style.filter = `blur(${(1 - a) * 10}px)`;
+      n.out.style.transform = `scale(${(0.85 + 0.15 * a) * pop})`;
+    }
+  });
+  if (dock) dock.querySelector('.empty').style.opacity = done ? 0 : 1;
+
+  if (doneEl && done !== last) {
+    doneEl.textContent = done;
+    if (last >= 0) doneEl.animate([{ transform: 'scale(1.5)' }, { transform: 'none' }], { duration: 300, easing: 'ease-out' });
+    last = done;
+  }
+  requestAnimationFrame(frame);
+}
+document.fonts.ready.then(() => setTimeout(() => { notes.forEach(drawStrokes); requestAnimationFrame(frame); }, 50));
+</script>
+</body>
+</html>
