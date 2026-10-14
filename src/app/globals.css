@@ -1,118 +1,193 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-body {
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+@theme {
+  --color-paper: #fafaf7;
+  --color-card: #ffffff;
+  --color-ink: #111111;
+  --color-body: #333333;
+  --color-muted: #6b6b6b;
+  --color-faint: #a7a7a2;
+  --color-hair: #e4e2dc;
+  --color-shade: #f4f3ef;
+  /* Blue is reserved for anything done by a program. */
+  --color-bot: #1f3bff;
+  --color-bot-soft: #eef0ff;
+
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @layer base {
-  :root {
-    --background: 255 100% 100%; /* Pure White */
-    --foreground: 0 0% 0%; /* Pure Black */
-
-    --card: 255 100% 100%; 
-    --card-foreground: 0 0% 0%;
-
-    --popover: 255 100% 100%;
-    --popover-foreground: 0 0% 0%;
-
-    --primary: 0 0% 0%; /* Black for primary elements in light mode */
-    --primary-foreground: 255 100% 100%; /* White */
-
-    --secondary: 0 0% 96%; /* Very Light Grey */
-    --secondary-foreground: 0 0% 0%; 
-
-    --muted: 0 0% 90%; /* Light Grey */
-    --muted-foreground: 0 0% 20%; 
-
-    --accent: 0 0% 0%; 
-    --accent-foreground: 255 100% 100%; 
-
-    --destructive: 0 100% 50%; 
-    --destructive-foreground: 255 100% 100%;
-
-    --border: 0 0% 87%; /* Light Grey border */
-    --input: 0 0% 92%; 
-    --ring: 0 0% 0%; 
-
-    --radius: 0rem; /* Sharp corners */
-
-    --chart-1: 0 0% 20%;
-    --chart-2: 0 0% 40%;
-    --chart-3: 0 0% 60%;
-    --chart-4: 0 0% 70%;
-    --chart-5: 0 0% 80%;
-    
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 13%;
-    --sidebar-primary: 0 0% 13%;
-    --sidebar-primary-foreground: 255 100% 100%;
-    --sidebar-accent: 0 0% 90%;
-    --sidebar-accent-foreground: 0 0% 13%;
-    --sidebar-border: 0 0% 85%;
-    --sidebar-ring: 0 0% 13%;
-  }
-
-  .dark {
-    --background: 0 0% 2%; /* Base for components that DO need a solid bg, very dark */
-    --foreground: 0 0% 98%; /* Near White */
-
-    --card: 0 0% 5%; /* Dark card background */
-    --card-foreground: 0 0% 98%;
-
-    --popover: 0 0% 3%; 
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%; /* White for primary elements in dark mode */
-    --primary-foreground: 0 0% 2%; /* Black */
-
-    --secondary: 0 0% 10%; /* Dark Grey */
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 15%; /* Medium Dark Grey */
-    --muted-foreground: 0 0% 70%; 
-
-    --accent: 0 0% 98%; 
-    --accent-foreground: 0 0% 2%; 
-
-    --destructive: 0 100% 50%; 
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 20%; /* Dark Grey border */
-    --input: 0 0% 12%; 
-    --ring: 0 0% 98%; 
-
-    /* Sidebar variables - dark theme */
-    --sidebar-background: 0 0% 5%; 
-    --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 255 100% 100%; 
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 0 0% 15%; 
-    --sidebar-accent-foreground: 255 100% 100%; 
-    --sidebar-border: 0 0% 18%;
-    --sidebar-ring: 255 100% 100%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
   html {
-    @apply scroll-smooth;
-  }
-  body {
-    @apply text-foreground;
-    font-family: var(--font-geist-sans);
-  }
-   /* Default to light mode background if .dark is not present */
-  body:not(.dark) {
-    background-color: hsl(var(--background)); /* White for light mode */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
-  /* Apply subtle gradient for dark mode body */
-  .dark body {
-    background: linear-gradient(180deg, hsl(0, 0%, 5%) 0%, hsl(0, 0%, 2%) 100%);
+  body {
+    @apply bg-paper text-ink font-sans text-[17px] leading-normal md:text-lg;
   }
+
+  ::selection {
+    @apply bg-bot text-card;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-bot);
+    outline-offset: 3px;
+  }
+}
+
+@utility wrap {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-inline: 20px;
+  @media (width >= 48rem) {
+    padding-inline: 40px;
+  }
+}
+
+@keyframes drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@utility animate-drop {
+  animation: drop-in 0.7s var(--ease-out-expo);
+}
+
+@utility animate-caret {
+  animation: blink 1s steps(2) infinite;
+}
+
+@keyframes typing {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  30% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+@keyframes ping-dot {
+  0% {
+    r: 4px;
+    opacity: 0.5;
+  }
+  100% {
+    r: 16px;
+    opacity: 0;
+  }
+}
+
+@utility animate-ping-dot {
+  animation: ping-dot 2.1s ease-out infinite;
+}
+
+@utility animate-typing {
+  animation: typing 1.1s ease-in-out infinite;
+}
+
+/* Hero sticky notes. Sizes are smaller on phones so more of them fit around the text. */
+.note-pos {
+  position: absolute;
+  width: clamp(112px, 10vw, 148px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 10px #00000026);
+  animation: note-land 0.9s cubic-bezier(0.25, 1.35, 0.4, 1) both;
+}
+.note-stage:not([data-placed]) .note-pos {
+  visibility: hidden;
+  animation: none;
+}
+.note {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity, filter;
+}
+.note-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  padding: 14px 14px 12px;
+  border-radius: 2px;
+  font: 600 clamp(18px, 1.65vw, 23px) / 1.08 var(--font-hand), cursive;
+  color: #2a2616;
+  text-align: left;
+}
+.note-band {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 18%;
+  background: #0000000a;
+}
+.note-face svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.note-face path {
+  fill: none;
+  stroke: var(--color-bot);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+}
+@media (max-width: 760px) {
+  .note-pos {
+    width: 76px;
+    filter: drop-shadow(0 7px 6px #00000022);
+  }
+  .note-face {
+    padding: 8px 7px 6px 8px;
+    font-size: 13.5px;
+    line-height: 1.02;
+  }
+  .note-face path {
+    stroke-width: 2.2;
+  }
+}
+@keyframes note-land {
+  from {
+    transform: translateY(-110vh) rotate(var(--r0));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Lenis recommended styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
 }
