@@ -19,7 +19,10 @@ export function buildMetadata(lang: Lang): Metadata {
       title: meta.title,
       description: meta.description,
       locale: lang === 'da' ? 'da_DK' : 'en_US',
+      // A still of the hero, rendered from the site itself.
+      images: [{ url: `/og-${lang}.png`, width: 1200, height: 630, alt: meta.title }],
     },
+    twitter: { card: 'summary_large_image', title: meta.title, description: meta.description, images: [`/og-${lang}.png`] },
     icons: {
       icon: [
         { url: '/favicon.ico' },
