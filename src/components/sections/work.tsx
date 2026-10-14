@@ -44,7 +44,7 @@ export default function Work({ t }: { t: Dict['work'] }) {
 
   return (
     <div id="projects" className="scroll-mt-14">
-      <div className="wrap pt-20 pb-2 md:pt-32 lg:pb-6">
+      <div className="wrap pt-16 pb-2 md:pt-24 lg:pb-0">
         <p className="font-mono text-[13px] text-muted">{t.label}</p>
         <h2 className="mt-3 text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
         <p className="mt-4 max-w-[600px] text-lg text-body md:text-xl">{t.intro}</p>
@@ -68,7 +68,7 @@ export default function Work({ t }: { t: Dict['work'] }) {
           <Scene id="sneakers" {...shared} {...t.sneakers}>
             {(p) => <Sneakers p={p} t={t.sneakers} />}
           </Scene>
-          <div className="wrap grid gap-14 py-12 md:grid-cols-2 md:gap-10 lg:py-20">
+          <div className="wrap grid gap-12 py-10 md:grid-cols-2 md:gap-10 lg:py-14">
             <Artsrig t={t.artsrig} more={shared} />
             <Hvilkendag t={t.hvilkendag} more={shared} />
           </div>

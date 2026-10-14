@@ -2,6 +2,7 @@ import { dictionaries } from '@/content';
 import type { Lang } from '@/content/site';
 import Footer from './footer';
 import Nav from './nav';
+import Benefits from './sections/benefits';
 import Contact from './sections/contact';
 import Hero from './sections/hero';
 import Job from './sections/job';
@@ -16,6 +17,7 @@ export default function Home({ lang }: { lang: Lang }) {
       <Nav lang={lang} t={t.nav} />
       <main>
         <Hero t={t.hero} />
+        <Benefits t={t.benefits} />
         <Job t={t.job} />
         <Work t={t.work} />
         <Offer t={t.process} />

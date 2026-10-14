@@ -18,7 +18,7 @@ export default function Offer({ t }: { t: Dict['process'] }) {
   const th = t.thread;
 
   return (
-    <section id="how" className="wrap scroll-mt-20 pt-24 pb-8 md:pt-32">
+    <section id="how" className="wrap scroll-mt-20 pt-16 md:pt-24">
       <div className="grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-20">
         <div>
           <h2 className="text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
@@ -87,7 +87,7 @@ export default function Offer({ t }: { t: Dict['process'] }) {
         </div>
       </div>
 
-      <div className="mt-14 grid gap-px border border-hair bg-hair md:mt-20 md:grid-cols-3">
+      <div className="mt-10 grid gap-px border border-hair bg-hair md:mt-14 md:grid-cols-3">
         {t.pricing.items.map((it, i) => (
           <div key={it.label} className="bg-paper p-5 md:p-6">
             <span className="font-mono text-[12px] text-muted">{it.label}</span>

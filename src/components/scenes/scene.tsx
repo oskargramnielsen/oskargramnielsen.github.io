@@ -56,8 +56,8 @@ export default function Scene({
       id={id}
       ref={section}
       className={
-        'relative scroll-mt-14 py-12 lg:py-0 motion-reduce:lg:h-auto motion-reduce:lg:py-24 ' +
-        (tall === 'long' ? 'lg:h-[250vh]' : 'lg:h-[210vh]')
+        'relative scroll-mt-14 py-8 lg:py-0 motion-reduce:lg:h-auto motion-reduce:lg:py-24 ' +
+        (tall === 'long' ? 'lg:h-[200vh]' : 'lg:h-[170vh]')
       }
     >
       <div className="wrap grid items-center gap-8 lg:sticky lg:top-0 lg:h-svh lg:grid-cols-[.85fr_1.15fr] lg:gap-16 motion-reduce:lg:static motion-reduce:lg:h-auto">

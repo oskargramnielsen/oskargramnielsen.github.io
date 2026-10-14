@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLenis } from 'lenis/react';
 import { cn } from '@/lib/utils';
 
 /** Section ids in page order; the first one is the hero at the top of the page. */
-const IDS = ['top', 'work', 'projects', 'how', 'contact'];
+const IDS = ['top', 'benefits', 'work', 'projects', 'how', 'contact'];
 
 /**
  * A small vertical list of the page's sections at the edge of the screen. It
@@ -15,6 +15,10 @@ export default function Guide({ labels, label }: { labels: readonly string[]; la
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
   const lenis = useLenis();
+  // Flash: the title of a section you just entered shows for a moment.
+  const [flash, setFlash] = useState(false);
+  const last = useRef(0);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     let raf = 0;
@@ -36,6 +40,12 @@ export default function Guide({ labels, label }: { labels: readonly string[]; la
       }
       setActive(i);
       setProgress(p);
+      if (i !== last.current) {
+        last.current = i;
+        setFlash(i > 0);
+        clearTimeout(timer.current);
+        timer.current = setTimeout(() => setFlash(false), 1800);
+      }
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -47,11 +57,32 @@ export default function Guide({ labels, label }: { labels: readonly string[]; la
       removeEventListener('scroll', onScroll);
       removeEventListener('resize', onScroll);
       cancelAnimationFrame(raf);
+      clearTimeout(timer.current);
     };
   }, []);
 
+  // Open: the rail grows and shows every title (hover, or a first tap on touch screens).
+  const [open, setOpen] = useState(false);
+  const touch = useRef(false);
+  const nav = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: PointerEvent) => {
+      if (!nav.current?.contains(e.target as Node)) setOpen(false);
+    };
+    addEventListener('pointerdown', close);
+    return () => removeEventListener('pointerdown', close);
+  }, [open]);
+
   const go = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
+    // On touch, the first tap opens the rail so the targets are big enough to hit.
+    if (touch.current && !open) {
+      setOpen(true);
+      return;
+    }
+    setOpen(false);
     const el = id === 'top' ? 0 : document.getElementById(id);
     if (el === null) return;
     const header = document.querySelector('header')?.offsetHeight ?? 0;
@@ -64,44 +95,65 @@ export default function Guide({ labels, label }: { labels: readonly string[]; la
 
   return (
     <nav
+      ref={nav}
       aria-label={label}
       inert={!shown}
+      onPointerDown={(e) => (touch.current = e.pointerType !== 'mouse')}
+      onPointerEnter={(e) => e.pointerType === 'mouse' && setOpen(true)}
+      onPointerLeave={(e) => e.pointerType === 'mouse' && setOpen(false)}
       className={cn(
-        'group/guide fixed top-1/2 right-1 z-40 -translate-y-1/2 transition-opacity duration-500 lg:right-auto lg:left-5',
+        'fixed top-1/2 right-1.5 z-40 -translate-y-1/2 rounded-2xl transition-[opacity,background-color,box-shadow,padding] duration-300 lg:right-auto lg:left-3',
         shown ? 'opacity-100' : 'pointer-events-none opacity-0',
+        open ? 'bg-paper/95 px-2 py-2 shadow-[0_12px_40px_-12px_#0000003a] backdrop-blur' : 'px-1 py-1',
       )}
     >
-      <ol className="flex flex-col gap-0.5">
-        {IDS.map((id, i) => (
-          <li key={id}>
-            <a
-              href={id === 'top' ? '#' : `#${id}`}
-              onClick={(e) => go(e, id)}
-              aria-current={i === active ? 'location' : undefined}
-              className="flex items-center gap-2.5 py-1.5 text-[12.5px] leading-none tracking-[-0.005em] max-lg:flex-row-reverse"
-            >
-              <span aria-hidden className="relative h-[1.5px] w-3 overflow-hidden rounded-full bg-ink/15 lg:w-5">
-                <span
-                  className={cn(
-                    'absolute inset-0 origin-left rounded-full transition-colors',
-                    i === active ? 'bg-bot' : i < active ? 'bg-ink/40' : '',
-                  )}
-                  style={{ transform: `scaleX(${i === active ? 0.25 + 0.75 * progress : i < active ? 1 : 0})` }}
-                />
-              </span>
-              <span
+      <ol className="flex flex-col">
+        {IDS.map((id, i) => {
+          const current = i === active;
+          const showLabel = open || (current && flash);
+          return (
+            <li key={id}>
+              <a
+                href={id === 'top' ? '#' : `#${id}`}
+                onClick={(e) => go(e, id)}
+                aria-current={current ? 'location' : undefined}
                 className={cn(
-                  'whitespace-nowrap transition-[opacity,color] duration-300',
-                  i === active ? 'text-ink' : 'text-muted hover:text-ink',
-                  // Labels only where there is room beside the page; otherwise they show on hover.
-                  'opacity-0 group-hover/guide:opacity-100 max-lg:hidden min-[1600px]:opacity-100',
+                  'flex items-center gap-3 rounded-lg transition-[padding] duration-300 max-lg:flex-row-reverse',
+                  open ? 'px-2 py-2' : 'py-[7px]',
                 )}
               >
-                {labels[i]}
-              </span>
-            </a>
-          </li>
-        ))}
+                <span
+                  aria-hidden
+                  className={cn(
+                    'relative h-[2.5px] overflow-hidden rounded-full transition-[width,background-color] duration-300',
+                    current ? 'w-5 bg-bot/20' : 'w-2.5',
+                    open && !current && 'w-3.5',
+                    !current && (i < active ? 'bg-ink/55' : 'bg-ink/25'),
+                  )}
+                >
+                  {current && (
+                    <span
+                      className="absolute inset-0 origin-left rounded-full bg-bot"
+                      style={{ transform: `scaleX(${0.3 + 0.7 * progress})` }}
+                    />
+                  )}
+                </span>
+                <span
+                  className={cn(
+                    'pointer-events-none whitespace-nowrap transition-[opacity,translate,font-size] duration-300 ease-out-expo',
+                    open ? 'text-[15px]' : 'text-[13px]',
+                    current ? 'font-medium text-ink' : 'text-muted',
+                    showLabel ? 'translate-x-0 opacity-100' : '-translate-x-1.5 opacity-0 max-lg:translate-x-1.5',
+                    // While not open, a flashed title sits on a small pill so it reads over the page.
+                    !open && current && 'rounded-full bg-paper/95 px-2 py-0.5 shadow-[0_4px_14px_-6px_#00000033]',
+                  )}
+                >
+                  {labels[i]}
+                </span>
+              </a>
+            </li>
+          );
+        })}
       </ol>
     </nav>
   );

@@ -1,69 +1,12 @@
 'use client';
 
-import { useRef, useState, useSyncExternalStore } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import type { Dict } from '@/content';
 import { bookingHref, site, type Lang } from '@/content/site';
 import { cn } from '@/lib/utils';
 
 type State = 'idle' | 'sending' | 'sent' | 'mail' | 'error';
-
-// Minimal typing for the browser's speech recognition (Chrome, Edge, Safari).
-type Recognition = {
-  lang: string;
-  continuous: boolean;
-  interimResults: boolean;
-  start: () => void;
-  stop: () => void;
-  onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }> }) => void) | null;
-  onend: (() => void) | null;
-};
-type RecognitionCtor = new () => Recognition;
-
-function getRecognition(): RecognitionCtor | undefined {
-  if (typeof window === 'undefined') return undefined;
-  const w = window as unknown as { SpeechRecognition?: RecognitionCtor; webkitSpeechRecognition?: RecognitionCtor };
-  return w.SpeechRecognition ?? w.webkitSpeechRecognition;
-}
-
-const noop = () => () => {};
-
-/** Dictation via the browser's built-in speech recognition. Note: Chrome sends the audio to Google for transcription. */
-function useDictation(lang: Lang, onText: (text: string) => void) {
-  const supported = useSyncExternalStore(
-    noop,
-    () => !!getRecognition(),
-    () => false,
-  );
-  const [listening, setListening] = useState(false);
-  const rec = useRef<Recognition | null>(null);
-  const base = useRef('');
-
-  const toggle = (current: string) => {
-    if (listening) {
-      rec.current?.stop();
-      return;
-    }
-    const Ctor = getRecognition();
-    if (!Ctor) return;
-    const r = new Ctor();
-    r.lang = lang === 'da' ? 'da-DK' : 'en-US';
-    r.continuous = true;
-    r.interimResults = true;
-    base.current = current ? current.trimEnd() + ' ' : '';
-    r.onresult = (e) => {
-      let text = '';
-      for (let i = 0; i < e.results.length; i++) text += e.results[i][0].transcript;
-      onText(base.current + text);
-    };
-    r.onend = () => setListening(false);
-    rec.current = r;
-    r.start();
-    setListening(true);
-  };
-
-  return { supported, listening, toggle };
-}
 
 function Chip({ selected, onClick, children }: { selected: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
@@ -81,13 +24,12 @@ function Chip({ selected, onClick, children }: { selected: boolean; onClick: () 
   );
 }
 
-export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang }) {
+export default function Contact({ t }: { t: Dict['contact']; lang: Lang }) {
   const [q, setQ] = useState(0);
   const [time, setTime] = useState('');
   const [details, setDetails] = useState('');
   const [email, setEmail] = useState('');
   const [state, setState] = useState<State>('idle');
-  const dictation = useDictation(lang, setDetails);
 
   const pick = (set: (v: string) => void, v: string) => {
     set(v);
@@ -121,7 +63,7 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
   const questions = [t.q1, t.q2, t.q3];
 
   return (
-    <section id="contact" className="wrap scroll-mt-20 pt-24 pb-28 md:pt-36 md:pb-36">
+    <section id="contact" className="wrap scroll-mt-20 pt-16 pb-20 md:pt-24 md:pb-28">
       <h2 className="text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
       <p className="mt-4 text-lg text-body md:text-xl">{t.intro}</p>
 
@@ -157,70 +99,47 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
 
               {q === 0 && (
                 <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end">
-                  {/* The visitor's own sticky note, like the ones in the hero. */}
-                  <div className="relative aspect-square w-full max-w-[270px] shrink-0 sm:max-w-[300px] -rotate-2 bg-[#fbe98f] px-5 pt-14 pb-4 sm:pt-16 shadow-[0_1px_1px_#0000000d,0_24px_34px_-20px_#0000004d]">
-                    <span aria-hidden className="absolute inset-x-0 top-0 h-[18%] bg-black/[0.04]" />
+                  {/* The visitor's own sticky note, like the ones in the hero, with a few ideas to tap. */}
+                  <div className="relative flex aspect-square w-full max-w-[320px] shrink-0 -rotate-2 flex-col bg-[#fbe98f] px-5 pt-14 pb-4 shadow-[0_1px_1px_#0000000d,0_24px_34px_-20px_#0000004d] sm:max-w-[340px] sm:pt-16">
+                    <span aria-hidden className="absolute inset-x-0 top-0 h-[17%] bg-black/[0.04]" />
                     <textarea
                       value={details}
                       onChange={(e) => setDetails(e.target.value)}
                       placeholder={t.placeholder}
                       aria-label={t.q1}
-                      className="relative size-full resize-none bg-transparent font-[family-name:var(--font-hand)] text-[26px] leading-[1.1] font-semibold text-[#2a2616] outline-none placeholder:text-[#2a261666] md:text-[28px]"
+                      className="relative min-h-0 w-full flex-1 resize-none bg-transparent font-[family-name:var(--font-hand)] text-[26px] leading-[1.1] font-semibold text-[#2a2616] outline-none placeholder:text-[#2a261666] md:text-[28px]"
                     />
-                  </div>
-                  <div className="flex w-full flex-col gap-3 sm:w-auto sm:max-w-[340px]">
-                    <p className="text-[14px] text-muted">{t.suggestionsLabel}</p>
-                    <div className="-mt-1 mb-2 flex flex-wrap gap-1.5">
-                      {t.suggestions.map((s) => (
-                        <button
-                          key={s}
-                          type="button"
-                          onClick={() => setDetails(s)}
-                          aria-pressed={details === s}
-                          className={cn(
-                            'rounded-full border px-3 py-1.5 text-left text-[14px] transition-colors duration-200',
-                            details === s ? 'border-[#e8cf55] bg-[#fbe98f]' : 'border-hair bg-paper hover:border-ink',
-                          )}
+                    <AnimatePresence initial={false}>
+                      {!details.trim() && (
+                        <motion.div
+                          key="ideas"
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 6 }}
+                          className="relative flex flex-wrap gap-1.5"
                         >
-                          {s}
-                        </button>
-                      ))}
-                    </div>
-                    {dictation.supported && (
-                      <button
-                        type="button"
-                        onClick={() => dictation.toggle(details)}
-                        aria-pressed={dictation.listening}
-                        className={cn(
-                          'flex items-center gap-2.5 text-left text-[15px] transition-colors',
-                          dictation.listening ? 'text-bot' : 'hover:text-bot',
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            'grid size-8 place-items-center rounded-full',
-                            dictation.listening ? 'animate-pulse bg-bot text-card' : 'bg-ink text-card',
-                          )}
-                        >
-                          <svg viewBox="0 0 24 24" className="size-3.5" fill="currentColor" aria-hidden>
-                            <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z" />
-                          </svg>
-                        </span>
-                        {dictation.listening ? t.listening : t.voice}
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      disabled={!details.trim()}
-                      onClick={() => {
-                        if (dictation.listening) dictation.toggle(details);
-                        setQ(1);
-                      }}
-                      className="rounded-full bg-ink px-7 py-3 text-base font-medium text-paper transition-colors duration-300 hover:bg-bot disabled:opacity-30 disabled:hover:bg-ink"
-                    >
-                      {t.next} →
-                    </button>
+                          {t.suggestions.map((s) => (
+                            <button
+                              key={s}
+                              type="button"
+                              onClick={() => setDetails(s)}
+                              className="rounded-full bg-[#2a2616]/[0.07] px-2.5 py-1 text-left text-[13px] leading-tight text-[#2a2616] transition-colors hover:bg-[#2a2616]/[0.14]"
+                            >
+                              + {s}
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
+                  <button
+                    type="button"
+                    disabled={!details.trim()}
+                    onClick={() => setQ(1)}
+                    className="rounded-full bg-ink px-7 py-3 text-base font-medium text-paper transition-colors duration-300 hover:bg-bot disabled:opacity-30 disabled:hover:bg-ink"
+                  >
+                    {t.next} →
+                  </button>
                 </div>
               )}
 

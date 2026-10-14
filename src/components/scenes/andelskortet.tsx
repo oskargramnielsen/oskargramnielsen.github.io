@@ -133,9 +133,30 @@ export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict
           </li>
         </ul>
 
-        <div className="absolute right-3 bottom-3 rounded-xl bg-card px-3.5 py-2.5 text-right shadow-[0_6px_18px_-8px_#00000040]">
-          <motion.b className="block text-[32px] leading-none font-semibold tracking-[-0.04em] md:text-[40px]">{users}</motion.b>
-          <span className="text-[11px] text-muted">{t.users}</span>
+        {/* How many people it has helped: the point of the whole thing. */}
+        <div className="absolute right-3 bottom-3 flex items-center gap-3 rounded-2xl bg-card py-3 pr-4 pl-3 shadow-[0_10px_30px_-10px_#00000055]">
+          <span className="grid size-10 place-items-center rounded-full md:size-12" style={{ background: '#e7efe9', color: GREEN }}>
+            <svg
+              viewBox="0 0 24 24"
+              className="size-5 md:size-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              aria-hidden
+            >
+              <circle cx="9" cy="8.5" r="3" />
+              <path d="M3.5 19c.6-3 2.8-4.8 5.5-4.8s4.9 1.8 5.5 4.8" />
+              <circle cx="16.5" cy="9.5" r="2.4" />
+              <path d="M15.5 14.4c2.6-.3 4.5 1.3 5 4.1" />
+            </svg>
+          </span>
+          <span>
+            <motion.b className="block text-[34px] leading-none font-semibold tracking-[-0.04em] md:text-[46px]" style={{ color: GREEN }}>
+              {users}
+            </motion.b>
+            <span className="mt-1 block text-[12px] text-body md:text-[13px]">{t.users}</span>
+          </span>
         </div>
 
         {/* What people wrote, one mail at a time. */}
