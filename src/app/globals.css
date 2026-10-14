@@ -103,6 +103,73 @@
   animation: typing 1.1s ease-in-out infinite;
 }
 
+/* Hero sticky notes. Sizes are smaller on phones so more of them fit around the text. */
+.note-pos {
+  position: absolute;
+  width: clamp(112px, 10vw, 148px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 10px #00000026);
+  animation: note-land 0.9s cubic-bezier(0.25, 1.35, 0.4, 1) both;
+}
+.note-stage:not([data-placed]) .note-pos {
+  visibility: hidden;
+  animation: none;
+}
+.note {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity, filter;
+}
+.note-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  padding: 14px 14px 12px;
+  border-radius: 2px;
+  font: 600 clamp(18px, 1.65vw, 23px) / 1.08 var(--font-hand), cursive;
+  color: #2a2616;
+  text-align: left;
+}
+.note-band {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 18%;
+  background: #0000000a;
+}
+.note-face svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.note-face path {
+  fill: none;
+  stroke: var(--color-bot);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+}
+@media (max-width: 760px) {
+  .note-pos {
+    width: 76px;
+    filter: drop-shadow(0 7px 6px #00000022);
+  }
+  .note-face {
+    padding: 8px 7px 6px 8px;
+    font-size: 13.5px;
+    line-height: 1.02;
+  }
+  .note-face path {
+    stroke-width: 2.2;
+  }
+}
+@keyframes note-land {
+  from {
+    transform: translateY(-110vh) rotate(var(--r0));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

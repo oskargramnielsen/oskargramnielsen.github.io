@@ -62,7 +62,7 @@ export default function CtaDock({ cta, book }: { cta: string; book: string }) {
   return (
     <div ref={anchor} className="relative">
       {/* Keeps the buttons' space in the hero while they are docked. */}
-      <div aria-hidden className="invisible flex flex-col gap-3 sm:flex-row">
+      <div aria-hidden className="invisible flex flex-col gap-3 sm:flex-row sm:justify-center">
         {buttons.map((b) => (
           <span key={b.href} className={cn(base, 'px-5.5 py-4')}>
             {b.label} {b.arrow && '→'}
@@ -78,7 +78,7 @@ export default function CtaDock({ cta, book }: { cta: string; book: string }) {
           'z-40 flex',
           docked
             ? 'fixed right-4 bottom-4 flex-row-reverse items-center gap-2.5 md:right-6 md:bottom-6'
-            : 'absolute inset-0 flex-col gap-3 sm:flex-row',
+            : 'absolute inset-0 flex-col gap-3 sm:flex-row sm:justify-center',
           docked && atContact && 'pointer-events-none',
         )}
       >
