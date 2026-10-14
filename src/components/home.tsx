@@ -3,7 +3,6 @@ import type { Lang } from '@/content/site';
 import Footer from './footer';
 import Nav from './nav';
 import Contact from './sections/contact';
-import Examples from './sections/examples';
 import Hero from './sections/hero';
 import Job from './sections/job';
 import Offer from './sections/offer';
@@ -20,7 +19,6 @@ export default function Home({ lang }: { lang: Lang }) {
         <Job t={t.job} />
         <Work t={t.work} />
         <Offer t={t.process} />
-        <Examples t={t.examples} />
         <Contact t={t.contact} lang={lang} />
       </main>
       <Footer t={t.footer} />

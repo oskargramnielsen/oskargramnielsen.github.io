@@ -10,11 +10,10 @@ export const en = {
     write: 'Write to me',
     langLabel: 'Language',
     // The section guide under the header, in page order.
-    guide: ['Start', 'Big ones', 'Small ones', 'How it works', 'Examples', 'Your turn'],
+    guide: ['Start', 'My day job', 'Spare-time projects', 'Working together', 'Your turn'],
     guideLabel: 'On this page',
   },
   hero: {
-    kicker: 'Oskar Gram Nielsen. Engineer in Copenhagen.',
     before: 'I build small and big programs that do',
     highlight: 'the boring part',
     after: 'of your job.',
@@ -37,15 +36,14 @@ export const en = {
     ],
   },
   job: {
-    label: 'At work',
-    title: 'The big ones.',
-    body: "I'm an engineer from DTU who loves solving problems. I make the computer do the boring part, so people can do what they love. By day I'm an automation engineer at CN3. Most of it is private, so this is what I can tell you:",
+    label: 'My day job',
+    title: 'I automate work for a whole company.',
+    body: "I'm an engineer from DTU, based in Copenhagen. By day I'm an automation engineer at CN3, where I make the computer do the boring part so people can do what they're good at. Most of it is confidential, but here are some examples of what I have done:",
     items: [
-      'A management system for {{x}}, one of the largest construction projects in the world.',
+      'A management system for one of the largest construction projects in the world.',
       'Chatbots that let the whole company talk to its building models, running on our own GPUs.',
       'Software that repairs itself: when a user hits a bug, it finds the cause and fixes it, often before anyone reports it.',
     ],
-    redacted: 'confidential',
     privacy: 'What we build together stays between us too.',
     facts: [
       { k: 'Now', v: 'Automation Engineer, CN3' },
@@ -56,9 +54,9 @@ export const en = {
     cv: 'Download PDF',
   },
   work: {
-    label: 'For myself',
-    title: 'The small ones.',
-    intro: 'It started with things that annoyed me. No team, no budget.',
+    label: 'In my spare time',
+    title: 'Programs I built to fix my own problems.',
+    intro: 'No team, no budget. Each one shows something your business could use too.',
     forBusiness: 'For a business:',
     more: 'Show 4 more projects',
     less: 'Show fewer projects',
@@ -170,30 +168,9 @@ export const en = {
       result: 'Everyone can do Thursday',
     },
   },
-  examples: {
-    title: 'It can be almost anything.',
-    intro: 'If someone does it by hand every week, it can probably be automated.',
-    items: [
-      {
-        before: 'Answering the same customer emails',
-        after: 'A chatbot drafts the reply from your own documents. You approve it with one click.',
-      },
-      { before: 'Sorting the shared inbox', after: 'Every email is read, labelled and sent to the right person.' },
-      { before: 'Hunting for the latest version of a document', after: 'Ask a chatbot that knows your files, manuals and drawings.' },
-      {
-        before: 'Typing invoices into the accounting system',
-        after: 'Invoices are read and booked automatically. Only the odd ones need you.',
-      },
-      { before: 'Building the same report every Monday', after: 'The report builds itself and is in everyone’s inbox at 8:00.' },
-      { before: 'Keeping track in five different spreadsheets', after: 'One management tool where everything is in one place.' },
-      { before: 'Leads waiting a day for an answer', after: 'Every new lead gets a reply within a minute, day or night.' },
-    ],
-    outro: "Or something completely different. If you're not sure it can be done, ask me.",
-  },
   process: {
-    title: 'How it works',
+    title: 'How we work together',
     steps: ['You tell me what takes too long.', 'You get a plan. Free.', 'I build it. You own it.'],
-    promises: ['Plan before code', 'Open about your data. Security from day one', 'No lock-in'],
     pricing: {
       items: [
         { label: 'The plan', price: 'Free', note: 'No strings attached.' },
@@ -224,7 +201,7 @@ export const en = {
     },
   },
   contact: {
-    title: 'What would you rather not do?',
+    title: 'Your turn. What would you rather not do?',
     intro: 'Three quick questions. Takes under a minute.',
     q1: 'What takes too long? Write it on the note.',
     q2: 'How much time does it take?',
@@ -232,6 +209,14 @@ export const en = {
     q3: 'Where should I send the plan?',
     placeholder: 'Every Monday we copy orders from email into e-\u2060conomic…',
     next: 'Next',
+    suggestionsLabel: 'Or tap one:',
+    suggestions: [
+      'Typing orders into e-\u2060conomic',
+      'Answering the same customer emails',
+      'Building the Monday report',
+      'Chasing unpaid invoices',
+      'Finding the latest drawing',
+    ],
     voice: 'Say it instead',
     listening: 'Listening… tap to stop',
     email: 'Your email',

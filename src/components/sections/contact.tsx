@@ -158,7 +158,7 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
               {q === 0 && (
                 <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end">
                   {/* The visitor's own sticky note, like the ones in the hero. */}
-                  <div className="relative aspect-square w-full max-w-[270px] shrink-0 sm:max-w-[300px] -rotate-2 bg-[#fbe98f] px-5 pt-[21%] pb-4 shadow-[0_1px_1px_#0000000d,0_24px_34px_-20px_#0000004d]">
+                  <div className="relative aspect-square w-full max-w-[270px] shrink-0 sm:max-w-[300px] -rotate-2 bg-[#fbe98f] px-5 pt-14 pb-4 sm:pt-16 shadow-[0_1px_1px_#0000000d,0_24px_34px_-20px_#0000004d]">
                     <span aria-hidden className="absolute inset-x-0 top-0 h-[18%] bg-black/[0.04]" />
                     <textarea
                       value={details}
@@ -168,7 +168,24 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
                       className="relative size-full resize-none bg-transparent font-[family-name:var(--font-hand)] text-[26px] leading-[1.1] font-semibold text-[#2a2616] outline-none placeholder:text-[#2a261666] md:text-[28px]"
                     />
                   </div>
-                  <div className="flex w-full flex-col gap-3 sm:w-auto">
+                  <div className="flex w-full flex-col gap-3 sm:w-auto sm:max-w-[340px]">
+                    <p className="text-[14px] text-muted">{t.suggestionsLabel}</p>
+                    <div className="-mt-1 mb-2 flex flex-wrap gap-1.5">
+                      {t.suggestions.map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setDetails(s)}
+                          aria-pressed={details === s}
+                          className={cn(
+                            'rounded-full border px-3 py-1.5 text-left text-[14px] transition-colors duration-200',
+                            details === s ? 'border-[#e8cf55] bg-[#fbe98f]' : 'border-hair bg-paper hover:border-ink',
+                          )}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
                     {dictation.supported && (
                       <button
                         type="button"

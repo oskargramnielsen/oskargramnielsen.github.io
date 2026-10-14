@@ -6,20 +6,8 @@ import type { Dict } from '@/content';
 import { site } from '@/content/site';
 import { useViewProgress } from '@/lib/motion';
 
-/** Splits "{{x}}" markers into permanent redaction bars. */
-function Redacted({ text, label }: { text: string; label: string }) {
-  return text.split('{{x}}').map((part, i, all) => (
-    <span key={i}>
-      {part}
-      {i < all.length - 1 && (
-        <span title={label} aria-label={label} className="mx-0.5 inline-block h-[0.9em] w-[7.5em] translate-y-[0.12em] bg-ink" />
-      )}
-    </span>
-  ));
-}
-
 /** A line that starts hidden and is revealed as it scrolls into view. */
-function Item({ i, text, label }: { i: number; text: string; label: string }) {
+function Item({ i, text }: { i: number; text: string }) {
   const ref = useRef<HTMLLIElement>(null);
   const p = useViewProgress(ref, ['start 0.92', 'start 0.55']);
   const scaleX = useTransform(p, [0, 1], [1, 0]);
@@ -27,7 +15,7 @@ function Item({ i, text, label }: { i: number; text: string; label: string }) {
     <li ref={ref} className="grid grid-cols-[32px_1fr] border-t border-hair py-5 text-lg leading-snug md:text-xl">
       <span className="pt-1 font-mono text-[13px] text-muted">{String(i + 1).padStart(2, '0')}</span>
       <span className="relative">
-        <Redacted text={text} label={label} />
+        {text}
         <motion.span aria-hidden className="absolute -inset-y-0.5 right-0 left-0 origin-right bg-paper" style={{ scaleX }} />
       </span>
     </li>
@@ -45,7 +33,7 @@ export default function Job({ t }: { t: Dict['job'] }) {
 
           <ol className="mt-10">
             {t.items.map((item, i) => (
-              <Item key={i} i={i} text={item} label={t.redacted} />
+              <Item key={i} i={i} text={item} />
             ))}
           </ol>
           <p className="border-t border-hair pt-5 text-lg font-medium text-bot">{t.privacy}</p>

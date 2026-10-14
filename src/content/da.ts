@@ -12,11 +12,10 @@ export const da: Dict = {
     write: 'Skriv til mig',
     langLabel: 'Sprog',
     // The section guide under the header, in page order.
-    guide: ['Start', 'De store', 'De små', 'Sådan foregår det', 'Eksempler', 'Din tur'],
+    guide: ['Start', 'Mit daglige arbejde', 'Fritidsprojekter', 'Samarbejdet', 'Din tur'],
     guideLabel: 'På siden',
   },
   hero: {
-    kicker: 'Oskar Gram Nielsen. Ingeniør i København.',
     before: 'Jeg bygger små og store programmer, der klarer',
     highlight: 'den kedelige del',
     after: 'af jeres arbejde.',
@@ -39,15 +38,14 @@ export const da: Dict = {
     ],
   },
   job: {
-    label: 'På arbejdet',
-    title: 'De store.',
-    body: 'Jeg er ingeniør fra DTU og elsker at løse problemer. Jeg får computeren til at lave det kedelige, så folk kan lave det, de elsker. Til daglig er jeg automation engineer hos CN3. Det meste er fortroligt, så det her kan jeg fortælle:',
+    label: 'Mit daglige arbejde',
+    title: 'Jeg automatiserer arbejde for en hel virksomhed.',
+    body: 'Jeg er ingeniør fra DTU og bor i København. Til daglig er jeg automation engineer hos CN3, hvor jeg får computeren til at lave det kedelige, så folk kan lave det, de er gode til. Det meste er fortroligt, men her er nogle eksempler på, hvad jeg har lavet:',
     items: [
-      'Et styringssystem til {{x}}, et af de største byggeprojekter i verden.',
+      'Et styringssystem til et af de største byggeprojekter i verden.',
       'Chatbots, der lader hele virksomheden tale med sine bygningsmodeller, kørt på vores egne GPU’er.',
       'Software, der reparerer sig selv: når en bruger rammer en fejl, finder den årsagen og retter den, ofte før nogen når at melde den.',
     ],
-    redacted: 'fortroligt',
     privacy: 'Det, vi bygger sammen, bliver også mellem os.',
     facts: [
       { k: 'Nu', v: 'Automation Engineer, CN3' },
@@ -58,9 +56,9 @@ export const da: Dict = {
     cv: 'Hent PDF',
   },
   work: {
-    label: 'Til mig selv',
-    title: 'De små.',
-    intro: 'Det startede med ting, der irriterede mig. Intet team, intet budget.',
+    label: 'I min fritid',
+    title: 'Programmer, jeg byggede for at løse mine egne problemer.',
+    intro: 'Intet team, intet budget. Hver af dem viser noget, jeres virksomhed også kan bruge.',
     forBusiness: 'For en virksomhed:',
     more: 'Vis 4 projekter mere',
     less: 'Vis færre projekter',
@@ -176,33 +174,9 @@ export const da: Dict = {
       result: 'Alle kan torsdag',
     },
   },
-  examples: {
-    title: 'Det kan være næsten hvad som helst.',
-    intro: 'Hvis nogen gør det i hånden hver uge, kan det sikkert automatiseres.',
-    items: [
-      {
-        before: 'At svare på de samme kundemails',
-        after: 'En chatbot skriver et udkast ud fra jeres egne dokumenter. I godkender med ét klik.',
-      },
-      { before: 'At sortere den fælles indbakke', after: 'Hver mail bliver læst, mærket og sendt til den rette person.' },
-      {
-        before: 'At lede efter den nyeste version af et dokument',
-        after: 'Spørg en chatbot, der kender jeres filer, manualer og tegninger.',
-      },
-      {
-        before: 'At taste fakturaer ind i regnskabssystemet',
-        after: 'Fakturaer bliver læst og bogført automatisk. Kun de skæve kræver jer.',
-      },
-      { before: 'At lave den samme rapport hver mandag', after: 'Rapporten laver sig selv og ligger i alles indbakke kl. 8.' },
-      { before: 'At holde styr på tingene i fem forskellige regneark', after: 'Ét styringsværktøj, hvor alt er samlet ét sted.' },
-      { before: 'Leads, der venter en dag på svar', after: 'Hvert nyt lead får svar inden for et minut, dag og nat.' },
-    ],
-    outro: 'Eller noget helt andet. Er I i tvivl om, det kan lade sig gøre, så spørg mig.',
-  },
   process: {
-    title: 'Sådan foregår det',
+    title: 'Sådan arbejder vi sammen',
     steps: ['I fortæller, hvad der tager for lang tid.', 'I får en plan. Gratis.', 'Jeg bygger det. I ejer det.'],
-    promises: ['Plan før kode', 'Åbenhed om jeres data. Sikkerhed fra dag ét', 'Ingen binding'],
     pricing: {
       items: [
         { label: 'Planen', price: 'Gratis', note: 'Helt uforpligtende.' },
@@ -233,7 +207,7 @@ export const da: Dict = {
     },
   },
   contact: {
-    title: 'Hvad ville I helst være fri for?',
+    title: 'Din tur. Hvad ville I helst være fri for?',
     intro: 'Tre hurtige spørgsmål. Tager under et minut.',
     q1: 'Hvad tager for lang tid? Skriv det på sedlen.',
     q2: 'Hvor meget tid tager det?',
@@ -241,6 +215,14 @@ export const da: Dict = {
     q3: 'Hvor skal jeg sende planen?',
     placeholder: 'Hver mandag kopierer vi ordrer fra mails ind i e-\u2060conomic…',
     next: 'Næste',
+    suggestionsLabel: 'Eller tryk på et forslag:',
+    suggestions: [
+      'Taste ordrer ind i e-\u2060conomic',
+      'Svare på de samme kundemails',
+      'Lave mandagsrapporten',
+      'Rykke for ubetalte fakturaer',
+      'Finde den nyeste tegning',
+    ],
     voice: 'Sig det i stedet',
     listening: 'Lytter… tryk for at stoppe',
     email: 'Din e-mail',

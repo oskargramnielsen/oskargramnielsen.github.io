@@ -38,14 +38,6 @@ export default function Offer({ t }: { t: Dict['process'] }) {
               </li>
             ))}
           </ol>
-          <ul className="mt-2 flex flex-wrap gap-x-6 gap-y-2 border-t border-hair pt-5 text-[15px] text-muted">
-            {t.promises.map((pr) => (
-              <li key={pr} className="flex items-center gap-2">
-                <span className="text-bot">✓</span>
-                {pr}
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div ref={ref} className="mx-auto w-full max-w-[440px] overflow-hidden rounded-[22px] border border-hair bg-card">

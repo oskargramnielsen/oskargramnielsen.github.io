@@ -5,7 +5,7 @@ import { useLenis } from 'lenis/react';
 import { cn } from '@/lib/utils';
 
 /** Section ids in page order; the first one is the hero at the top of the page. */
-const IDS = ['top', 'work', 'projects', 'how', 'examples', 'contact'];
+const IDS = ['top', 'work', 'projects', 'how', 'contact'];
 
 /**
  * A small vertical list of the page's sections at the edge of the screen. It
