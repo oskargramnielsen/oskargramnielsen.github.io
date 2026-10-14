@@ -11,6 +11,9 @@ export const da: Dict = {
     how: 'Sådan foregår det',
     write: 'Skriv til mig',
     langLabel: 'Sprog',
+    // The section guide under the header, in page order.
+    guide: ['Start', 'De store', 'De små', 'Sådan foregår det', 'Eksempler', 'Din tur'],
+    guideLabel: 'På siden',
   },
   hero: {
     kicker: 'Oskar Gram Nielsen. Ingeniør i København.',
@@ -61,10 +64,13 @@ export const da: Dict = {
     forBusiness: 'For en virksomhed:',
     more: 'Vis 4 projekter mere',
     less: 'Vis færre projekter',
+    readMore: 'Læs mere',
+    readLess: 'Læs mindre',
     housing: {
       tag: 'Bolig · for længe siden',
       title: 'Først i køen til en lejlighed',
       body: 'Andelsboliger gik til den, der skrev først. Så et program holdt øje med DBA og skrev til sælgeren inden for et minut.',
+      short: 'Et program, der skrev til hver ny sælger inden for et minut.',
       lesson: 'svar jeres leads på ét minut i stedet for én dag.',
       photo: 'foto',
       listingTitle: '3 vær. andelslejlighed, 2100',
@@ -84,6 +90,7 @@ export const da: Dict = {
       tag: 'Sneakers · for år tilbage',
       title: 'Sneakers solgt for billigt',
       body: 'En scraper læste hvert nyt par på Trendsales og sagde til, når et blev sat til salg under videresalgsprisen.',
+      short: 'En scraper, der fandt sneakers sat til salg under gensalgsprisen.',
       lesson: 'lad et program holde øje med forskellen på to priser, fx leverandørpriser mod jeres egne.',
       status: 'tjekker Trendsales hvert 10. min',
       checked: '4 nye annoncer tjekket',
@@ -97,6 +104,7 @@ export const da: Dict = {
       tag: 'Biler · for nylig',
       title: 'Alle brugte biler i én database',
       body: 'En platform, der scraper biler fra Marketplace, DBA, Bilbasen og AutoUncle ind i én database, så den samme bil kan sammenlignes på tværs af dem alle.',
+      short: 'Fire bilsider samlet i én database.',
       lesson: 'saml det, jeres konkurrenter og leverandører sætter til salg, og se hele markedet ét sted.',
       status: 'læser 4 bilsider hver morgen',
       car: 'VW Golf 1.5 TSI · 2019 · 98.000 km',
@@ -109,22 +117,29 @@ export const da: Dict = {
       tag: 'Andelskortet · kører stadig',
       title: 'Alle andelsforeninger i København på ét kort',
       body: 'Jeg tog alle andelsforeninger fra CVR-registret, fandt deres hjemmesider og lod en scraper læse hver enkelt for åbne ventelister.',
+      short: 'Alle foreningers ventelister, samlet af en scraper.',
       lesson: 'meget af det, I har brug for, findes allerede i offentlige data. Nogen skal bare samle det.',
       caption: 'andelskortet.dk',
       attribution: 'Kort © OpenStreetMap · prikker er illustrative',
       users: 'brugere på 21 måneder',
+      legend: { all: 'Andelsforening', open: 'Åben venteliste' },
       mailApp: 'Mail',
       // Rigtige beskeder. Private afsendere er anonymiseret.
       mails: [
         { from: 'En andelshaver', time: 'sep. 2024', msg: 'Det er et genialt koncept. Kan du tilføje vores forening?' },
         { from: 'En besøgende', time: 'mar. 2026', msg: 'Super god hjemmeside!' },
-        { from: 'Jyske Bank', time: 'sep. 2024', msg: 'Vi har set jeres projekt og synes, at det er rigtig godt. Kunne det være en idé med et kaffemøde?' },
+        {
+          from: 'Jyske Bank',
+          time: 'sep. 2024',
+          msg: 'Vi har set jeres projekt og synes, at det er rigtig godt. Kunne det være en idé med et kaffemøde?',
+        },
       ],
     },
     bank: {
       tag: 'Privatøkonomi · kører nu',
       title: 'En bankapp, der holder øje for mig',
       body: 'Min egen bankapp på min egen server. Modeller, jeg selv har trænet, sorterer hver postering, holder budgettet og siger til, når noget ser forkert ud eller koster for meget.',
+      short: 'Min egen bankapp med modeller, jeg selv har trænet.',
       lesson: 'AI behøver ikke betyde, at jeres data ryger ud i en andens sky.',
       status: 'egen model · egen server',
       categories: { groceries: 'Dagligvarer', transport: 'Transport', bills: 'Faste udgifter', savings: 'Opsparing' },
@@ -142,6 +157,7 @@ export const da: Dict = {
     artsrig: {
       name: 'Artsrig',
       body: 'De vilde bier forsvinder, men få ved, hvad de skal plante, hvor de bor. Skriv din adresse, så slår Artsrig jordtypen og de arter, der mangler i nærheden, op og sammensætter en frøblanding til præcis dét sted.',
+      short: 'Skriv din adresse, og få en frøblanding til vilde bier.',
       address: 'Amagerbrogade 120, 2300',
       soil: 'Jord',
       soilValue: 'sandet ler',
@@ -152,6 +168,7 @@ export const da: Dict = {
     hvilkendag: {
       name: 'Hvilkendag',
       body: 'Jeg blev træt af Doodles reklamer og login, så jeg lavede en enklere. Opret en afstemning, send linket, se hvilken dag der passer.',
+      short: 'En enklere Doodle uden reklamer og oprettelse.',
       days: ['Man', 'Tir', 'Ons', 'Tor', 'Fre'],
       people: ['Anna', 'Jonas', 'Maja', 'Emil', 'Sara'],
       result: 'Alle kan torsdag',
@@ -161,10 +178,19 @@ export const da: Dict = {
     title: 'Det kan være næsten hvad som helst.',
     intro: 'Hvis nogen gør det i hånden hver uge, kan det sikkert automatiseres.',
     items: [
-      { before: 'At svare på de samme kundemails', after: 'En chatbot skriver et udkast ud fra jeres egne dokumenter. I godkender med ét klik.' },
+      {
+        before: 'At svare på de samme kundemails',
+        after: 'En chatbot skriver et udkast ud fra jeres egne dokumenter. I godkender med ét klik.',
+      },
       { before: 'At sortere den fælles indbakke', after: 'Hver mail bliver læst, mærket og sendt til den rette person.' },
-      { before: 'At lede efter den nyeste version af et dokument', after: 'Spørg en chatbot, der kender jeres filer, manualer og tegninger.' },
-      { before: 'At taste fakturaer ind i regnskabssystemet', after: 'Fakturaer bliver læst og bogført automatisk. Kun de skæve kræver jer.' },
+      {
+        before: 'At lede efter den nyeste version af et dokument',
+        after: 'Spørg en chatbot, der kender jeres filer, manualer og tegninger.',
+      },
+      {
+        before: 'At taste fakturaer ind i regnskabssystemet',
+        after: 'Fakturaer bliver læst og bogført automatisk. Kun de skæve kræver jer.',
+      },
       { before: 'At lave den samme rapport hver mandag', after: 'Rapporten laver sig selv og ligger i alles indbakke kl. 8.' },
       { before: 'At holde styr på tingene i fem forskellige regneark', after: 'Ét styringsværktøj, hvor alt er samlet ét sted.' },
       { before: 'Leads, der venter en dag på svar', after: 'Hvert nyt lead får svar inden for et minut, dag og nat.' },
@@ -178,8 +204,16 @@ export const da: Dict = {
     pricing: {
       items: [
         { label: 'Planen', price: 'Gratis', note: 'Helt uforpligtende.' },
-        { label: 'Løsningen', price: 'Fast pris', note: 'Aftales i planen. I betaler, når det kører. Gør det ikke, hvad planen siger, betaler I ikke.' },
-        { label: 'Support', price: 'Månedlig*', note: 'Valgfrit. Prisen aftales i planen. Drift, rettelser og små ændringer. Kan opsiges når som helst.' },
+        {
+          label: 'Løsningen',
+          price: 'Fast pris',
+          note: 'Aftales i planen. I betaler, når det kører. Gør det ikke, hvad planen siger, betaler I ikke.',
+        },
+        {
+          label: 'Support',
+          price: 'Månedlig*',
+          note: 'Valgfrit. Prisen aftales i planen. Drift, rettelser og små ændringer. Kan opsiges når som helst.',
+        },
       ],
       footnote: '* Inden for arbejdstid, over nettet og på skrift, med svar inden for en arbejdsdag. Nye funktioner prissættes for sig.',
     },
@@ -199,12 +233,12 @@ export const da: Dict = {
   contact: {
     title: 'Hvad ville I helst være fri for?',
     intro: 'Tre hurtige spørgsmål. Tager under et minut.',
-    q1: 'Hvad handler det om?',
-    topics: ['Mails', 'Kundespørgsmål', 'Rapporter', 'Fakturaer og indtastning', 'Dokumenter og søgning', 'Interne værktøjer', 'Noget andet'],
+    q1: 'Hvad tager for lang tid? Skriv det på sedlen.',
     q2: 'Hvor meget tid tager det?',
     times: ['Et par timer om måneden', 'Et par timer om ugen', 'Timer hver dag', 'Ved ikke'],
-    q3: 'Fortæl lidt mere',
-    placeholder: 'Fx: hver mandag kopierer vi ordrer fra mails ind i e-conomic.',
+    q3: 'Hvor skal jeg sende planen?',
+    placeholder: 'Hver mandag kopierer vi ordrer fra mails ind i e-\u2060conomic…',
+    next: 'Næste',
     voice: 'Sig det i stedet',
     listening: 'Lytter… tryk for at stoppe',
     email: 'Din e-mail',
@@ -221,8 +255,5 @@ export const da: Dict = {
     talk: 'Vil du hellere tale sammen?',
     book: 'Book 20 minutter',
   },
-  footer: {
-    place: 'København',
-    privacy: 'Denne side tracker dig ikke.',
-  },
+  footer: { place: 'København', privacy: 'Denne side tracker dig ikke.' },
 };

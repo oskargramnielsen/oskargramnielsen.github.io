@@ -22,7 +22,7 @@ export function revealProject(id: string) {
 export default function Work({ t }: { t: Dict['work'] }) {
   const [open, setOpen] = useState(false);
   const lenis = useLenis();
-  const shared = { forBusiness: t.forBusiness };
+  const shared = { forBusiness: t.forBusiness, readMore: t.readMore, readLess: t.readLess };
 
   useEffect(() => {
     const onReveal = (e: Event) => {
@@ -69,8 +69,8 @@ export default function Work({ t }: { t: Dict['work'] }) {
             {(p) => <Sneakers p={p} t={t.sneakers} />}
           </Scene>
           <div className="wrap grid gap-14 py-12 md:grid-cols-2 md:gap-10 lg:py-20">
-            <Artsrig t={t.artsrig} />
-            <Hvilkendag t={t.hvilkendag} />
+            <Artsrig t={t.artsrig} more={shared} />
+            <Hvilkendag t={t.hvilkendag} more={shared} />
           </div>
         </>
       )}

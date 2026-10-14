@@ -1,6 +1,7 @@
 import { langPath, site, type Lang } from '@/content/site';
 import type { Dict } from '@/content';
 import { cn } from '@/lib/utils';
+import Guide from './guide';
 
 export default function Nav({ lang, t }: { lang: Lang; t: Dict['nav'] }) {
   return (
@@ -9,7 +10,7 @@ export default function Nav({ lang, t }: { lang: Lang; t: Dict['nav'] }) {
         <a href={langPath[lang]} className="font-medium">
           {site.name}
         </a>
-        <div className="flex items-center gap-5 md:gap-7">
+        <div className="nav-right flex items-center gap-5 md:gap-7">
           <a href="#work" className="hidden hover:text-bot md:inline">
             {t.work}
           </a>
@@ -31,11 +32,12 @@ export default function Nav({ lang, t }: { lang: Lang; t: Dict['nav'] }) {
               </span>
             ))}
           </div>
-          <a href="#contact" className="border-b-[1.5px] border-ink pb-px hover:border-bot hover:text-bot">
+          <a href="#contact" className="nav-write border-b-[1.5px] border-ink pb-px hover:border-bot hover:text-bot">
             {t.write}
           </a>
         </div>
       </nav>
+      <Guide labels={t.guide} label={t.guideLabel} />
     </header>
   );
 }

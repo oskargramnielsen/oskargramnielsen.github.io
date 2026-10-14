@@ -191,3 +191,13 @@ html.lenis body {
 .lenis [data-lenis-prevent] {
   overscroll-behavior: contain;
 }
+
+/* The docked hero buttons take the place of "Write to me" on small screens. */
+@media (width < 64rem) {
+  html[data-docked] .nav-write {
+    display: none;
+  }
+  html[data-docked] .nav-right {
+    padding-right: 96px;
+  }
+}

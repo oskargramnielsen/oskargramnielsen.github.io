@@ -30,7 +30,11 @@ const noop = () => () => {};
 
 /** Dictation via the browser's built-in speech recognition. Note: Chrome sends the audio to Google for transcription. */
 function useDictation(lang: Lang, onText: (text: string) => void) {
-  const supported = useSyncExternalStore(noop, () => !!getRecognition(), () => false);
+  const supported = useSyncExternalStore(
+    noop,
+    () => !!getRecognition(),
+    () => false,
+  );
   const [listening, setListening] = useState(false);
   const rec = useRef<Recognition | null>(null);
   const base = useRef('');
@@ -79,7 +83,6 @@ function Chip({ selected, onClick, children }: { selected: boolean; onClick: () 
 
 export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang }) {
   const [q, setQ] = useState(0);
-  const [topic, setTopic] = useState('');
   const [time, setTime] = useState('');
   const [details, setDetails] = useState('');
   const [email, setEmail] = useState('');
@@ -93,8 +96,9 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const subject = `New task from website: ${topic}`;
-    const message = `Topic: ${topic}\nTime spent: ${time}\n\n${details || '(no details)'}`;
+    const firstLine = details.trim().split('\n')[0];
+    const subject = `New task from website: ${firstLine.length > 60 ? firstLine.slice(0, 57) + '…' : firstLine}`;
+    const message = `${details.trim()}\n\nTime spent: ${time}`;
     if (!site.web3formsKey) {
       window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`${message}\n\n${email}`)}`;
       setState('mail');
@@ -146,12 +150,54 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
               <p className="mb-5 text-xl font-medium tracking-[-0.01em] md:text-2xl">{questions[q]}</p>
 
               {q === 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {t.topics.map((o) => (
-                    <Chip key={o} selected={topic === o} onClick={() => pick(setTopic, o)}>
-                      {o}
-                    </Chip>
-                  ))}
+                <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end">
+                  {/* The visitor's own sticky note, like the ones in the hero. */}
+                  <div className="relative aspect-square w-full max-w-[300px] shrink-0 -rotate-2 bg-[#fbe98f] px-5 pt-[21%] pb-4 shadow-[0_1px_1px_#0000000d,0_24px_34px_-20px_#0000004d]">
+                    <span aria-hidden className="absolute inset-x-0 top-0 h-[18%] bg-black/[0.04]" />
+                    <textarea
+                      value={details}
+                      onChange={(e) => setDetails(e.target.value)}
+                      placeholder={t.placeholder}
+                      aria-label={t.q1}
+                      className="relative size-full resize-none bg-transparent font-[family-name:var(--font-hand)] text-[26px] leading-[1.1] font-semibold text-[#2a2616] outline-none placeholder:text-[#2a261666] md:text-[28px]"
+                    />
+                  </div>
+                  <div className="flex w-full flex-col gap-3 sm:w-auto">
+                    {dictation.supported && (
+                      <button
+                        type="button"
+                        onClick={() => dictation.toggle(details)}
+                        aria-pressed={dictation.listening}
+                        className={cn(
+                          'flex items-center gap-2.5 text-left text-[15px] transition-colors',
+                          dictation.listening ? 'text-bot' : 'hover:text-bot',
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            'grid size-8 place-items-center rounded-full',
+                            dictation.listening ? 'animate-pulse bg-bot text-card' : 'bg-ink text-card',
+                          )}
+                        >
+                          <svg viewBox="0 0 24 24" className="size-3.5" fill="currentColor" aria-hidden>
+                            <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z" />
+                          </svg>
+                        </span>
+                        {dictation.listening ? t.listening : t.voice}
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      disabled={!details.trim()}
+                      onClick={() => {
+                        if (dictation.listening) dictation.toggle(details);
+                        setQ(1);
+                      }}
+                      className="bg-ink px-7 py-3.5 text-[17px] font-medium text-paper transition-colors duration-300 hover:bg-bot disabled:opacity-40 disabled:hover:bg-ink"
+                    >
+                      {t.next} →
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -167,35 +213,7 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
 
               {q === 2 && (
                 <div>
-                  <div className="relative border border-hair focus-within:border-ink">
-                    <textarea
-                      value={details}
-                      onChange={(e) => setDetails(e.target.value)}
-                      rows={3}
-                      placeholder={t.placeholder}
-                      aria-label={t.q3}
-                      className="block w-full resize-none bg-transparent px-4 py-3 text-lg leading-snug outline-none placeholder:text-[#b5b5b0]"
-                    />
-                    {dictation.supported && (
-                      <button
-                        type="button"
-                        onClick={() => dictation.toggle(details)}
-                        aria-pressed={dictation.listening}
-                        className={cn(
-                          'flex w-full items-center gap-2.5 border-t border-hair px-4 py-3 text-left text-[15px] transition-colors',
-                          dictation.listening ? 'bg-bot-soft text-bot' : 'hover:text-bot',
-                        )}
-                      >
-                        <span className={cn('grid size-7 place-items-center rounded-full', dictation.listening ? 'animate-pulse bg-bot text-card' : 'bg-ink text-card')}>
-                          <svg viewBox="0 0 24 24" className="size-3.5" fill="currentColor" aria-hidden>
-                            <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z" />
-                          </svg>
-                        </span>
-                        {dictation.listening ? t.listening : t.voice}
-                      </button>
-                    )}
-                  </div>
-                  <div className="mt-3 flex flex-col border border-ink sm:flex-row">
+                  <div className="flex flex-col border border-ink sm:flex-row">
                     <input
                       type="email"
                       value={email}
@@ -226,13 +244,23 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
         </form>
 
         {/* After sending, the request lands like one of the agents' messages. */}
-        <div className={cn('absolute inset-0 grid place-items-center bg-card p-5 transition-opacity duration-500', done ? 'opacity-100' : 'pointer-events-none opacity-0')}>
+        <div
+          className={cn(
+            'absolute inset-0 grid place-items-center bg-card p-5 transition-opacity duration-500',
+            done ? 'opacity-100' : 'pointer-events-none opacity-0',
+          )}
+        >
           <div className="w-full max-w-[560px]">
-            <div className={cn('grid grid-cols-[8px_auto_1fr_auto] items-center gap-3 border border-hair px-4 py-3 text-sm', done && 'animate-drop')}>
+            <div
+              className={cn(
+                'grid grid-cols-[8px_auto_1fr_auto] items-center gap-3 border border-hair px-4 py-3 text-sm',
+                done && 'animate-drop',
+              )}
+            >
               <span className="size-[7px] rounded-full bg-ink" />
               <span className="font-mono text-xs">{t.you}</span>
               <span className="truncate">
-                {topic} · {time}
+                {details.trim()} · {time}
               </span>
               <span className="font-mono text-xs text-faint">{t.now}</span>
             </div>

@@ -1,20 +1,24 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { createPortal } from 'react-dom';
+import { motion, useReducedMotion } from 'motion/react';
 import { bookingHref } from '@/content/site';
 import { cn } from '@/lib/utils';
 
 const NAV_HEIGHT = 64;
 
 const ChatIcon = () => (
-  <svg viewBox="0 0 24 24" className="size-[22px]" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-    <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5v-9Z" strokeLinejoin="round" />
+  <svg viewBox="0 0 24 24" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+    <path
+      d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5v-9Z"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
 const CalendarIcon = () => (
-  <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+  <svg viewBox="0 0 24 24" className="size-[17px]" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
     <rect x="4" y="5" width="16" height="15" rx="1.5" />
     <path d="M4 10h16M9 3v4M15 3v4" strokeLinecap="round" />
   </svg>
@@ -27,31 +31,29 @@ const styles = {
 };
 
 /**
- * The two hero buttons. Once they scroll out of view they fly to the bottom
- * right corner and shrink to icons, so writing to me is always one tap away.
- * They step aside while the contact section is on screen.
+ * The two hero buttons. When they scroll up to the header they stay there and
+ * shrink to icons, so writing to me is always one tap away. On small screens
+ * they take the place of the header's "Write to me" link.
  */
 export default function CtaDock({ cta, book }: { cta: string; book: string }) {
   const anchor = useRef<HTMLDivElement>(null);
   const [docked, setDocked] = useState(false);
-  const [atContact, setAtContact] = useState(false);
   const reduce = useReducedMotion();
 
   useEffect(() => {
     const el = anchor.current;
-    const contact = document.getElementById('contact');
     if (!el) return;
     const dock = new IntersectionObserver(([e]) => setDocked(!e.isIntersecting && e.boundingClientRect.top < NAV_HEIGHT), {
       rootMargin: `-${NAV_HEIGHT}px 0px 0px 0px`,
     });
-    const hide = new IntersectionObserver(([e]) => setAtContact(e.isIntersecting), { threshold: 0.2 });
     dock.observe(el);
-    if (contact) hide.observe(contact);
-    return () => {
-      dock.disconnect();
-      hide.disconnect();
-    };
+    return () => dock.disconnect();
   }, []);
+
+  // Lets the header hide its own "Write to me" link while the icons sit there.
+  useEffect(() => {
+    document.documentElement.toggleAttribute('data-docked', docked);
+  }, [docked]);
 
   const transition = reduce ? { duration: 0 } : { type: 'spring' as const, stiffness: 260, damping: 30 };
   const buttons = [
@@ -70,64 +72,64 @@ export default function CtaDock({ cta, book }: { cta: string; book: string }) {
         ))}
       </div>
 
-      <motion.div
-        layout
-        transition={transition}
-        animate={{ opacity: docked && atContact ? 0 : 1, scale: docked && atContact ? 0.8 : 1 }}
-        className={cn(
-          'z-40 flex',
-          docked
-            ? 'fixed right-4 bottom-4 flex-row-reverse items-center gap-2.5 md:right-6 md:bottom-6'
-            : 'absolute inset-0 flex-col gap-3 sm:flex-row sm:justify-center',
-          docked && atContact && 'pointer-events-none',
-        )}
-      >
-        {buttons.map((b) => (
-          <motion.a
-            key={b.href}
-            href={b.href}
-            layout
-            transition={transition}
-            aria-label={docked ? b.label : undefined}
-            animate={{ borderRadius: docked ? 999 : 0 }}
-            className={cn(
-              base,
-              b.style,
-              'transition-colors duration-300',
-              docked ? (b.arrow ? 'size-14 shadow-[0_10px_30px_-8px_#1f3bff80]' : 'size-12 shadow-[0_8px_24px_-10px_#00000055]') : 'px-5.5 py-4',
-            )}
-          >
-            <AnimatePresence mode="popLayout" initial={false}>
-              {docked ? (
-                <motion.span key="icon" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
+      {!docked && (
+        <div className="absolute inset-0 z-40 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          {buttons.map((b, i) => (
+            <motion.a
+              key={b.href}
+              href={b.href}
+              layoutId={`cta-${i}`}
+              transition={transition}
+              style={{ borderRadius: 0 }}
+              className={cn(base, b.style, 'px-5.5 py-4 transition-colors duration-300')}
+            >
+              <motion.span
+                layout="position"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex items-center gap-3 whitespace-nowrap"
+              >
+                {b.label}
+                {b.arrow && (
+                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
+                    →
+                  </span>
+                )}
+              </motion.span>
+            </motion.a>
+          ))}
+        </div>
+      )}
+
+      {/* Docked in the header. A portal, so the hero's stacking does not trap them under the header. */}
+      {docked &&
+        createPortal(
+          <div className="wrap pointer-events-none fixed inset-x-0 top-0 z-[55] flex h-14 items-center justify-end gap-2 md:h-16 lg:justify-center">
+            {buttons.map((b, i) => (
+              <motion.a
+                key={b.href}
+                href={b.href}
+                layoutId={`cta-${i}`}
+                transition={transition}
+                aria-label={b.label}
+                style={{ borderRadius: 999 }}
+                className={cn(base, b.style, 'pointer-events-auto size-10 transition-colors duration-300')}
+              >
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: reduce ? 0 : 0.12 }}
+                >
                   {b.icon}
                 </motion.span>
-              ) : (
-                <motion.span
-                  key="label"
-                  layout="position"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex items-center gap-3 whitespace-nowrap"
-                >
+                <span className="pointer-events-none absolute top-[calc(100%+8px)] left-1/2 hidden -translate-x-1/2 bg-ink px-3 py-1.5 text-[14px] whitespace-nowrap text-paper opacity-0 transition-opacity group-hover:opacity-100 md:block">
                   {b.label}
-                  {b.arrow && (
-                    <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
-                      →
-                    </span>
-                  )}
-                </motion.span>
-              )}
-            </AnimatePresence>
-            {docked && (
-              <span className="pointer-events-none absolute right-0 bottom-[calc(100%+10px)] hidden bg-ink px-3 py-1.5 text-[14px] whitespace-nowrap text-paper opacity-0 transition-opacity group-hover:opacity-100 md:block">
-                {b.label}
-              </span>
-            )}
-          </motion.a>
-        ))}
-      </motion.div>
+                </span>
+              </motion.a>
+            ))}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

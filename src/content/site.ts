@@ -10,7 +10,7 @@ export const site = {
   web3formsKey: '4b17ca73-ec43-461f-b533-8fb63b1d2dd2',
 } as const;
 
-export const bookingHref: string = site.calLink ? `https://cal.com/${site.calLink}` : '#contact';
+export const bookingHref: string = site.calLink ? `https://cal.com/${site.calLink}?overlayCalendar=true` : '#contact';
 
 export type Lang = 'en' | 'da';
 

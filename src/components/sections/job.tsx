@@ -18,7 +18,7 @@ function Redacted({ text, label }: { text: string; label: string }) {
   ));
 }
 
-/** A line that starts blacked out and is "declassified" as it scrolls into view. */
+/** A line that starts hidden and is revealed as it scrolls into view. */
 function Item({ i, text, label }: { i: number; text: string; label: string }) {
   const ref = useRef<HTMLLIElement>(null);
   const p = useViewProgress(ref, ['start 0.92', 'start 0.55']);
@@ -28,7 +28,7 @@ function Item({ i, text, label }: { i: number; text: string; label: string }) {
       <span className="pt-1 font-mono text-[13px] text-muted">{String(i + 1).padStart(2, '0')}</span>
       <span className="relative">
         <Redacted text={text} label={label} />
-        <motion.span aria-hidden className="absolute inset-y-0.5 right-0 left-0 origin-right bg-ink" style={{ scaleX }} />
+        <motion.span aria-hidden className="absolute -inset-y-0.5 right-0 left-0 origin-right bg-paper" style={{ scaleX }} />
       </span>
     </li>
   );

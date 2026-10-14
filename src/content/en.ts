@@ -9,6 +9,9 @@ export const en = {
     how: 'How it works',
     write: 'Write to me',
     langLabel: 'Language',
+    // The section guide under the header, in page order.
+    guide: ['Start', 'Big ones', 'Small ones', 'How it works', 'Examples', 'Your turn'],
+    guideLabel: 'On this page',
   },
   hero: {
     kicker: 'Oskar Gram Nielsen. Engineer in Copenhagen.',
@@ -59,10 +62,13 @@ export const en = {
     forBusiness: 'For a business:',
     more: 'Show 4 more projects',
     less: 'Show fewer projects',
+    readMore: 'Read more',
+    readLess: 'Read less',
     housing: {
       tag: 'Housing · a long time ago',
       title: 'First in line for an apartment',
       body: 'Co-op apartments went to whoever wrote first. So a program watched DBA and wrote to the seller within a minute.',
+      short: 'A program that wrote to every new seller within a minute.',
       lesson: 'answer your leads in one minute instead of one day.',
       photo: 'photo',
       listingTitle: '3 vær. andelslejlighed, 2100',
@@ -82,6 +88,7 @@ export const en = {
       tag: 'Sneakers · years ago',
       title: 'Sneakers sold too cheap',
       body: 'A scraper read every new pair on Trendsales and told me when one was listed below what it resold for.',
+      short: 'A scraper that found sneakers listed below resale price.',
       lesson: 'let a program watch the gap between two prices, like supplier prices against your own.',
       status: 'checks Trendsales every 10 min',
       checked: '4 new listings checked',
@@ -95,6 +102,7 @@ export const en = {
       tag: 'Cars · recently',
       title: 'Every used car in one database',
       body: 'A platform that scrapes cars from Marketplace, DBA, Bilbasen and AutoUncle into one database, so the same car can be compared across all of them.',
+      short: 'Four car sites scraped into one database.',
       lesson: 'collect what your competitors and suppliers list, and see the whole market in one place.',
       status: 'reads 4 car sites every morning',
       car: 'VW Golf 1.5 TSI · 2019 · 98.000 km',
@@ -107,10 +115,12 @@ export const en = {
       tag: 'Andelskortet · still running',
       title: 'Every housing co‑op in Copenhagen on one map',
       body: 'I took every co-op from the CVR register, found its website and let a scraper read each one for open waiting lists.',
+      short: 'Every co-op’s waiting list, collected by a scraper.',
       lesson: 'a lot of what you need is already in public data. Someone just has to collect it.',
       caption: 'andelskortet.dk',
       attribution: 'Map © OpenStreetMap · dots illustrative',
       users: 'users in 21 months',
+      legend: { all: 'Housing co-op', open: 'Open waiting list' },
       mailApp: 'Mail',
       // Real messages. Private senders are anonymised.
       mails: [
@@ -123,6 +133,7 @@ export const en = {
       tag: 'Personal finance · running now',
       title: 'A bank app that looks out for me',
       body: 'My own banking app on my own server. Models I trained sort every transaction, keep the budget and point out what looks wrong or costs too much.',
+      short: 'My own bank app, with models I trained myself.',
       lesson: "AI doesn't have to mean sending your data to someone else's cloud.",
       status: 'own model · own server',
       categories: { groceries: 'Groceries', transport: 'Transport', bills: 'Bills', savings: 'Savings' },
@@ -140,6 +151,7 @@ export const en = {
     artsrig: {
       name: 'Artsrig',
       body: 'Wild bees are disappearing, but few people know what to plant where they live. Type your address and Artsrig looks up your soil and the species missing nearby, then puts together a seed mix for exactly that spot.',
+      short: 'Type your address, get a seed mix for wild bees.',
       address: 'Amagerbrogade 120, 2300',
       soil: 'Soil',
       soilValue: 'sandy clay',
@@ -150,6 +162,7 @@ export const en = {
     hvilkendag: {
       name: 'Hvilkendag',
       body: "I got tired of Doodle's ads and sign-ups, so I made a simpler one. Make a poll, send the link, see which day works.",
+      short: 'A simpler Doodle, without ads or sign-ups.',
       days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
       people: ['Anna', 'Jonas', 'Maja', 'Emil', 'Sara'],
       result: 'Everyone can do Thursday',
@@ -159,10 +172,16 @@ export const en = {
     title: 'It can be almost anything.',
     intro: 'If someone does it by hand every week, it can probably be automated.',
     items: [
-      { before: 'Answering the same customer emails', after: 'A chatbot drafts the reply from your own documents. You approve it with one click.' },
+      {
+        before: 'Answering the same customer emails',
+        after: 'A chatbot drafts the reply from your own documents. You approve it with one click.',
+      },
       { before: 'Sorting the shared inbox', after: 'Every email is read, labelled and sent to the right person.' },
       { before: 'Hunting for the latest version of a document', after: 'Ask a chatbot that knows your files, manuals and drawings.' },
-      { before: 'Typing invoices into the accounting system', after: 'Invoices are read and booked automatically. Only the odd ones need you.' },
+      {
+        before: 'Typing invoices into the accounting system',
+        after: 'Invoices are read and booked automatically. Only the odd ones need you.',
+      },
       { before: 'Building the same report every Monday', after: 'The report builds itself and is in everyone’s inbox at 8:00.' },
       { before: 'Keeping track in five different spreadsheets', after: 'One management tool where everything is in one place.' },
       { before: 'Leads waiting a day for an answer', after: 'Every new lead gets a reply within a minute, day or night.' },
@@ -176,8 +195,16 @@ export const en = {
     pricing: {
       items: [
         { label: 'The plan', price: 'Free', note: 'No strings attached.' },
-        { label: 'The build', price: 'Fixed price', note: 'Agreed in the plan. You pay when it runs. If it doesn’t do what the plan says, you don’t pay.' },
-        { label: 'Support', price: 'Monthly*', note: 'Optional. Price agreed in the plan. Hosting, fixes and small changes. Cancel anytime.' },
+        {
+          label: 'The build',
+          price: 'Fixed price',
+          note: 'Agreed in the plan. You pay when it runs. If it doesn’t do what the plan says, you don’t pay.',
+        },
+        {
+          label: 'Support',
+          price: 'Monthly*',
+          note: 'Optional. Price agreed in the plan. Hosting, fixes and small changes. Cancel anytime.',
+        },
       ],
       footnote: '* Within working hours, remotely and in writing, with answers within one working day. New features are quoted separately.',
     },
@@ -197,12 +224,12 @@ export const en = {
   contact: {
     title: 'What would you rather not do?',
     intro: 'Three quick questions. Takes under a minute.',
-    q1: 'What is it about?',
-    topics: ['Emails', 'Customer questions', 'Reports', 'Invoices and data entry', 'Documents and search', 'Internal tools', 'Something else'],
+    q1: 'What takes too long? Write it on the note.',
     q2: 'How much time does it take?',
     times: ['A few hours a month', 'A few hours a week', 'Hours every day', 'Not sure'],
-    q3: 'Tell me a bit more',
-    placeholder: 'For example: every Monday we copy orders from email into e-conomic.',
+    q3: 'Where should I send the plan?',
+    placeholder: 'Every Monday we copy orders from email into e-\u2060conomic…',
+    next: 'Next',
     voice: 'Say it instead',
     listening: 'Listening… tap to stop',
     email: 'Your email',
@@ -219,10 +246,7 @@ export const en = {
     talk: 'Prefer talking?',
     book: 'Book 20 minutes',
   },
-  footer: {
-    place: 'Copenhagen',
-    privacy: "This site doesn't track you.",
-  },
+  footer: { place: 'Copenhagen', privacy: "This site doesn't track you." },
 };
 
 export type Dict = typeof en;

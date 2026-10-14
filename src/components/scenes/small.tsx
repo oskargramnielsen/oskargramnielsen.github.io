@@ -6,30 +6,35 @@ import type { Dict } from '@/content';
 import { seg, useStep, useViewProgress } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import { Appear } from './bits';
+import ReadMore from './read-more';
+
+type More = { readMore: string; readLess: string };
 
 type W = Dict['work'];
 
-function Card({ id, name, href, body, children }: { id: string; name: string; href: string; body: string; children: React.ReactNode }) {
+type CardProps = { id: string; name: string; href: string; body: string; short: string; more: More; children: React.ReactNode };
+
+function Card({ id, name, href, body, short, more, children }: CardProps) {
   return (
     <article id={id} className="flex scroll-mt-20 flex-col border-t border-ink pt-6">
       <a href={href} target="_blank" rel="noopener noreferrer" className="group inline-flex w-fit items-baseline gap-2">
         <h3 className="text-2xl font-semibold tracking-[-0.02em] transition-colors group-hover:text-bot">{name}</h3>
         <span className="font-mono text-xs text-muted group-hover:text-bot">{href.replace('https://', '')} ↗</span>
       </a>
-      <p className="mt-2 mb-6 max-w-[520px] text-base text-body">{body}</p>
+      <ReadMore short={short} body={body} {...more} className="mt-2 mb-6 max-w-[520px] text-base" />
       {children}
     </article>
   );
 }
 
-export function Artsrig({ t }: { t: W['artsrig'] }) {
+export function Artsrig({ t, more }: { t: W['artsrig']; more: More }) {
   const ref = useRef<HTMLDivElement>(null);
   const p = useViewProgress(ref);
   const typed = useTransform(p, (v) => t.address.slice(0, Math.round(t.address.length * seg(v, 0, 0.3))));
   const step = useStep(p, [0.36, 0.45, 0.53, 0.6, 0.67, 0.74, 0.86]);
 
   return (
-    <Card id="artsrig" name={t.name} href="https://artsrig.dk" body={t.body}>
+    <Card id="artsrig" name={t.name} href="https://artsrig.dk" body={t.body} short={t.short} more={more}>
       <div ref={ref} className="mt-auto border border-hair bg-card p-4 md:p-5">
         <div className="flex items-center border border-hair px-3 py-2.5 font-mono text-[13px]">
           <span className="mr-2 text-faint">⌕</span>
@@ -76,14 +81,17 @@ const YES = [
   [1, 0, 0, 1, 1],
 ];
 
-export function Hvilkendag({ t }: { t: W['hvilkendag'] }) {
+export function Hvilkendag({ t, more }: { t: W['hvilkendag']; more: More }) {
   const ref = useRef<HTMLDivElement>(null);
   const p = useViewProgress(ref);
-  const filled = useStep(p, YES.map((_, i) => 0.08 + i * 0.13));
+  const filled = useStep(
+    p,
+    YES.map((_, i) => 0.08 + i * 0.13),
+  );
   const step = useStep(p, [0.78, 0.88]);
 
   return (
-    <Card id="hvilkendag" name={t.name} href="https://hvilkendag.dk" body={t.body}>
+    <Card id="hvilkendag" name={t.name} href="https://hvilkendag.dk" body={t.body} short={t.short} more={more}>
       <div ref={ref} className="mt-auto border border-hair bg-card p-4 md:p-5">
         <table className="w-full table-fixed font-mono text-[12px]">
           <thead>
