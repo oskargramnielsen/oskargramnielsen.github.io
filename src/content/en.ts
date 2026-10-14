@@ -117,10 +117,12 @@ export const en = {
       body: 'I took every co-op from the CVR register, found its website and let a scraper read each one for open waiting lists.',
       short: 'Every co-op’s waiting list, collected by a scraper.',
       lesson: 'a lot of what you need is already in public data. Someone just has to collect it.',
-      caption: 'andelskortet.dk',
-      attribution: 'Map © OpenStreetMap · dots illustrative',
+      url: 'andelskortet.dk',
+      heading: 'Find your next co-op apartment in Copenhagen',
+      search: 'Search for a co-op or address…',
+      attribution: 'Map © OpenStreetMap · co-ops from andelskortet.dk',
       users: 'users in 21 months',
-      legend: { all: 'Housing co-op', open: 'Open waiting list' },
+      legend: { all: 'Other co-ops', open: 'Open waiting lists' },
       mailApp: 'Mail',
       // Real messages. Private senders are anonymised.
       mails: [

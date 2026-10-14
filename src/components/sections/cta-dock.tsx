@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 const NAV_HEIGHT = 64;
 
 const ChatIcon = () => (
-  <svg viewBox="0 0 24 24" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+  <svg viewBox="0 0 24 24" className="size-[15px]" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
     <path
       d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5v-9Z"
       strokeLinejoin="round"
@@ -18,7 +18,7 @@ const ChatIcon = () => (
 );
 
 const CalendarIcon = () => (
-  <svg viewBox="0 0 24 24" className="size-[17px]" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+  <svg viewBox="0 0 24 24" className="size-[14px]" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
     <rect x="4" y="5" width="16" height="15" rx="1.5" />
     <path d="M4 10h16M9 3v4M15 3v4" strokeLinecap="round" />
   </svg>
@@ -32,8 +32,8 @@ const styles = {
 
 /**
  * The two hero buttons. When they scroll up to the header they stay there and
- * shrink to icons, so writing to me is always one tap away. On small screens
- * they take the place of the header's "Write to me" link.
+ * shrink to icons in its right corner, so writing to me is always one tap away.
+ * They take the place of the header's "Write to me" link.
  */
 export default function CtaDock({ cta, book }: { cta: string; book: string }) {
   const anchor = useRef<HTMLDivElement>(null);
@@ -104,7 +104,7 @@ export default function CtaDock({ cta, book }: { cta: string; book: string }) {
       {/* Docked in the header. A portal, so the hero's stacking does not trap them under the header. */}
       {docked &&
         createPortal(
-          <div className="wrap pointer-events-none fixed inset-x-0 top-0 z-[55] flex h-14 items-center justify-end gap-2 md:h-16 lg:justify-center">
+          <div className="wrap pointer-events-none fixed inset-x-0 top-0 z-[55] flex h-14 items-center justify-end gap-2.5 md:h-16">
             {buttons.map((b, i) => (
               <motion.a
                 key={b.href}
@@ -113,7 +113,7 @@ export default function CtaDock({ cta, book }: { cta: string; book: string }) {
                 transition={transition}
                 aria-label={b.label}
                 style={{ borderRadius: 999 }}
-                className={cn(base, b.style, 'pointer-events-auto size-10 transition-colors duration-300')}
+                className={cn(base, b.style, 'pointer-events-auto size-[34px] transition-colors duration-300')}
               >
                 <motion.span
                   initial={{ opacity: 0, scale: 0.5 }}
@@ -122,7 +122,7 @@ export default function CtaDock({ cta, book }: { cta: string; book: string }) {
                 >
                   {b.icon}
                 </motion.span>
-                <span className="pointer-events-none absolute top-[calc(100%+8px)] left-1/2 hidden -translate-x-1/2 bg-ink px-3 py-1.5 text-[14px] whitespace-nowrap text-paper opacity-0 transition-opacity group-hover:opacity-100 md:block">
+                <span className="pointer-events-none absolute top-[calc(100%+10px)] right-0 hidden bg-ink px-3 py-1.5 text-[14px] whitespace-nowrap text-paper opacity-0 transition-opacity group-hover:opacity-100 md:block">
                   {b.label}
                 </span>
               </motion.a>

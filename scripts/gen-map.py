@@ -1,85 +1,73 @@
-"""Build src/content/map.ts from OpenStreetMap outlines.
+"""Build src/content/map.ts, the map in the Andelskortet scene.
 
-Outlines: Københavns + Frederiksberg Kommune, the lakes and the big parks via
-Nominatim (© OpenStreetMap contributors, ODbL). Dots are illustrative co-op
-positions, sampled on land outside parks and lakes and weighted towards the
-dense inner districts.
+Land: the municipalities around Copenhagen; lakes and big parks. All outlines
+via Nominatim (© OpenStreetMap contributors, ODbL). Co-ops: the real positions
+and waiting-list status from andelskortet.dk (andelskortet-coops.json, taken
+from its map-data-seed.sql: [lng, lat, open waiting list ? 1 : 0]).
 Run: python3 scripts/gen-map.py
 """
-import json, math, random
+import json, math
 from pathlib import Path
 
 here = Path(__file__).parent
-W, H, PAD = 600, 560, 16
+W = H = 600
+LAT0, LAT1 = 55.612, 55.738  # what the view shows, north to south
+LON_C = 12.555  # centre of the view, east-west
 
-def rings(path):
-    g = json.loads((here / path).read_text())[0]['geojson']
-    polys = g['coordinates'] if g['type'] == 'MultiPolygon' else [g['coordinates']]
-    return [p[0] for p in polys]  # outer rings only
-
+KOMMUNER = ['kobenhavn', 'frederiksberg'] + [
+    f'kommune-{k}' for k in ['Gentofte', 'Gladsaxe', 'Herlev', 'Rødovre', 'Hvidovre', 'Brøndby', 'Tårnby', 'Dragør',
+                             'Ballerup', 'Glostrup', 'Albertslund', 'Vallensbæk', 'Lyngby-Taarbæk', 'Høje-Taastrup', 'Ishøj']]
 LAKES = ['Sortedams Sø', 'Peblinge Sø', 'Sankt Jørgens Sø', 'Damhussøen']
 PARKS = ['Fælledparken', 'Kongens Have', 'Frederiksberg Have', 'Søndermarken', 'Assistens Kirkegård', 'Amager Fælled',
          'Kastellet', 'Vestre Kirkegård', 'Utterslev Mose', 'Valbyparken', 'Bispebjerg Kirkegård']
-LABELS = [('Nørrebro', 12.547, 55.697), ('Østerbro', 12.577, 55.712), ('Vesterbro', 12.548, 55.665),
-          ('Frederiksberg', 12.522, 55.684), ('Indre By', 12.581, 55.682), ('Amager', 12.605, 55.652),
-          ('Valby', 12.503, 55.660), ('Bispebjerg', 12.535, 55.717)]
-fname = lambda n: f"osm-{n.replace(' ', '_')}.json"
+LABELS = [('Nørrebro', 12.549, 55.699), ('Østerbro', 12.578, 55.713), ('Vesterbro', 12.546, 55.664),
+          ('Frederiksberg', 12.520, 55.681), ('Indre By', 12.583, 55.680), ('Amager', 12.608, 55.650),
+          ('Valby', 12.500, 55.659), ('Hellerup', 12.574, 55.731), ('Rødovre', 12.458, 55.683),
+          ('Hvidovre', 12.470, 55.640), ('Kastrup', 12.640, 55.627)]
 
-outer = rings('osm-kobenhavn.json') + rings('osm-frederiksberg.json')
-outer = [r for r in outer if len(r) > 8]  # drop tiny islets
-lat0 = 55.68
-kx = math.cos(math.radians(lat0))
-pts = [(lon * kx, lat) for r in outer for lon, lat in r]
-minx, maxx = min(p[0] for p in pts), max(p[0] for p in pts)
-miny, maxy = min(p[1] for p in pts), max(p[1] for p in pts)
-s = min((W - 2 * PAD) / (maxx - minx), (H - 2 * PAD) / (maxy - miny))
-ox = (W - (maxx - minx) * s) / 2
-oy = (H - (maxy - miny) * s) / 2
+kx = math.cos(math.radians((LAT0 + LAT1) / 2))
+s = H / (LAT1 - LAT0)
+
 
 def proj(lon, lat):
-    return (ox + (lon * kx - minx) * s, oy + (maxy - lat) * s)
+    return ((lon - LON_C) * kx * s + W / 2, (LAT1 - lat) * s)
 
-def to_path(rs):
-    return ' '.join('M' + ' L'.join(f'{x:.1f} {y:.1f}' for x, y in r) + ' Z' for r in rs)
 
-prings = [[proj(lon, lat) for lon, lat in r] for r in outer]
-path = to_path(prings)
-lakes = [[proj(lon, lat) for lon, lat in r] for n in LAKES for r in rings(fname(n))]
-parks = [[proj(lon, lat) for lon, lat in r] for n in PARKS for r in rings(fname(n))]
+def rings(name):
+    g = json.loads((here / f"osm-{name.replace(' ', '_')}.json").read_text())[0]['geojson']
+    polys = g['coordinates'] if g['type'] == 'MultiPolygon' else [g['coordinates']]
+    return [p[0] for p in polys if len(p[0]) > 8]  # outer rings, no tiny islets
+
+
+def to_path(names):
+    out = []
+    for n in names:
+        for r in rings(n):
+            pts = [proj(lon, lat) for lon, lat in r]
+            out.append('M' + ' L'.join(f'{x:.1f} {y:.1f}' for x, y in pts) + ' Z')
+    return ' '.join(out)
+
+
+inside = lambda x, y, m=6: m <= x <= W - m and m <= y <= H - m
+coops = []
+for lon, lat, open_ in json.loads((here / 'andelskortet-coops.json').read_text()):
+    x, y = proj(lon, lat)
+    if inside(x, y):
+        coops.append((round(x, 1), round(y, 1), open_))
+coops.sort(key=lambda c: c[1])  # north to south, so the scan reveals them in order
 labels = [(n, *(round(v, 1) for v in proj(lon, lat))) for n, lon, lat in LABELS]
-
-def inside(x, y, ring):
-    c = False
-    j = len(ring) - 1
-    for i in range(len(ring)):
-        xi, yi = ring[i]; xj, yj = ring[j]
-        if (yi > y) != (yj > y) and x < (xj - xi) * (y - yi) / (yj - yi) + xi:
-            c = not c
-        j = i
-    return c
-
-cx, cy = proj(12.555, 55.685)  # around the lakes
-rng = random.Random(7)
-dots = []
-while len(dots) < 460:
-    x, y = rng.uniform(0, W), rng.uniform(0, H)
-    w = math.exp(-((x - cx) ** 2 + (y - cy) ** 2) / (2 * 95 ** 2))
-    if rng.random() > w + 0.04:
-        continue
-    if any(inside(x, y, r) for r in prings) and not any(inside(x, y, r) for r in lakes + parks):
-        dots.append((round(x, 1), round(y, 1), 1 if rng.random() < 0.18 else 0))
 
 out = here.parent / 'src/content/map.ts'
 out.write_text(
-    '// Generated by scripts/gen-map.py. Outline © OpenStreetMap contributors (ODbL).\n'
-    '// Dots are illustrative co-op positions, not real data.\n'
+    '// Generated by scripts/gen-map.py. Outlines © OpenStreetMap contributors (ODbL).\n'
+    '// Co-op positions and waiting-list status are the real ones from andelskortet.dk.\n'
     f'export const mapViewBox = "0 0 {W} {H}";\n'
-    f'export const mapPath = {json.dumps(path)};\n'
-    f'export const mapLakes = {json.dumps(to_path(lakes))};\n'
-    f'export const mapParks = {json.dumps(to_path(parks))};\n'
+    f'export const mapLand = {json.dumps(to_path(KOMMUNER))};\n'
+    f'export const mapLakes = {json.dumps(to_path(LAKES))};\n'
+    f'export const mapParks = {json.dumps(to_path(PARKS))};\n'
     '/** [name, x, y] */\n'
     f'export const mapLabels: [string, number, number][] = {json.dumps(labels, ensure_ascii=False)};\n'
     '/** [x, y, open waiting list ? 1 : 0] */\n'
-    f'export const mapDots: [number, number, number][] = {json.dumps(dots)};\n'
+    f'export const mapDots: [number, number, number][] = {json.dumps(coops)};\n'
 )
-print('dots', len(dots), 'path chars', len(path))
+print('coops', len(coops), 'open', sum(c[2] for c in coops), 'kB', out.stat().st_size // 1024)

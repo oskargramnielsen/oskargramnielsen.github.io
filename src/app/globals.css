@@ -14,7 +14,8 @@
   --color-bot-soft: #eef0ff;
 
   --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  /* Small labels use the same face as the text. */
+  --font-mono: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
 
   --ease-out-expo: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -192,12 +193,10 @@ html.lenis body {
   overscroll-behavior: contain;
 }
 
-/* The docked hero buttons take the place of "Write to me" on small screens. */
-@media (width < 64rem) {
-  html[data-docked] .nav-write {
-    display: none;
-  }
-  html[data-docked] .nav-right {
-    padding-right: 96px;
-  }
+/* The docked hero buttons take the place of "Write to me" in the header. */
+html[data-docked] .nav-write {
+  display: none;
+}
+html[data-docked] .nav-right {
+  padding-right: calc(78px + 1.25rem);
 }

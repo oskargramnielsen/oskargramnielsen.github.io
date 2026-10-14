@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLenis } from 'lenis/react';
 import { cn } from '@/lib/utils';
 
@@ -8,13 +8,12 @@ import { cn } from '@/lib/utils';
 const IDS = ['top', 'work', 'projects', 'how', 'examples', 'contact'];
 
 /**
- * A short list of the page's sections under the header. It shows where you
- * are and lets you jump. It stays out of the way until you leave the hero.
+ * A small vertical list of the page's sections at the edge of the screen. It
+ * shows where you are and lets you jump. Hidden while the hero is on screen.
  */
 export default function Guide({ labels, label }: { labels: readonly string[]; label: string }) {
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
-  const list = useRef<HTMLOListElement>(null);
   const lenis = useLenis();
 
   useEffect(() => {
@@ -51,14 +50,6 @@ export default function Guide({ labels, label }: { labels: readonly string[]; la
     };
   }, []);
 
-  // On narrow screens the list scrolls sideways; keep the current section in view.
-  useEffect(() => {
-    const ol = list.current;
-    const li = ol?.children[active] as HTMLElement | undefined;
-    if (!ol || !li || ol.scrollWidth <= ol.clientWidth) return;
-    ol.scrollTo({ left: li.offsetLeft - (ol.clientWidth - li.offsetWidth) / 2, behavior: 'smooth' });
-  }, [active]);
-
   const go = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     const el = id === 'top' ? 0 : document.getElementById(id);
@@ -74,41 +65,44 @@ export default function Guide({ labels, label }: { labels: readonly string[]; la
   return (
     <nav
       aria-label={label}
-      className={cn(
-        'grid transition-[grid-template-rows,opacity] duration-300',
-        shown ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0',
-      )}
       inert={!shown}
+      className={cn(
+        'group/guide fixed top-1/2 right-1 z-40 -translate-y-1/2 transition-opacity duration-500 lg:right-auto lg:left-5',
+        shown ? 'opacity-100' : 'pointer-events-none opacity-0',
+      )}
     >
-      <div className="overflow-hidden">
-        <ol
-          ref={list}
-          className="wrap flex gap-5 overflow-x-auto pb-2 font-mono text-[12px] whitespace-nowrap [scrollbar-width:none] md:gap-7"
-        >
-          {IDS.map((id, i) => (
-            <li key={id}>
-              <a
-                href={id === 'top' ? '#' : `#${id}`}
-                onClick={(e) => go(e, id)}
-                aria-current={i === active ? 'location' : undefined}
+      <ol className="flex flex-col gap-0.5">
+        {IDS.map((id, i) => (
+          <li key={id}>
+            <a
+              href={id === 'top' ? '#' : `#${id}`}
+              onClick={(e) => go(e, id)}
+              aria-current={i === active ? 'location' : undefined}
+              className="flex items-center gap-2.5 py-1.5 text-[12.5px] leading-none tracking-[-0.005em] max-lg:flex-row-reverse"
+            >
+              <span aria-hidden className="relative h-[1.5px] w-3 overflow-hidden rounded-full bg-ink/15 lg:w-5">
+                <span
+                  className={cn(
+                    'absolute inset-0 origin-left rounded-full transition-colors',
+                    i === active ? 'bg-bot' : i < active ? 'bg-ink/40' : '',
+                  )}
+                  style={{ transform: `scaleX(${i === active ? 0.25 + 0.75 * progress : i < active ? 1 : 0})` }}
+                />
+              </span>
+              <span
                 className={cn(
-                  'relative block py-1 transition-colors hover:text-bot',
-                  i === active ? 'text-ink' : i < active ? 'text-muted' : 'text-faint',
+                  'whitespace-nowrap transition-[opacity,color] duration-300',
+                  i === active ? 'text-ink' : 'text-muted hover:text-ink',
+                  // Labels only where there is room beside the page; otherwise they show on hover.
+                  'opacity-0 group-hover/guide:opacity-100 max-lg:hidden min-[1600px]:opacity-100',
                 )}
               >
-                <span className={cn('mr-1.5', i === active ? 'text-bot' : undefined)}>{String(i + 1).padStart(2, '0')}</span>
                 {labels[i]}
-                <span className="absolute inset-x-0 bottom-0 h-[1.5px] bg-hair" hidden={i !== active} />
-                <span
-                  className="absolute bottom-0 left-0 h-[1.5px] w-full origin-left bg-bot"
-                  hidden={i !== active}
-                  style={{ transform: `scaleX(${progress})` }}
-                />
-              </a>
-            </li>
-          ))}
-        </ol>
-      </div>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
     </nav>
   );
 }

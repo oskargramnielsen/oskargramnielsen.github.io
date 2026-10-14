@@ -119,10 +119,12 @@ export const da: Dict = {
       body: 'Jeg tog alle andelsforeninger fra CVR-registret, fandt deres hjemmesider og lod en scraper læse hver enkelt for åbne ventelister.',
       short: 'Alle foreningers ventelister, samlet af en scraper.',
       lesson: 'meget af det, I har brug for, findes allerede i offentlige data. Nogen skal bare samle det.',
-      caption: 'andelskortet.dk',
-      attribution: 'Kort © OpenStreetMap · prikker er illustrative',
+      url: 'andelskortet.dk',
+      heading: 'Find din næste andelsbolig i København',
+      search: 'Søg efter forening eller adresse…',
+      attribution: 'Kort © OpenStreetMap · foreninger fra andelskortet.dk',
       users: 'brugere på 21 måneder',
-      legend: { all: 'Andelsforening', open: 'Åben venteliste' },
+      legend: { all: 'Øvrige foreninger', open: 'Åbne ventelister' },
       mailApp: 'Mail',
       // Rigtige beskeder. Private afsendere er anonymiseret.
       mails: [

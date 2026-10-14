@@ -72,8 +72,8 @@ function Chip({ selected, onClick, children }: { selected: boolean; onClick: () 
       onClick={onClick}
       aria-pressed={selected}
       className={cn(
-        'border px-4 py-2.5 text-left text-base transition-colors duration-200 md:text-[17px]',
-        selected ? 'border-bot bg-bot text-card' : 'border-ink bg-card hover:border-bot hover:text-bot',
+        'rounded-full border px-4.5 py-2.5 text-left text-[15px] transition-colors duration-200 md:text-base',
+        selected ? 'border-bot bg-bot text-card' : 'border-hair bg-paper hover:border-ink',
       )}
     >
       {children}
@@ -125,20 +125,26 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
       <h2 className="text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
       <p className="mt-4 text-lg text-body md:text-xl">{t.intro}</p>
 
-      <div className="relative mt-10 max-w-[900px] border border-ink bg-card md:mt-12">
+      <div className="relative mt-10 max-w-[900px] overflow-hidden rounded-[28px] border border-hair bg-card shadow-[0_40px_80px_-50px_#0000004d] md:mt-12">
         {/* Progress */}
-        <div className="flex items-center justify-between border-b border-hair px-5 py-3 font-mono text-xs text-muted md:px-6">
+        <div className="flex items-center justify-between px-6 pt-5 text-[13px] text-muted md:px-8 md:pt-7">
           <span>
             {t.step} {Math.min(q + 1, 3)} {t.of} 3
           </span>
           <div className="flex gap-1.5">
             {questions.map((_, i) => (
-              <span key={i} className={cn('h-1 w-8 transition-colors duration-300', i <= q ? 'bg-bot' : 'bg-hair')} />
+              <span
+                key={i}
+                className={cn(
+                  'h-1.5 rounded-full transition-all duration-300',
+                  i === q ? 'w-6 bg-bot' : i < q ? 'w-1.5 bg-bot' : 'w-1.5 bg-hair',
+                )}
+              />
             ))}
           </div>
         </div>
 
-        <form onSubmit={submit} className="min-h-[340px] p-5 md:p-6">
+        <form onSubmit={submit} className="min-h-[300px] px-6 pt-3 pb-7 md:px-8 md:pb-8">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={q}
@@ -147,12 +153,12 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
               exit={{ opacity: 0, x: -24 }}
               transition={{ duration: 0.25 }}
             >
-              <p className="mb-5 text-xl font-medium tracking-[-0.01em] md:text-2xl">{questions[q]}</p>
+              <p className="mb-6 text-[22px] leading-tight font-semibold tracking-[-0.02em] md:text-[28px]">{questions[q]}</p>
 
               {q === 0 && (
                 <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end">
                   {/* The visitor's own sticky note, like the ones in the hero. */}
-                  <div className="relative aspect-square w-full max-w-[300px] shrink-0 -rotate-2 bg-[#fbe98f] px-5 pt-[21%] pb-4 shadow-[0_1px_1px_#0000000d,0_24px_34px_-20px_#0000004d]">
+                  <div className="relative aspect-square w-full max-w-[270px] shrink-0 sm:max-w-[300px] -rotate-2 bg-[#fbe98f] px-5 pt-[21%] pb-4 shadow-[0_1px_1px_#0000000d,0_24px_34px_-20px_#0000004d]">
                     <span aria-hidden className="absolute inset-x-0 top-0 h-[18%] bg-black/[0.04]" />
                     <textarea
                       value={details}
@@ -193,7 +199,7 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
                         if (dictation.listening) dictation.toggle(details);
                         setQ(1);
                       }}
-                      className="bg-ink px-7 py-3.5 text-[17px] font-medium text-paper transition-colors duration-300 hover:bg-bot disabled:opacity-40 disabled:hover:bg-ink"
+                      className="rounded-full bg-ink px-7 py-3 text-base font-medium text-paper transition-colors duration-300 hover:bg-bot disabled:opacity-30 disabled:hover:bg-ink"
                     >
                       {t.next} →
                     </button>
@@ -213,7 +219,7 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
 
               {q === 2 && (
                 <div>
-                  <div className="flex flex-col border border-ink sm:flex-row">
+                  <div className="flex items-center rounded-full border border-hair bg-paper p-1.5 transition-colors focus-within:border-ink">
                     <input
                       type="email"
                       value={email}
@@ -221,12 +227,12 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
                       required
                       placeholder={t.email}
                       aria-label={t.email}
-                      className="min-w-0 flex-1 bg-transparent px-4 py-3.5 text-[17px] outline-none"
+                      className="min-w-0 flex-1 bg-transparent px-4 py-2.5 text-base outline-none md:text-[17px]"
                     />
                     <button
                       type="submit"
                       disabled={state === 'sending'}
-                      className="bg-ink px-7 py-3.5 text-[17px] font-medium text-paper transition-colors duration-300 hover:bg-bot disabled:opacity-60"
+                      className="shrink-0 rounded-full bg-ink px-5 py-2.5 text-base font-medium text-paper transition-colors duration-300 hover:bg-bot disabled:opacity-60 md:px-6"
                     >
                       {state === 'sending' ? t.sending : `${t.send} →`}
                     </button>
@@ -235,7 +241,11 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
               )}
 
               {q > 0 && (
-                <button type="button" onClick={() => setQ((n) => n - 1)} className="mt-6 font-mono text-xs text-muted hover:text-bot">
+                <button
+                  type="button"
+                  onClick={() => setQ((n) => n - 1)}
+                  className="mt-7 text-[13px] text-muted transition-colors hover:text-ink"
+                >
                   ← {t.back}
                 </button>
               )}
@@ -253,7 +263,7 @@ export default function Contact({ t, lang }: { t: Dict['contact']; lang: Lang })
           <div className="w-full max-w-[560px]">
             <div
               className={cn(
-                'grid grid-cols-[8px_auto_1fr_auto] items-center gap-3 border border-hair px-4 py-3 text-sm',
+                'grid grid-cols-[8px_auto_1fr_auto] items-center gap-3 rounded-full border border-hair px-4 py-3 text-sm',
                 done && 'animate-drop',
               )}
             >
