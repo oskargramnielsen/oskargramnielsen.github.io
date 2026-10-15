@@ -9,7 +9,7 @@ export const site = {
   // Web3Forms access key. Public by design: it only lets the form send mail to site.email.
   web3formsKey: '4b17ca73-ec43-461f-b533-8fb63b1d2dd2',
   // Google Analytics 4 measurement ID (G-…). Public by design. Empty: no Google Analytics and no cookie banner.
-  gaId: '',
+  gaId: 'G-FYVHW5N03S',
 } as const;
 
 export const bookingHref: string = site.calLink ? `https://cal.com/${site.calLink}?overlayCalendar=true` : '#contact';

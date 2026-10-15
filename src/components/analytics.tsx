@@ -38,7 +38,8 @@ function loadGa(id: string) {
     window.dataLayer!.push(arguments);
   };
   window.gtag('js', new Date());
-  window.gtag('config', id);
+  // Analytics only: no ads signals, matching what the banner promises.
+  window.gtag('config', id, { allow_google_signals: false, allow_ad_personalization_signals: false });
   const s = document.createElement('script');
   s.async = true;
   s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
