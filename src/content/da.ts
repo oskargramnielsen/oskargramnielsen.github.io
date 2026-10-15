@@ -244,5 +244,15 @@ export const da: Dict = {
     talk: 'Vil du hellere tale sammen?',
     book: 'Book 20 minutter',
   },
-  footer: { place: 'København', privacy: 'Denne side tracker dig ikke.' },
+  footer: {
+    place: 'København',
+    privacy: 'Besøg tælles uden cookies. Google Analytics kun hvis du siger ja.',
+    settings: 'Cookie-indstillinger',
+  },
+  consent: {
+    label: 'Cookies',
+    text: 'Må jeg bruge Google Analytics til at se, hvilke dele af siden der er nyttige? Ingen reklamer, intet sælges.',
+    yes: 'Ja, fint',
+    no: 'Nej tak',
+  },
 };

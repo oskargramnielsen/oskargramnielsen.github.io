@@ -1,5 +1,6 @@
 import { site } from '@/content/site';
 import type { Dict } from '@/content';
+import { ConsentSettings } from './analytics';
 
 export default function Footer({ t }: { t: Dict['footer'] }) {
   return (
@@ -8,7 +9,9 @@ export default function Footer({ t }: { t: Dict['footer'] }) {
         <span>
           {site.name} · {t.place}
         </span>
-        <span>{t.privacy}</span>
+        <span>
+          {t.privacy} <ConsentSettings label={t.settings} />
+        </span>
       </div>
     </footer>
   );

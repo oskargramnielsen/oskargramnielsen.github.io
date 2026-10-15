@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import type { Dict } from '@/content';
 import { bookingHref, site, type Lang } from '@/content/site';
+import { sourceKey, track } from '@/lib/track';
 import { cn } from '@/lib/utils';
 
 type State = 'idle' | 'sending' | 'sent' | 'mail' | 'error';
@@ -33,6 +34,7 @@ export default function Contact({ t }: { t: Dict['contact']; lang: Lang }) {
 
   const pick = (set: (v: string) => void, v: string) => {
     set(v);
+    track('contact_step', { step: 3, time: v });
     setTimeout(() => setQ((n) => n + 1), 220);
   };
 
@@ -40,10 +42,11 @@ export default function Contact({ t }: { t: Dict['contact']; lang: Lang }) {
     e.preventDefault();
     const firstLine = details.trim().split('\n')[0];
     const subject = `New task from website: ${firstLine.length > 60 ? firstLine.slice(0, 57) + '…' : firstLine}`;
-    const message = `${details.trim()}\n\nTime spent: ${time}`;
+    const message = `${details.trim()}\n\nTime spent: ${time}\nCame from: ${sessionStorage.getItem(sourceKey) || 'unknown'}`;
     if (!site.web3formsKey) {
       window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`${message}\n\n${email}`)}`;
       setState('mail');
+      track('contact_submit', { result: 'mail', time });
       return;
     }
     setState('sending');
@@ -54,8 +57,10 @@ export default function Contact({ t }: { t: Dict['contact']; lang: Lang }) {
       const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body });
       const json = await res.json();
       setState(json.success ? 'sent' : 'error');
+      track('contact_submit', { result: json.success ? 'sent' : 'error', time });
     } catch {
       setState('error');
+      track('contact_submit', { result: 'error', time });
     }
   }
 
@@ -122,7 +127,10 @@ export default function Contact({ t }: { t: Dict['contact']; lang: Lang }) {
                             <button
                               key={s}
                               type="button"
-                              onClick={() => setDetails(s)}
+                              onClick={() => {
+                                setDetails(s);
+                                track('contact_suggestion', { text: s });
+                              }}
                               className="rounded-full bg-[#2a2616]/[0.07] px-2.5 py-1 text-left text-[13px] leading-tight text-[#2a2616] transition-colors hover:bg-[#2a2616]/[0.14]"
                             >
                               + {s}
@@ -135,7 +143,10 @@ export default function Contact({ t }: { t: Dict['contact']; lang: Lang }) {
                   <button
                     type="button"
                     disabled={!details.trim()}
-                    onClick={() => setQ(1)}
+                    onClick={() => {
+                      setQ(1);
+                      track('contact_step', { step: 2 });
+                    }}
                     className="rounded-full bg-ink px-7 py-3 text-base font-medium text-paper transition-colors duration-300 hover:bg-bot disabled:opacity-30 disabled:hover:bg-ink"
                   >
                     {t.next} →

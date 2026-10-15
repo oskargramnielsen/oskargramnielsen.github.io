@@ -1,5 +1,6 @@
 import { Caveat, Schibsted_Grotesk } from 'next/font/google';
 import type { Lang } from '@/content/site';
+import Analytics from './analytics';
 import SmoothScroll from './smooth-scroll';
 import '@/app/globals.css';
 
@@ -19,6 +20,7 @@ export default function RootHtml({ lang, children }: { lang: Lang; children: Rea
     <html lang={lang} className={`${schibsted.variable} ${caveat.variable}`}>
       <body>
         <SmoothScroll>{children}</SmoothScroll>
+        <Analytics lang={lang} />
       </body>
     </html>
   );

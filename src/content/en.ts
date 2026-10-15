@@ -243,7 +243,17 @@ export const en = {
     talk: 'Prefer talking?',
     book: 'Book 20 minutes',
   },
-  footer: { place: 'Copenhagen', privacy: "This site doesn't track you." },
+  footer: {
+    place: 'Copenhagen',
+    privacy: 'Visits are counted without cookies. Google Analytics only if you say yes.',
+    settings: 'Cookie settings',
+  },
+  consent: {
+    label: 'Cookies',
+    text: 'May I use Google Analytics to see which parts of the site are useful? No ads, nothing sold.',
+    yes: 'Yes, fine',
+    no: 'No thanks',
+  },
 };
 
 export type Dict = typeof en;
