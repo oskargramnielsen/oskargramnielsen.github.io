@@ -24,7 +24,7 @@ const CalendarIcon = () => (
   </svg>
 );
 
-const base = 'group relative inline-flex items-center justify-center gap-3 border-[1.5px] text-[17px] font-medium';
+const base = 'group press relative inline-flex items-center justify-center gap-3 border-[1.5px] text-[17px] font-medium';
 const styles = {
   primary: 'border-ink bg-ink text-paper hover:border-bot hover:bg-bot',
   secondary: 'border-ink bg-paper text-ink hover:border-bot hover:text-bot',

@@ -105,78 +105,114 @@ function Chat({ t }: { t: Dict['job']['chat'] }) {
 }
 
 /**
- * Who's behind it: a name badge hanging on a lanyard from the top of the section. It swings in,
- * sways a little, and can be grabbed and swung, like a real one.
+ * Who's behind it: a name badge on a lanyard. It drops in from above, bounces and swings until it
+ * settles, and can be grabbed and swung like a real one. The avatar waves when touched.
  */
 function Badge({ t }: { t: Dict['job'] }) {
   const reduce = useReducedMotion();
-  const angle = useSpring(0, { stiffness: 120, damping: 6, mass: 0.8 });
+  const angle = useSpring(0, { stiffness: 120, damping: 5, mass: 0.8 });
   const ref = useRef<HTMLDivElement>(null);
-  const seen = useInView(ref, { once: true, margin: '-10% 0px' });
+  const seen = useInView(ref, { once: true, amount: 0.2 });
   useEffect(() => {
-    if (reduce) return;
-    // Arrive with a swing, then come to rest.
-    if (seen) angle.set(0);
-    else angle.jump(-14);
+    if (reduce || !seen) return;
+    // A kick to the side as it lands, so it swings itself to rest.
+    const id = setTimeout(() => angle.set(11), 380);
+    const id2 = setTimeout(() => angle.set(0), 520);
+    return () => [id, id2].forEach(clearTimeout);
   }, [seen, reduce, angle]);
   return (
-    <div ref={ref} className="relative mx-auto w-full max-w-[330px] lg:mx-0">
+    <div ref={ref} className="relative mx-auto w-full max-w-[280px] md:max-w-[330px] lg:mx-0">
       <motion.div
-        style={{ rotate: angle, transformOrigin: '50% -90px' }}
-        onPan={(_, info) => !reduce && angle.set(Math.max(-35, Math.min(35, info.offset.x * 0.12)))}
-        onPanEnd={() => angle.set(0)}
-        className="relative cursor-grab touch-pan-y select-none active:cursor-grabbing"
+        initial={reduce ? false : { y: -260, opacity: 0 }}
+        animate={seen ? { y: 0, opacity: 1 } : undefined}
+        transition={{ y: { type: 'spring', stiffness: 260, damping: 13, mass: 1.1 }, opacity: { duration: 0.2 } }}
       >
-        {/* The lanyard, running up out of sight. */}
-        <span
-          aria-hidden
-          className="absolute bottom-full left-1/2 h-[80px] w-[18px] -translate-x-1/2 bg-bot [mask:linear-gradient(to_top,#000_45%,#0000)] lg:h-[100px]"
-        ></span>
-        {/* The clip. */}
-        <span
-          aria-hidden
-          className="absolute -top-3 left-1/2 z-10 h-6 w-10 -translate-x-1/2 rounded-[8px] border-2 border-[#b9bcc6] bg-[#e4e6ec]"
-        />
-        <div className="relative rounded-[24px] border border-hair bg-card p-5 shadow-[0_30px_60px_-30px_#00000066] md:p-6">
-          <span aria-hidden className="mx-auto mb-5 block h-2 w-12 rounded-full bg-hair" />
-          <div className="flex items-center gap-4">
-            <span className="relative grid size-16 shrink-0 place-items-center rounded-full bg-bot text-[22px] font-semibold tracking-[-0.02em] text-card">
-              OG
-              <span className="absolute right-0 bottom-0.5 size-4 rounded-full border-[3px] border-card bg-[#2fbf71]" />
-            </span>
-            <div>
-              <p className="text-[19px] leading-tight font-semibold tracking-[-0.02em]">{site.name}</p>
-              <p className="mt-0.5 text-[14px] text-muted">{t.facts[0].v}</p>
+        <motion.div
+          style={{ rotate: angle, transformOrigin: '50% -90px' }}
+          onPan={(_, info) => !reduce && angle.set(Math.max(-35, Math.min(35, info.offset.x * 0.12)))}
+          onPanEnd={() => angle.set(0)}
+          className="relative cursor-grab touch-pan-y select-none active:cursor-grabbing"
+        >
+          {/* The lanyard, running up out of sight. */}
+          <span
+            aria-hidden
+            className="absolute bottom-full left-1/2 h-[80px] w-[16px] -translate-x-1/2 bg-bot [mask:linear-gradient(to_top,#000_45%,#0000)] md:w-[18px] lg:h-[100px]"
+          />
+          {/* The clip. */}
+          <span
+            aria-hidden
+            className="absolute -top-3 left-1/2 z-10 h-6 w-10 -translate-x-1/2 rounded-[8px] border-2 border-[#b9bcc6] bg-[#e4e6ec]"
+          />
+          <div className="relative rounded-[22px] border border-hair bg-card p-4 shadow-[0_30px_60px_-30px_#00000066] md:rounded-[24px] md:p-6">
+            <span aria-hidden className="mx-auto mb-4 block h-2 w-12 rounded-full bg-hair md:mb-5" />
+            <div className="flex items-center gap-3 md:gap-4">
+              <motion.span
+                initial="rest"
+                whileHover="wave"
+                whileTap="wave"
+                className="relative grid size-12 shrink-0 cursor-pointer place-items-center rounded-full bg-bot text-[18px] font-semibold tracking-[-0.02em] text-card md:size-16 md:text-[22px]"
+              >
+                OG
+                <motion.span
+                  aria-hidden
+                  variants={{
+                    rest: { scale: 0, opacity: 0, rotate: 0 },
+                    wave: { scale: 1, opacity: 1, rotate: [0, 22, -8, 22, -8, 0], transition: { duration: 0.9 } },
+                  }}
+                  style={{ originX: 0.7, originY: 0.9 }}
+                  className="absolute -top-4 -right-4 text-[24px]"
+                >
+                  👋
+                </motion.span>
+                {/* Online, with a soft ping. */}
+                <span className="absolute right-0 bottom-0 size-3.5 rounded-full border-[3px] border-card bg-[#2fbf71] md:bottom-0.5 md:size-4">
+                  <span className="absolute -inset-[3px] animate-ping rounded-full bg-[#2fbf71] opacity-40 motion-reduce:hidden" />
+                </span>
+              </motion.span>
+              <div>
+                <p className="text-[17px] leading-tight font-semibold tracking-[-0.02em] md:text-[19px]">{site.name}</p>
+                <p className="mt-0.5 text-[13px] text-muted md:text-[14px]">{t.facts[0].v}</p>
+              </div>
             </div>
+            <dl className="mt-4 space-y-2.5 border-t border-hair pt-3 text-[13px] md:mt-5 md:space-y-3 md:pt-4 md:text-[14px]">
+              <div>
+                <dt className="text-[12px] text-faint">{t.facts[1].k}</dt>
+                <dd>{t.facts[1].v}</dd>
+              </div>
+              <div>
+                <dt className="text-[12px] text-faint">{t.facts[2].k}</dt>
+                <dd className="mt-1.5 flex flex-wrap gap-1.5">
+                  {t.facts[2].v.split(', ').map((skill, i) => (
+                    <motion.span
+                      key={skill}
+                      initial={reduce ? false : { opacity: 0, y: 6, scale: 0.8 }}
+                      animate={seen ? { opacity: 1, y: 0, scale: 1 } : undefined}
+                      transition={{ delay: 0.7 + i * 0.07, type: 'spring', stiffness: 500, damping: 18 }}
+                      whileHover={{ y: -2 }}
+                      className="rounded-full bg-shade px-2.5 py-1 text-[12px] md:text-[13px]"
+                    >
+                      {skill}
+                    </motion.span>
+                  ))}
+                </dd>
+              </div>
+            </dl>
+            <a
+              href={site.cv}
+              download
+              onPointerDownCapture={(e) => e.stopPropagation()}
+              className="group press mt-4 flex items-center justify-between rounded-full bg-ink py-2 pr-2 pl-4 text-[14px] font-medium text-paper duration-300 hover:bg-bot md:mt-5 md:py-2.5 md:pr-2.5 md:pl-5 md:text-[15px]"
+            >
+              {t.cvLabel} · {t.cv}
+              <span
+                className="grid size-7 place-items-center rounded-full bg-paper/15 transition-transform duration-300 group-hover:translate-y-0.5 md:size-8"
+                aria-hidden
+              >
+                ↓
+              </span>
+            </a>
           </div>
-          <dl className="mt-5 space-y-3 border-t border-hair pt-4 text-[14px]">
-            <div>
-              <dt className="text-[12px] text-faint">{t.facts[1].k}</dt>
-              <dd>{t.facts[1].v}</dd>
-            </div>
-            <div>
-              <dt className="text-[12px] text-faint">{t.facts[2].k}</dt>
-              <dd className="mt-1.5 flex flex-wrap gap-1.5">
-                {t.facts[2].v.split(', ').map((skill) => (
-                  <span key={skill} className="rounded-full bg-shade px-2.5 py-1 text-[13px]">
-                    {skill}
-                  </span>
-                ))}
-              </dd>
-            </div>
-          </dl>
-          <a
-            href={site.cv}
-            download
-            onPointerDownCapture={(e) => e.stopPropagation()}
-            className="mt-5 flex items-center justify-between rounded-full bg-ink py-2.5 pr-2.5 pl-5 text-[15px] font-medium text-paper transition-colors duration-300 hover:bg-bot"
-          >
-            {t.cvLabel} · {t.cv}
-            <span className="grid size-8 place-items-center rounded-full bg-paper/15" aria-hidden>
-              ↓
-            </span>
-          </a>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );

@@ -78,6 +78,8 @@ function Stack({ t }: { t: Dict['benefits']['stack'] }) {
           <motion.li
             key={tool.name}
             variants={pop(0.15 + gi * 0.45 + i * 0.06)}
+            whileHover={{ y: -4, rotate: i % 2 ? 2 : -2, transition: { type: 'spring', stiffness: 400, damping: 14 } }}
+            whileTap={{ scale: 0.94 }}
             className="flex h-[76px] flex-col items-center justify-center gap-1.5 rounded-[14px] border border-hair bg-paper px-1.5 text-center md:h-[92px] md:gap-2 md:rounded-[16px]"
           >
             {TOOL_ICONS[tool.icon] ? (
@@ -131,8 +133,10 @@ function Stack({ t }: { t: Dict['benefits']['stack'] }) {
         {arrow(0)}
         <motion.span
           variants={pop(1.2)}
-          className="mx-auto shrink-0 rounded-[20px] bg-bot px-5 py-3 text-center text-card shadow-[0_10px_24px_-10px_#1f3bff99] md:mx-0"
+          className="relative mx-auto shrink-0 rounded-[20px] bg-bot px-5 py-3 text-center text-card shadow-[0_10px_24px_-10px_#1f3bff99] md:mx-0"
         >
+          {/* A slow pulse: this is where it all comes together. */}
+          <span aria-hidden className="absolute inset-0 animate-[pulse-ring_2.4s_ease-out_infinite] rounded-[20px] motion-reduce:hidden" />
           <span className="block text-[15px] leading-tight font-semibold">{t.center}</span>
           <span className="block text-[12px] leading-tight opacity-75">{t.centerNote}</span>
         </motion.span>
@@ -179,15 +183,27 @@ function Bill({ t, seen }: { t: Dict['benefits']; seen: boolean }) {
             </div>
             <div className="my-5 border-t border-dashed border-ink/25" />
             <ul className="space-y-3 md:space-y-4">
-              {t.items.map((item) => (
-                <li key={item.title} className="flex items-center gap-3">
+              {t.items.map((item, i) => (
+                <motion.li key={item.title} whileHover="hover" className="flex items-center gap-3">
                   <div className="min-w-0">
                     <p className="text-[16px] leading-tight font-semibold">{item.title}</p>
                     <p className="mt-0.5 text-[13.5px] leading-snug text-muted">{item.text}</p>
                   </div>
                   <span aria-hidden className="h-px min-w-4 flex-1 translate-y-1 border-b border-dotted border-ink/30" />
-                  <span className="flex shrink-0 items-center gap-0.5 font-mono text-bot">{SYMBOLS[item.icon]}</span>
-                </li>
+                  <motion.span
+                    variants={{ hover: { scale: 1.25, rotate: -8, transition: { type: 'spring', stiffness: 500, damping: 12 } } }}
+                    className="shrink-0"
+                  >
+                    <motion.span
+                      initial={reduce ? false : { scale: 0, opacity: 0 }}
+                      animate={seen ? { scale: 1, opacity: 1 } : undefined}
+                      transition={{ delay: 1.3 + i * 0.12, type: 'spring', stiffness: 600, damping: 14 }}
+                      className="flex items-center gap-0.5 font-mono text-bot"
+                    >
+                      {SYMBOLS[item.icon]}
+                    </motion.span>
+                  </motion.span>
+                </motion.li>
               ))}
             </ul>
             <div className="my-5 border-t border-dashed border-ink/25" />
@@ -200,8 +216,21 @@ function Bill({ t, seen }: { t: Dict['benefits']; seen: boolean }) {
                 <p className="text-[15px] font-semibold">{b.get}</p>
                 <p className="text-[13px] text-muted">{b.getText}</p>
               </div>
-              <p className="text-right text-[clamp(30px,3.2vw,44px)] leading-none font-semibold tracking-[-0.04em] text-bot">
+              <p className="relative text-right text-[clamp(30px,3.2vw,44px)] leading-none font-semibold tracking-[-0.04em] text-bot">
                 {b.getValue}
+                {/* Underlined by hand once the bill is out. */}
+                <svg viewBox="0 0 200 12" preserveAspectRatio="none" className="absolute -bottom-2.5 left-0 h-3 w-full" aria-hidden>
+                  <motion.path
+                    d="M3 8 C 50 3, 120 2, 197 6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    initial={reduce ? false : { pathLength: 0 }}
+                    animate={seen ? { pathLength: 1 } : undefined}
+                    transition={{ delay: 2.2, duration: 0.6, ease: 'easeOut' }}
+                  />
+                </svg>
               </p>
             </div>
             <div className="mt-6 flex items-center justify-between gap-4">

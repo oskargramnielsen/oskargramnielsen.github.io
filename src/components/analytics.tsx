@@ -131,7 +131,7 @@ export default function Analytics({ lang }: { lang: Lang }) {
               <button
                 type="button"
                 onClick={() => setConsent('yes')}
-                className="rounded-full bg-ink px-3 py-1.5 text-[13px] font-medium text-card transition-colors hover:bg-bot"
+                className="rounded-full bg-ink px-3 py-1.5 text-[13px] font-medium text-card press hover:bg-bot"
               >
                 {t.yes}
               </button>

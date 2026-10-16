@@ -38,7 +38,7 @@ export default function ReadMore({ short, body, extra, readMore, readLess, class
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="group mt-4 inline-flex items-center gap-2 rounded-full bg-bot-soft py-1.5 pr-3.5 pl-1.5 text-[14px] font-medium text-bot transition-colors duration-300 hover:bg-bot hover:text-card"
+        className="group mt-4 inline-flex items-center gap-2 rounded-full bg-bot-soft py-1.5 pr-3.5 pl-1.5 text-[14px] font-medium text-bot press duration-300 hover:bg-bot hover:text-card"
       >
         <span className="grid size-6 place-items-center rounded-full bg-bot text-card transition-[background-color,rotate] duration-300 group-hover:bg-card group-hover:text-bot group-aria-expanded:rotate-45">
           <svg

@@ -1,6 +1,7 @@
 'use client';
 
-import { motion, useTransform, type MotionValue } from 'motion/react';
+import { useState } from 'react';
+import { motion, useMotionValueEvent, useTransform, type MotionValue } from 'motion/react';
 import type { Dict } from '@/content';
 import { mapDots, mapLabels, mapLakes, mapLand, mapParks, mapViewBox } from '@/content/map';
 import { seg, useStep } from '@/lib/motion';
@@ -100,6 +101,7 @@ function Line({
   const left = useTransform(grow, (g) => `${g * END[0]}%`);
   const top = useTransform(grow, (g) => `${yAt(g * END[0])}%`);
   const shown = useTransform(grow, (g) => (g > 0.01 ? 1 : 0));
+  const done = useDone(grow);
   return (
     <div className={className} style={style} aria-hidden>
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full">
@@ -129,8 +131,46 @@ function Line({
       <motion.span className="absolute size-0" style={{ left, top, opacity: shown }}>
         <span className="absolute -inset-[9px] animate-ping rounded-full opacity-30" style={{ background: BLUE }} />
         <span className="absolute -inset-[7px] rounded-full border-[3px] border-card" style={{ background: BLUE }} />
+        {/* A small burst when it reaches the top. */}
+        {done &&
+          Array.from({ length: 8 }, (_, k) => (
+            <span
+              key={k}
+              className="absolute -inset-[3px] animate-burst rounded-full motion-reduce:hidden"
+              style={
+                {
+                  background: BLUE,
+                  '--bx': `${Math.cos((k / 8) * Math.PI * 2) * 26}px`,
+                  '--by': `${Math.sin((k / 8) * Math.PI * 2) * 26}px`,
+                } as React.CSSProperties
+              }
+            />
+          ))}
       </motion.span>
     </div>
+  );
+}
+
+/** True once the line has reached the top. */
+function useDone(grow: MotionValue<number>) {
+  const [done, setDone] = useState(false);
+  useMotionValueEvent(grow, 'change', (g) => setDone((d) => (d ? g > 0.98 : g >= 0.999)));
+  return done;
+}
+
+/** The count, with a little bounce when it gets to the top. */
+function Count({ grow, className }: { grow: MotionValue<number>; className: string }) {
+  const users = useUsers(grow);
+  const done = useDone(grow);
+  return (
+    <motion.b
+      className={className}
+      style={{ originX: 1, originY: 1 }}
+      animate={done ? { scale: [1, 1.14, 0.97, 1] } : { scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {users}
+    </motion.b>
   );
 }
 
@@ -140,12 +180,11 @@ const useUsers = (grow: MotionValue<number>) => useTransform(grow, (g) => Math.r
 /** On large screens the line runs across the whole pinned screen, behind the text and the window, and ends at the count. */
 export function AndelskortetBackdrop({ p, t }: { p: MotionValue<number>; t: Dict['work']['andelskortet'] }) {
   const grow = useTransform(p, (v) => seg(v, 0.1, 0.75));
-  const users = useUsers(grow);
   return (
     <>
       <Line grow={grow} id="ak-grow-wide" width={5} className="absolute inset-0" />
       <div className="absolute -translate-x-full pr-2 pb-5 text-right" style={{ left: `${END[0]}%`, bottom: `${100 - END[1]}%` }}>
-        <motion.b className="block text-[52px] leading-none font-semibold tracking-[-0.04em] text-bot">{users}</motion.b>
+        <Count grow={grow} className="block text-[52px] leading-none font-semibold tracking-[-0.04em] text-bot" />
         <span className="mt-1 block text-[13px] whitespace-nowrap text-body">{t.users}</span>
       </div>
     </>
@@ -170,7 +209,6 @@ const HouseIcon = ({ className }: { className?: string }) => (
 export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict['work']['andelskortet'] }) {
   const scanY = useTransform(p, (v) => seg(v, 0.05, 0.6) * H);
   const grow = useTransform(p, (v) => seg(v, 0.1, 0.75));
-  const users = useUsers(grow);
   const step = useStep(p, [0.62, 0.78, 0.84, 0.9]);
 
   return (
@@ -184,7 +222,7 @@ export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict
             className="absolute -translate-x-full pr-1 text-right"
             style={{ left: `${END[0]}%`, bottom: BAND - (BAND_TOP + (END[1] / 100) * (BAND - BAND_TOP)) + 12 }}
           >
-            <motion.b className="block text-[36px] leading-none font-semibold tracking-[-0.04em] text-bot">{users}</motion.b>
+            <Count grow={grow} className="block text-[36px] leading-none font-semibold tracking-[-0.04em] text-bot" />
             <span className="mt-0.5 block text-[12px] text-body">{t.users}</span>
           </div>
         </div>

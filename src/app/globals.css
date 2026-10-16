@@ -68,6 +68,42 @@
   animation: drop-in 0.7s var(--ease-out-expo);
 }
 
+/* Buttons give a little when pressed. */
+@utility press {
+  transition-property: color, background-color, border-color, opacity, scale;
+  transition-duration: var(--tw-duration, 200ms);
+  transition-timing-function: var(--ease-out-expo);
+  &:active:not(:disabled) {
+    scale: 0.96;
+  }
+}
+
+@keyframes burst {
+  from {
+    translate: 0 0;
+    scale: 1;
+    opacity: 1;
+  }
+  to {
+    translate: var(--bx) var(--by);
+    scale: 0.3;
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-ring {
+  from {
+    box-shadow: 0 0 0 0 #1f3bff55;
+  }
+  to {
+    box-shadow: 0 0 0 14px #1f3bff00;
+  }
+}
+
+@utility animate-burst {
+  animation: burst 0.8s var(--ease-out-expo) forwards;
+}
+
 @utility animate-caret {
   animation: blink 1s steps(2) infinite;
 }
@@ -128,7 +164,9 @@
   overflow: hidden;
   padding: 14px 14px 12px;
   border-radius: 2px;
-  font: 600 clamp(18px, 1.65vw, 23px) / 1.08 var(--font-hand), cursive;
+  font:
+    600 clamp(18px, 1.65vw, 23px) / 1.08 var(--font-hand),
+    cursive;
   color: #2a2616;
   text-align: left;
 }

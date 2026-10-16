@@ -16,7 +16,7 @@ function Chip({ selected, onClick, children }: { selected: boolean; onClick: () 
       onClick={onClick}
       aria-pressed={selected}
       className={cn(
-        'rounded-full border px-4.5 py-2.5 text-left text-[15px] transition-colors duration-200 md:text-base',
+        'press rounded-full border px-4.5 py-2.5 text-left text-[15px] md:text-base',
         selected ? 'border-bot bg-bot text-card' : 'border-hair bg-paper hover:border-ink',
       )}
     >
@@ -188,7 +188,7 @@ export default function Contact({ t }: { t: Dict['contact']; lang: Lang }) {
               <button
                 type="submit"
                 disabled={state === 'sending' || !details.trim()}
-                className="self-start rounded-full bg-ink px-7 py-3.5 text-base font-medium text-paper transition-colors duration-300 hover:bg-bot disabled:opacity-30 disabled:hover:bg-ink"
+                className="self-start rounded-full bg-ink px-7 py-3.5 text-base font-medium text-paper press duration-300 hover:bg-bot disabled:opacity-30 disabled:hover:bg-ink"
               >
                 {state === 'sending' ? t.sending : `${t.send} →`}
               </button>
@@ -218,7 +218,7 @@ export default function Contact({ t }: { t: Dict['contact']; lang: Lang }) {
             </div>
             <a
               href={bookingHref}
-              className="flex shrink-0 items-center justify-center gap-2.5 rounded-full bg-bot px-8 py-4.5 text-[18px] font-medium text-card shadow-[0_14px_30px_-14px_#1f3bffaa] transition-colors duration-300 hover:bg-ink"
+              className="flex shrink-0 items-center justify-center gap-2.5 rounded-full bg-bot px-8 py-4.5 text-[18px] font-medium text-card shadow-[0_14px_30px_-14px_#1f3bffaa] press duration-300 hover:bg-ink"
             >
               <svg
                 viewBox="0 0 24 24"
