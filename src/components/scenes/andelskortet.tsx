@@ -12,14 +12,92 @@ const open = mapDots.filter((d) => d[2]);
 // Andelskortet's own colours: its green, and a light map like the CARTO tiles it uses.
 const GREEN = '#3a5d50';
 
-// Visitors since launch, month by month: some months grow fast, some slowly, but it never goes down.
-// Shape of the real curve, rounded. Drawn in a 100 x 100 box that stretches with the scene; on desktop
-// it starts behind the browser window and climbs out above it.
-const GROWTH = [3, 1, 4, 2, 5, 1.5, 3, 6, 2, 4, 2.5, 5, 7, 3, 4, 6, 2, 5, 8, 3, 6, 4, 7, 9, 5, 8];
-const TOTAL = GROWTH.map((_, i) => GROWTH.slice(0, i + 1).reduce((a, b) => a + b, 0));
-const LINE = TOTAL.map(
-  (v, i) => `${i ? 'L' : 'M'}${((i / (TOTAL.length - 1)) * 98).toFixed(2)},${(46 - (v / TOTAL[TOTAL.length - 1]) * 44).toFixed(2)}`,
-).join(' ');
+// Visitors since launch: it climbs with small dips, like the real curve. Points are % of the
+// screen (x from the left, y from the top), traced from Oskar's sketch.
+const CURVE = [
+  [2, 72],
+  [3, 69],
+  [5, 71],
+  [7, 71.5],
+  [9.5, 69],
+  [12, 70.5],
+  [14.5, 70.5],
+  [17.5, 67.5],
+  [20, 68.5],
+  [23.5, 67],
+  [25.5, 65],
+  [28, 66],
+  [31, 58.5],
+  [32, 59.5],
+  [34, 57.5],
+  [36.5, 53],
+  [38, 49.5],
+  [39.5, 50.5],
+  [41, 45],
+  [42, 33.5],
+  [44, 33.5],
+  [45.5, 27.5],
+  [47, 26.5],
+  [50, 23],
+  [53, 21],
+  [55, 23],
+  [59, 19.5],
+  [61.5, 19.5],
+  [64.5, 13.5],
+  [66, 15],
+  [70, 9],
+  [73, 12],
+  [75, 8],
+  [76.5, 9],
+  [79, 10.5],
+  [81, 5.5],
+  [84, 8],
+  [86, 5],
+  [88.5, 6.5],
+  [90, 2.5],
+  [92, 2.5],
+  [93, 1.5],
+  [94, 2.5],
+  [96.5, 1.5],
+  [98, 1.5],
+] as const;
+// Smooth: a curve through the midpoints, bending at each traced point.
+const LINE =
+  `M${CURVE[0][0]},${CURVE[0][1]} ` +
+  CURVE.slice(1, -1)
+    .map(([x, y], i) => `Q${x},${y} ${(x + CURVE[i + 2][0]) / 2},${(y + CURVE[i + 2][1]) / 2}`)
+    .join(' ') +
+  ` L${CURVE[CURVE.length - 1][0]},${CURVE[CURVE.length - 1][1]}`;
+
+/** The rising visitor line, revealed left to right as the scene plays. */
+function Line({ grow, id, className, width }: { grow: MotionValue<number>; id: string; className: string; width: number }) {
+  const clipW = useTransform(grow, (g) => g * 104);
+  return (
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" className={className} aria-hidden>
+      <defs>
+        <clipPath id={id}>
+          <motion.rect x="-2" y="-5" height="110" width={clipW} />
+        </clipPath>
+      </defs>
+      <path
+        d={LINE}
+        clipPath={`url(#${id})`}
+        fill="none"
+        stroke={GREEN}
+        strokeWidth={width}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
+/** On large screens the line runs across the whole pinned screen, behind the text and the window. */
+export function AndelskortetBackdrop({ p }: { p: MotionValue<number> }) {
+  const grow = useTransform(p, (v) => seg(v, 0.1, 0.75));
+  return <Line grow={grow} id="ak-grow-wide" width={6} className="absolute inset-0 size-full opacity-90" />;
+}
 
 /** The house-in-a-circle marker andelskortet.dk uses for open waiting lists. */
 const House = () => (
@@ -39,36 +117,20 @@ const HouseIcon = ({ className }: { className?: string }) => (
 export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict['work']['andelskortet'] }) {
   const scanY = useTransform(p, (v) => seg(v, 0.05, 0.6) * H);
   const grow = useTransform(p, (v) => seg(v, 0.1, 0.75));
-  const clipW = useTransform(grow, (g) => g * 104);
   const users = useTransform(grow, (g) => Math.round(24485 * g).toLocaleString('da-DK'));
   const step = useStep(p, [0.62, 0.78, 0.84, 0.9]);
 
   return (
     <div className="relative flex flex-col sm:block sm:h-[600px] lg:absolute lg:inset-0 lg:h-auto">
       {/* In the back: how many people it has helped, a number that counts up and a line that only goes up. */}
-      <div className="relative h-[170px] sm:absolute sm:inset-0 sm:h-auto">
-        <svg
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          className="absolute inset-x-0 top-0 h-[230%] w-full overflow-visible sm:inset-0 sm:size-full"
-          aria-hidden
-        >
-          <defs>
-            <clipPath id="ak-grow">
-              <motion.rect x="-2" y="-5" height="110" width={clipW} />
-            </clipPath>
-          </defs>
-          <path
-            d={LINE}
-            clipPath="url(#ak-grow)"
-            fill="none"
-            stroke={GREEN}
-            strokeWidth="3.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            vectorEffect="non-scaling-stroke"
-          />
-        </svg>
+      <div className="relative h-[230px] sm:absolute sm:inset-0 sm:h-auto">
+        {/* Smaller screens: the line runs edge to edge behind the number and the top of the window. */}
+        <Line
+          grow={grow}
+          id="ak-grow"
+          width={5}
+          className="absolute top-[64px] left-1/2 h-[170px] w-screen -translate-x-1/2 sm:top-0 sm:h-full lg:hidden"
+        />
         <div className="absolute top-0 left-0">
           <motion.b className="block text-[40px] leading-none font-semibold tracking-[-0.04em] md:text-[52px]" style={{ color: GREEN }}>
             {users}

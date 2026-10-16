@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useLenis } from 'lenis/react';
 import type { Dict } from '@/content';
-import Andelskortet from '../scenes/andelskortet';
+import Andelskortet, { AndelskortetBackdrop } from '../scenes/andelskortet';
 import Bank from '../scenes/bank';
 import Cars from '../scenes/cars';
 import Housing from '../scenes/housing';
@@ -50,7 +50,7 @@ export default function Work({ t }: { t: Dict['work'] }) {
         <p className="mt-4 max-w-[600px] text-lg text-body md:text-xl">{t.intro}</p>
       </div>
 
-      <Scene id="andelskortet" {...shared} {...t.andelskortet} tall="long">
+      <Scene id="andelskortet" {...shared} {...t.andelskortet} tall="long" backdrop={(p) => <AndelskortetBackdrop p={p} />}>
         {(p) => <Andelskortet p={p} t={t.andelskortet} />}
       </Scene>
       <Scene id="housing" {...shared} {...t.housing}>

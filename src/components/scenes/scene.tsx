@@ -20,6 +20,8 @@ type Props = {
   caption?: string;
   /** Section height on large screens; more height = slower scrub. */
   tall?: 'normal' | 'long';
+  /** Drawn across the whole pinned screen, behind the text and the canvas. Large screens only. */
+  backdrop?: (p: MotionValue<number>) => React.ReactNode;
   children: (p: MotionValue<number>) => React.ReactNode;
 };
 
@@ -40,6 +42,7 @@ export default function Scene({
   lesson,
   caption,
   tall = 'normal',
+  backdrop,
   children,
 }: Props) {
   const section = useRef<HTMLElement>(null);
@@ -56,12 +59,17 @@ export default function Scene({
       id={id}
       ref={section}
       className={
-        'relative scroll-mt-14 py-8 lg:py-0 motion-reduce:lg:h-auto motion-reduce:lg:py-24 ' +
+        'relative scroll-mt-14 overflow-x-clip py-8 lg:py-0 motion-reduce:lg:h-auto motion-reduce:lg:py-24 ' +
         (tall === 'long' ? 'lg:h-[200vh]' : 'lg:h-[170vh]')
       }
     >
-      <div className="wrap grid items-center gap-8 lg:sticky lg:top-0 lg:h-svh lg:grid-cols-[.85fr_1.15fr] lg:gap-16 motion-reduce:lg:static motion-reduce:lg:h-auto">
-        <div>
+      <div className="wrap relative grid items-center gap-8 lg:sticky lg:top-0 lg:h-svh lg:grid-cols-[.85fr_1.15fr] lg:gap-16 motion-reduce:lg:static motion-reduce:lg:h-auto">
+        {backdrop && (
+          <div aria-hidden className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-screen -translate-x-1/2 lg:block">
+            {backdrop(p)}
+          </div>
+        )}
+        <div className="relative">
           <p className="font-mono text-[13px] text-muted">{tag}</p>
           <h3 className="mt-3 mb-4 text-[clamp(28px,3vw,44px)] leading-[1.05] font-semibold tracking-[-0.03em] text-balance">{title}</h3>
           <ReadMore
@@ -82,7 +90,10 @@ export default function Scene({
 
         <div
           ref={canvas}
-          className={cn('relative lg:flex lg:h-[min(640px,80svh)] lg:flex-col', caption && 'overflow-hidden border border-hair bg-card')}
+          className={cn(
+            'relative z-[1] lg:flex lg:h-[min(640px,80svh)] lg:flex-col',
+            caption && 'overflow-hidden border border-hair bg-card',
+          )}
         >
           {caption && <p className="px-4 pt-3 font-mono text-[11px] text-faint">{caption}</p>}
           <div className="lg:flex lg:flex-1 lg:flex-col lg:justify-center">{children(p)}</div>
