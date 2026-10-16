@@ -146,6 +146,8 @@ export default function Guide({ labels, label }: { labels: readonly string[]; la
                     showLabel ? 'translate-x-0 opacity-100' : '-translate-x-1.5 opacity-0 max-lg:translate-x-1.5',
                     // While not open, a flashed title sits on a small pill so it reads over the page.
                     !open && current && 'rounded-full bg-paper/95 px-2 py-0.5 shadow-[0_4px_14px_-6px_#00000033]',
+                    // On phones it would cover the text, so titles only show when the guide is opened.
+                    !open && 'max-lg:hidden',
                   )}
                 >
                   {labels[i]}

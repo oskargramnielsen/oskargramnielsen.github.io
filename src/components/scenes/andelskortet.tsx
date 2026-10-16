@@ -8,6 +8,9 @@ import { cn } from '@/lib/utils';
 import { Appear, Banner } from './bits';
 
 const H = 600;
+// The band the line gets on smaller screens: its height and where the line starts in it, in px.
+const BAND = 200;
+const BAND_TOP = 56;
 const open = mapDots.filter((d) => d[2]);
 // Andelskortet's own colours: its green, and a light map like the CARTO tiles it uses.
 const GREEN = '#3a5d50';
@@ -80,13 +83,25 @@ function yAt(x: number) {
 }
 
 /** The rising visitor line with a soft fill under it, revealed left to right, a live dot at its tip. */
-function Line({ grow, id, className, width }: { grow: MotionValue<number>; id: string; className: string; width: number }) {
+function Line({
+  grow,
+  id,
+  className,
+  width,
+  style,
+}: {
+  grow: MotionValue<number>;
+  id: string;
+  className: string;
+  width: number;
+  style?: React.CSSProperties;
+}) {
   const clipW = useTransform(grow, (g) => g * END[0]);
   const left = useTransform(grow, (g) => `${g * END[0]}%`);
   const top = useTransform(grow, (g) => `${yAt(g * END[0])}%`);
   const shown = useTransform(grow, (g) => (g > 0.01 ? 1 : 0));
   return (
-    <div className={className} aria-hidden>
+    <div className={className} style={style} aria-hidden>
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full">
         <defs>
           <clipPath id={id}>
@@ -159,24 +174,23 @@ export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict
   const step = useStep(p, [0.62, 0.78, 0.84, 0.9]);
 
   return (
-    <div className="relative flex flex-col sm:block sm:h-[600px] lg:absolute lg:inset-0 lg:h-auto">
-      {/* In the back: how many people it has helped, a number that counts up and a line that only goes up. */}
-      <div className="relative h-[230px] sm:absolute sm:inset-0 sm:h-auto">
-        {/* Smaller screens: the line runs edge to edge behind the number and the top of the window. */}
-        <Line
-          grow={grow}
-          id="ak-grow"
-          width={5}
-          className="absolute top-[64px] left-1/2 h-[170px] w-screen -translate-x-1/2 sm:top-0 sm:h-full lg:hidden"
-        />
-        {/* On large screens the count sits at the end of the line in the backdrop instead. */}
-        <div className="absolute top-0 left-0 lg:hidden">
-          <motion.b className="block text-[40px] leading-none font-semibold tracking-[-0.04em] text-bot md:text-[52px]">{users}</motion.b>
-          <span className="mt-1 block text-[13px] text-body">{t.users}</span>
+    <div className="relative flex flex-col lg:absolute lg:inset-0 lg:block">
+      {/* Smaller screens: the user line gets its own band above the window, edge to edge, with the count
+          at its end. On large screens both are drawn in the backdrop instead. */}
+      <div className="relative lg:hidden" style={{ height: BAND }}>
+        <div className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2">
+          <Line grow={grow} id="ak-grow" width={4} className="absolute inset-x-0 bottom-0" style={{ top: BAND_TOP }} />
+          <div
+            className="absolute -translate-x-full pr-1 text-right"
+            style={{ left: `${END[0]}%`, bottom: BAND - (BAND_TOP + (END[1] / 100) * (BAND - BAND_TOP)) + 12 }}
+          >
+            <motion.b className="block text-[36px] leading-none font-semibold tracking-[-0.04em] text-bot">{users}</motion.b>
+            <span className="mt-0.5 block text-[12px] text-body">{t.users}</span>
+          </div>
         </div>
       </div>
 
-      <div className="relative z-10 -mt-6 flex h-[420px] w-full flex-col overflow-hidden rounded-[18px] border border-hair bg-card shadow-[0_30px_60px_-30px_#00000050] sm:absolute sm:bottom-0 sm:left-0 sm:mt-0 sm:h-[80%] sm:w-[86%]">
+      <div className="relative z-10 flex h-[330px] w-full flex-col overflow-hidden rounded-[18px] border border-hair bg-card shadow-[0_30px_60px_-30px_#00000050] lg:absolute lg:bottom-0 lg:left-0 lg:h-[80%] lg:w-[86%]">
         {/* Browser bar */}
         <div className="flex h-9 shrink-0 items-center gap-3 border-b border-hair bg-shade px-3.5">
           <div className="flex gap-1.5" aria-hidden>
@@ -280,7 +294,7 @@ export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict
       </div>
 
       {/* What people wrote, one mail at a time, outside the map. */}
-      <div className="relative z-20 -mt-6 ml-auto flex w-[88%] flex-col gap-2 sm:absolute sm:right-0 sm:bottom-[4%] sm:mt-0 sm:w-[min(290px,44%)]">
+      <div className="relative z-20 -mt-10 ml-auto flex w-[88%] max-w-[340px] flex-col gap-2 lg:absolute lg:right-0 lg:bottom-[4%] lg:mt-0 lg:w-[min(290px,44%)]">
         {t.mails.map((m, i) => (
           <Appear key={m.msg} on={step >= 2 + i}>
             <Banner app={t.mailApp} time={m.time} title={m.from}>

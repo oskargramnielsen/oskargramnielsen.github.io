@@ -43,7 +43,7 @@ export default function Cars({ p, t }: { p: MotionValue<number>; t: Dict['work']
     <div className="p-4 pt-3 md:p-7">
       <div className="mx-auto max-w-[460px] overflow-hidden rounded-[22px] border border-hair bg-card">
         <ThreadHead name="car-scraper" status={t.status} initials="C" bot />
-        <Thread className="h-[440px] md:h-[470px]">
+        <Thread className="h-[370px] md:h-[470px]">
           {step >= 1 && <Divider key="time">07:30</Divider>}
           {step === 1 && <Typing key="t1" side="left" bot />}
           {step >= 2 && (

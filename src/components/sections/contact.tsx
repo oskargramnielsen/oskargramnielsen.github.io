@@ -81,8 +81,8 @@ export default function Contact({ t }: { t: Dict['contact']; lang: Lang }) {
 
   return (
     <section id="contact" className="wrap scroll-mt-20 pt-16 pb-20 md:pt-24 md:pb-28">
-      <h2 className="text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
-      <p className="mt-4 text-lg text-body md:text-xl">{t.intro}</p>
+      <h2 className="text-[clamp(30px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
+      <p className="mt-4 text-[17px] text-body md:text-xl">{t.intro}</p>
 
       <div className="relative mt-10 max-w-[1040px] overflow-hidden rounded-[28px] border border-hair bg-card shadow-[0_40px_80px_-50px_#0000004d] md:mt-12">
         <form onSubmit={submit} className="px-6 pt-6 pb-7 md:px-8 md:pt-8 md:pb-8">

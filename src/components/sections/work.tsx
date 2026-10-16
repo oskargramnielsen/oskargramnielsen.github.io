@@ -46,8 +46,8 @@ export default function Work({ t }: { t: Dict['work'] }) {
     <div id="projects" className="scroll-mt-14">
       <div className="wrap pt-16 pb-2 md:pt-24 lg:pb-0">
         <p className="font-mono text-[13px] text-muted">{t.label}</p>
-        <h2 className="mt-3 text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
-        <p className="mt-4 max-w-[600px] text-lg text-body md:text-xl">{t.intro}</p>
+        <h2 className="mt-3 text-[clamp(30px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
+        <p className="mt-4 max-w-[600px] text-[17px] text-body md:text-xl">{t.intro}</p>
       </div>
 
       <Scene

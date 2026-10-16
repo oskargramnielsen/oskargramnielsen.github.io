@@ -22,12 +22,19 @@ export default function Housing({ p, t }: { p: MotionValue<number>; t: Dict['wor
       {/* The listing and the agent's checks. */}
       <div>
         <Appear on={step >= 1}>
-          <div className="border border-hair bg-card p-3">
+          <div className="flex items-center gap-3 border border-hair bg-card p-3 md:block">
             {/* Stock photo (Unsplash), not the real apartment. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/apartment.jpg" alt={t.photo} loading="lazy" className="mb-3 aspect-[16/9] w-full object-cover" />
-            <p className="text-[15px] font-semibold">{t.listingTitle}</p>
-            <p className="text-[13px] text-muted">{t.listingMeta}</p>
+            <img
+              src="/images/apartment.jpg"
+              alt={t.photo}
+              loading="lazy"
+              className="aspect-[4/3] w-[110px] shrink-0 object-cover md:mb-3 md:aspect-[16/9] md:w-full"
+            />
+            <div>
+              <p className="text-[15px] font-semibold">{t.listingTitle}</p>
+              <p className="text-[13px] text-muted">{t.listingMeta}</p>
+            </div>
           </div>
         </Appear>
         <ul className="mt-3 font-mono text-[12px]">

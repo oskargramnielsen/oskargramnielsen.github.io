@@ -53,7 +53,7 @@ export default function Scene({
   const reduce = useReducedMotion();
   const desktop = useMediaQuery('(min-width: 1024px)');
   const pinned = useScroll({ target: section, offset: ['start start', 'end end'] }).scrollYProgress;
-  const flowing = useScroll({ target: canvas, offset: ['start 0.8', 'end 0.75'] }).scrollYProgress;
+  const flowing = useScroll({ target: canvas, offset: ['start 0.95', 'end 1'] }).scrollYProgress;
   const done = useMotionValue(1);
   const p = reduce ? done : desktop ? pinned : flowing;
 

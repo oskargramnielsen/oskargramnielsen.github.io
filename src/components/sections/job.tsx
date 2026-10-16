@@ -196,8 +196,8 @@ export default function Job({ t }: { t: Dict['job'] }) {
       <div className="grid gap-x-12 gap-y-16 lg:grid-cols-[1fr_330px]">
         <div>
           <p className="font-mono text-[13px] text-muted">{t.label}</p>
-          <h2 className="mt-3 text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
-          <p className="mt-4 max-w-[640px] text-lg text-body md:text-xl">{t.body}</p>
+          <h2 className="mt-3 text-[clamp(30px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
+          <p className="mt-4 max-w-[640px] text-[17px] text-body md:text-xl">{t.body}</p>
         </div>
         <div className="pt-[70px] lg:-mt-16 lg:-mb-6 lg:pt-[60px]">
           <Badge t={t} />

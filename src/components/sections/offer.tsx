@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import type { Dict } from '@/content';
-import { useStep, useViewProgress } from '@/lib/motion';
+import { useMediaQuery, useStep, useViewProgress } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import { Bubble, Divider, Thread, ThreadHead, Typing } from '../scenes/bits';
 
@@ -14,16 +14,21 @@ export default function Offer({ t }: { t: Dict['process'] }) {
   const ref = useRef<HTMLDivElement>(null);
   const p = useViewProgress(ref, ['start 0.85', 'end 0.7']);
   const step = useStep(p, [0.04, 0.1, 0.16, 0.25, 0.32, 0.4, 0.48, 0.55, 0.64, 0.7, 0.78, 0.86]);
-  const phase = step >= 12 ? 4 : step >= 9 ? 3 : step >= 7 ? 2 : step >= 6 ? 1 : 0;
+  const chatPhase = step >= 12 ? 4 : step >= 9 ? 3 : step >= 7 ? 2 : step >= 6 ? 1 : 0;
+  // On phones the steps sit above the chat, so they light up as they themselves scroll past.
+  const list = useRef<HTMLOListElement>(null);
+  const listPhase = useStep(useViewProgress(list, ['start 0.7', 'end 0.6']), [0.2, 0.4, 0.6, 0.85]);
+  const desktop = useMediaQuery('(min-width: 1024px)');
+  const phase = desktop ? chatPhase : listPhase;
   const th = t.thread;
 
   return (
     <section id="how" className="wrap scroll-mt-20 pt-16 md:pt-24">
       <div className="grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-20">
         <div>
-          <h2 className="text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
-          <p className="mt-4 max-w-[520px] text-lg text-body md:text-xl">{t.intro}</p>
-          <ol className="relative mt-8 md:mt-10">
+          <h2 className="text-[clamp(30px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
+          <p className="mt-4 max-w-[520px] text-[17px] text-body md:text-xl">{t.intro}</p>
+          <ol ref={list} className="relative mt-8 md:mt-10">
             {t.steps.map((s, i) => (
               <li
                 key={s.title}
@@ -65,7 +70,7 @@ export default function Offer({ t }: { t: Dict['process'] }) {
 
         <div ref={ref} className="mx-auto w-full max-w-[440px] overflow-hidden rounded-[22px] border border-hair bg-card">
           <ThreadHead name="Oskar" status={th.status} initials="OG" />
-          <Thread className="h-[460px]">
+          <Thread className="h-[380px] md:h-[460px]">
             {step >= 1 && (
               <Bubble key="you1" side="right">
                 {th.you1}

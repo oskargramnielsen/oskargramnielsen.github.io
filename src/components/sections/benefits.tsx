@@ -78,12 +78,12 @@ function Stack({ t }: { t: Dict['benefits']['stack'] }) {
           <motion.li
             key={tool.name}
             variants={pop(0.15 + gi * 0.45 + i * 0.06)}
-            className="flex h-[92px] flex-col items-center justify-center gap-2 rounded-[16px] border border-hair bg-paper px-1.5 text-center"
+            className="flex h-[76px] flex-col items-center justify-center gap-1.5 rounded-[14px] border border-hair bg-paper px-1.5 text-center md:h-[92px] md:gap-2 md:rounded-[16px]"
           >
             {TOOL_ICONS[tool.icon] ? (
               <svg
                 viewBox="0 0 24 24"
-                className="size-8 text-bot"
+                className="size-7 text-bot md:size-8"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.6"
@@ -95,7 +95,7 @@ function Stack({ t }: { t: Dict['benefits']['stack'] }) {
               </svg>
             ) : (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={`/logos/${tool.icon}.svg`} alt="" className="size-8" loading="lazy" />
+              <img src={`/logos/${tool.icon}.svg`} alt="" className="size-7 md:size-8" loading="lazy" />
             )}
             <span className="text-[12px] leading-tight md:text-[13px]">{tool.name}</span>
           </motion.li>
@@ -169,16 +169,16 @@ function Bill({ t, seen }: { t: Dict['benefits']; seen: boolean }) {
         <motion.div
           initial={reduce ? false : { y: '-101%' }}
           animate={seen ? { y: 0 } : undefined}
-          transition={{ duration: 2.2, ease: [0.35, 0.5, 0.25, 1] }}
+          transition={{ duration: 1.6, ease: [0.35, 0.5, 0.25, 1] }}
           className="drop-shadow-[0_8px_10px_#0000001f]"
         >
-          <div className="bg-card px-6 pt-7 pb-12 [mask:conic-gradient(from_-45deg_at_bottom,#0000,#000_1deg_89deg,#0000_90deg)_50%/18px_100%] sm:px-8">
+          <div className="bg-card px-5 pt-6 pb-11 [mask:conic-gradient(from_-45deg_at_bottom,#0000,#000_1deg_89deg,#0000_90deg)_50%/18px_100%] sm:px-8">
             <div className="flex items-baseline justify-between gap-4">
               <p className="text-[20px] font-semibold tracking-[-0.02em] sm:text-[22px]">{b.title}</p>
               <p className="shrink-0 font-mono text-[12px] text-muted">{b.when}</p>
             </div>
             <div className="my-5 border-t border-dashed border-ink/25" />
-            <ul className="space-y-4">
+            <ul className="space-y-3 md:space-y-4">
               {t.items.map((item) => (
                 <li key={item.title} className="flex items-center gap-3">
                   <div className="min-w-0">
@@ -222,11 +222,11 @@ function Bill({ t, seen }: { t: Dict['benefits']; seen: boolean }) {
 export default function Benefits({ t }: { t: Dict['benefits'] }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
-  const seen = useInView(ref, { once: true, margin: '-25% 0px' });
+  const seen = useInView(ref, { once: true, amount: 0.15 });
   return (
     <section id="benefits" className="wrap scroll-mt-20 pt-16 md:pt-24">
       <p className="font-mono text-[13px] text-muted">{t.label}</p>
-      <h2 className="mt-3 text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
+      <h2 className="mt-3 text-[clamp(30px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
       <div ref={ref} className="mt-8 grid items-center gap-8 md:mt-12 lg:grid-cols-[minmax(0,540px)_1fr] lg:gap-16">
         <Bill t={t} seen={seen} />
         <div className="text-center lg:text-left">
