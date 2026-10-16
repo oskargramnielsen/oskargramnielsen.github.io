@@ -64,11 +64,16 @@ export const en = {
     // The tools, moved here from the day job.
     stack: {
       title: 'A flexible tool stack',
-      text: 'I use what fits your company. Often that is the Microsoft tools you already pay for: Power Automate, Power Apps, SharePoint and Teams. When they aren’t enough, I write it in Python or TypeScript.',
+      text: 'I use what fits your company. Often that is the Microsoft tools you already pay for. When they aren’t enough, I write it in Python or TypeScript. And if you run on something else, I connect to that.',
       center: 'Your process',
+      centerNote: 'automated',
+      others: {
+        title: 'Not on Microsoft? I also connect to',
+        items: ['Google Workspace', 'e-conomic', 'Dinero', 'Shopify', 'HubSpot', 'Slack', 'your own system'],
+      },
       groups: [
         {
-          name: 'Microsoft 365 & Power Platform',
+          name: 'Often: the Microsoft tools you have',
           tools: [
             { name: 'Power Automate', icon: 'automate' },
             { name: 'Power Apps', icon: 'apps' },
@@ -79,7 +84,7 @@ export const en = {
           ],
         },
         {
-          name: 'Custom code & AI',
+          name: 'When needed: custom code & AI',
           tools: [
             { name: 'Python', icon: 'python' },
             { name: 'TypeScript', icon: 'typescript' },

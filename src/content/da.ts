@@ -65,11 +65,16 @@ export const da: Dict = {
     // The tools, moved here from the day job.
     stack: {
       title: 'Et fleksibelt værktøjssæt',
-      text: 'Jeg bruger det, der passer til jeres virksomhed. Tit er det Microsoft-værktøjerne, I allerede betaler for: Power Automate, Power Apps, SharePoint og Teams. Rækker de ikke, skriver jeg det i Python eller TypeScript.',
+      text: 'Jeg bruger det, der passer til jeres virksomhed. Tit er det Microsoft-værktøjerne, I allerede betaler for. Rækker de ikke, skriver jeg det i Python eller TypeScript. Og kører I på noget andet, kobler jeg mig på det.',
       center: 'Jeres proces',
+      centerNote: 'automatiseret',
+      others: {
+        title: 'Ikke på Microsoft? Jeg kobler mig også på',
+        items: ['Google Workspace', 'e-conomic', 'Dinero', 'Shopify', 'HubSpot', 'Slack', 'jeres eget system'],
+      },
       groups: [
         {
-          name: 'Microsoft 365 & Power Platform',
+          name: 'Tit: Microsoft-værktøjerne I har',
           tools: [
             { name: 'Power Automate', icon: 'automate' },
             { name: 'Power Apps', icon: 'apps' },
@@ -80,7 +85,7 @@ export const da: Dict = {
           ],
         },
         {
-          name: 'Egen kode & AI',
+          name: 'Efter behov: egen kode & AI',
           tools: [
             { name: 'Python', icon: 'python' },
             { name: 'TypeScript', icon: 'typescript' },

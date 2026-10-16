@@ -122,7 +122,7 @@ function Badge({ t }: { t: Dict['job'] }) {
   return (
     <div ref={ref} className="relative mx-auto w-full max-w-[330px] lg:mx-0">
       <motion.div
-        style={{ rotate: angle, transformOrigin: '50% -120px' }}
+        style={{ rotate: angle, transformOrigin: '50% -90px' }}
         onPan={(_, info) => !reduce && angle.set(Math.max(-35, Math.min(35, info.offset.x * 0.12)))}
         onPanEnd={() => angle.set(0)}
         className="relative cursor-grab touch-pan-y select-none active:cursor-grabbing"
@@ -130,14 +130,8 @@ function Badge({ t }: { t: Dict['job'] }) {
         {/* The lanyard, running up out of sight. */}
         <span
           aria-hidden
-          className="absolute bottom-full left-1/2 h-[150px] w-[18px] -translate-x-1/2 overflow-hidden bg-bot [mask:linear-gradient(to_top,#000_70%,#0000)] lg:h-[260px]"
-        >
-          <span className="absolute inset-x-0 bottom-2 flex flex-col items-center gap-3 font-mono text-[8px] leading-none font-semibold text-card/70 [writing-mode:vertical-rl]">
-            {Array.from({ length: 4 }, (_, i) => (
-              <span key={i}>OGN</span>
-            ))}
-          </span>
-        </span>
+          className="absolute bottom-full left-1/2 h-[80px] w-[18px] -translate-x-1/2 bg-bot [mask:linear-gradient(to_top,#000_45%,#0000)] lg:h-[100px]"
+        ></span>
         {/* The clip. */}
         <span
           aria-hidden
@@ -205,7 +199,7 @@ export default function Job({ t }: { t: Dict['job'] }) {
           <h2 className="mt-3 text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
           <p className="mt-4 max-w-[640px] text-lg text-body md:text-xl">{t.body}</p>
         </div>
-        <div className="pt-[110px] lg:-mt-16 lg:-mb-6 lg:pt-[150px]">
+        <div className="pt-[70px] lg:-mt-16 lg:-mb-6 lg:pt-[60px]">
           <Badge t={t} />
         </div>
       </div>

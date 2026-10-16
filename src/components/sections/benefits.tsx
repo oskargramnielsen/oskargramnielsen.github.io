@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 import type { Dict } from '@/content';
+import { cn } from '@/lib/utils';
 
 // The "price" of each line on the bill: a symbol, not a number, since every office is different.
 const svg = (d: React.ReactNode, fill = false) => (
@@ -102,25 +103,50 @@ function Stack({ t }: { t: Dict['benefits']['stack'] }) {
       </ul>
     </div>
   );
-  const link = (
+  // Arrows from both sides into the process: down/up on phones, right/left on wider screens.
+  const arrow = (side: 0 | 1) => (
     <motion.span
       aria-hidden
-      className="mx-auto block h-6 w-px origin-top bg-bot md:mx-0 md:h-px md:w-6 md:origin-left lg:w-10"
-      variants={{ hidden: { scale: 0 }, shown: { scale: 1, transition: { delay: 1, duration: 0.4 } } }}
-    />
+      className={cn('mx-auto flex items-center text-bot md:mx-0', side ? 'flex-col-reverse md:flex-row-reverse' : 'flex-col md:flex-row')}
+      variants={{ hidden: { opacity: 0 }, shown: { opacity: 1, transition: { delay: 1, duration: 0.4 } } }}
+    >
+      <span className="block h-5 w-px bg-bot md:h-px md:w-5 lg:w-8" />
+      <svg
+        viewBox="0 0 10 10"
+        className={cn('-m-0.5 size-2.5', side ? '-rotate-90 md:rotate-180' : 'rotate-90 md:rotate-0')}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="m3 1.5 4 3.5-4 3.5" />
+      </svg>
+    </motion.span>
   );
   return (
-    <div className="flex flex-col gap-3 md:flex-row md:items-center">
-      {group(t.groups[0], 0)}
-      {link}
-      <motion.span
-        variants={pop(1.2)}
-        className="mx-auto shrink-0 rounded-full bg-bot px-4 py-2.5 text-center text-[14px] font-medium text-card shadow-[0_10px_24px_-10px_#1f3bff99] md:mx-0"
-      >
-        {t.center}
-      </motion.span>
-      {link}
-      {group(t.groups[1], 1)}
+    <div>
+      <div className="flex flex-col gap-3 md:flex-row md:items-center">
+        {group(t.groups[0], 0)}
+        {arrow(0)}
+        <motion.span
+          variants={pop(1.2)}
+          className="mx-auto shrink-0 rounded-[20px] bg-bot px-5 py-3 text-center text-card shadow-[0_10px_24px_-10px_#1f3bff99] md:mx-0"
+        >
+          <span className="block text-[15px] leading-tight font-semibold">{t.center}</span>
+          <span className="block text-[12px] leading-tight opacity-75">{t.centerNote}</span>
+        </motion.span>
+        {arrow(1)}
+        {group(t.groups[1], 1)}
+      </div>
+      <motion.div variants={pop(1.5)} className="mt-5 flex flex-wrap items-center gap-2 border-t border-hair pt-4">
+        <span className="mr-1 text-[13px] text-muted">{t.others.title}</span>
+        {t.others.items.map((o) => (
+          <span key={o} className="rounded-full border border-dashed border-ink/25 px-3 py-1 text-[13px] text-body">
+            {o}
+          </span>
+        ))}
+      </motion.div>
     </div>
   );
 }

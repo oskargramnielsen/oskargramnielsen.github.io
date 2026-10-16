@@ -171,9 +171,7 @@ export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict
         />
         {/* On large screens the count sits at the end of the line in the backdrop instead. */}
         <div className="absolute top-0 left-0 lg:hidden">
-          <motion.b className="block text-[40px] leading-none font-semibold tracking-[-0.04em] text-bot md:text-[52px]">
-            {users}
-          </motion.b>
+          <motion.b className="block text-[40px] leading-none font-semibold tracking-[-0.04em] text-bot md:text-[52px]">{users}</motion.b>
           <span className="mt-1 block text-[13px] text-body">{t.users}</span>
         </div>
       </div>
