@@ -199,7 +199,7 @@ function Badge({ t }: { t: Dict['job'] }) {
             </dl>
             <a
               href={site.cv}
-              download
+              download="Oskar Gram Nielsen - CV.pdf"
               onPointerDownCapture={(e) => e.stopPropagation()}
               className="group press mt-4 flex items-center justify-between rounded-full bg-ink py-2 pr-2 pl-4 text-[14px] font-medium text-paper duration-300 hover:bg-bot md:mt-5 md:py-2.5 md:pr-2.5 md:pl-5 md:text-[15px]"
             >
