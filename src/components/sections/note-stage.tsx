@@ -69,8 +69,10 @@ function drawStrokes(n: Note) {
   n.svg.setAttribute('viewBox', `0 0 ${fw} ${fw}`);
   n.svg.innerHTML = rects
     .map((r, j) => {
-      const x0 = r.left - b.left - 4, x1 = r.right - b.left + 4;
-      const y = r.top - b.top + (r.bottom - r.top) * 0.58, w = (rand(j + n.rank) - 0.5) * 5;
+      const x0 = r.left - b.left - 4,
+        x1 = r.right - b.left + 4;
+      const y = r.top - b.top + (r.bottom - r.top) * 0.58,
+        w = (rand(j + n.rank) - 0.5) * 5;
       return `<path d="M${x0} ${y + w * 0.4} Q${(x0 + x1) / 2} ${y - 3 + w} ${x1} ${y - w * 0.5}"/>`;
     })
     .join('');
@@ -94,7 +96,10 @@ export default function NoteStage({ notes, children }: { notes: string[]; childr
   const fxRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const pin = pinRef.current!, stage = stageRef.current!, content = contentRef.current!, fx = fxRef.current!;
+    const pin = pinRef.current!,
+      stage = stageRef.current!,
+      content = contentRef.current!,
+      fx = fxRef.current!;
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let phone = matchMedia('(max-width: 760px)').matches;
     const DPR = Math.min(2, devicePixelRatio || 1);
@@ -125,14 +130,21 @@ export default function NoteStage({ notes, children }: { notes: string[]; childr
     // clear of every line of text, the buttons and the notes already placed. Notes that don't fit stay hidden.
     function place() {
       phone = matchMedia('(max-width: 760px)').matches;
-      const W = stage.clientWidth, H = stage.clientHeight, s = stage.getBoundingClientRect(), pad = phone ? 12 : 20;
+      const W = stage.clientWidth,
+        H = stage.clientHeight,
+        s = stage.getBoundingClientRect(),
+        pad = phone ? 12 : 20;
       const avoid: { l: number; r: number; t: number; b: number }[] = [];
       const add = (r: { left: number; right: number; top: number; bottom: number }) =>
         avoid.push({ l: r.left - s.left - pad, r: r.right - s.left + pad, t: r.top - s.top - pad, b: r.bottom - s.top + pad });
       content.querySelectorAll('[data-avoid=text]').forEach((el) => lineRects(el).forEach(add));
       content.querySelectorAll('[data-avoid=box] a').forEach((el) => add(el.getBoundingClientRect()));
 
-      const NAV = phone ? 66 : 76, w = list[0].pos.offsetWidth, gap = phone ? 10 : 16, edge = phone ? 8 : 16, step = 6;
+      const NAV = phone ? 66 : 76,
+        w = list[0].pos.offsetWidth,
+        gap = phone ? 10 : 16,
+        edge = phone ? 8 : 16,
+        step = 6;
       const spots: { x: number; y: number }[] = [];
       for (let y = NAV; y + w <= H - edge; y += step)
         for (let x = edge; x + w <= W - edge; x += step)
@@ -143,8 +155,10 @@ export default function NoteStage({ notes, children }: { notes: string[]; childr
       list.forEach((n, k) => {
         if (phone && k >= PHONE_MAX) return;
         const [dx, dy, mx, my] = SPOTS[n.i];
-        const wx = ((phone ? mx : dx) / 100) * W, wy = ((phone ? my : dy) / 100) * H;
-        let best: { x: number; y: number } | null = null, bd = Infinity;
+        const wx = ((phone ? mx : dx) / 100) * W,
+          wy = ((phone ? my : dy) / 100) * H;
+        let best: { x: number; y: number } | null = null,
+          bd = Infinity;
         for (const f of spots) {
           const d = (f.x - wx) ** 2 + (f.y - wy) ** 2;
           if (d < bd && !taken.some((t) => Math.abs(t.x - f.x) < w + gap && Math.abs(t.y - f.y) < w + gap)) {
@@ -169,13 +183,17 @@ export default function NoteStage({ notes, children }: { notes: string[]; childr
       fx.height = innerHeight * DPR;
     }
 
-    let raf = 0, prevT = 0, onScreen = true, started = false;
+    let raf = 0,
+      prevT = 0,
+      onScreen = true,
+      started = false;
     const WIN = 0.26;
 
     function frame(now: number) {
       const dt = prevT ? Math.min(0.05, (now - prevT) / 1000) : 0;
       prevT = now;
-      const r = pin.getBoundingClientRect(), st = stage.getBoundingClientRect();
+      const r = pin.getBoundingClientRect(),
+        st = stage.getBoundingClientRect();
       const p = clamp(-r.top / (r.height - innerHeight));
       ctx.clearRect(0, 0, fx.width, fx.height);
 
@@ -186,7 +204,9 @@ export default function NoteStage({ notes, children }: { notes: string[]; childr
         const s = clamp(k / 0.38);
         n.lines.forEach(([path, L], j) => (path.style.strokeDashoffset = `${L * (1 - clamp(s * n.lines.length - j))}`));
         // 2) noise eats the paper away while smoke rises off it
-        const e = clamp((k - 0.46) / 0.54), f = ease(e), c = 1 - 4.6 * f;
+        const e = clamp((k - 0.46) / 0.54),
+          f = ease(e),
+          c = 1 - 4.6 * f;
         const on = e > 0 && e < 1;
         n.el.style.filter = on ? `url(#dz-${n.i})` : 'none';
         if (on) {

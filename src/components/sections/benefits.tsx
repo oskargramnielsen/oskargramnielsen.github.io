@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 import type { Dict } from '@/content';
-import { cn } from '@/lib/utils';
 
 // The "price" of each line on the bill: a symbol, not a number, since every office is different.
 const svg = (d: React.ReactNode, fill = false) => (
@@ -166,13 +165,17 @@ function Bill({ t, seen }: { t: Dict['benefits']; seen: boolean }) {
               ))}
             </ul>
             <div className="my-5 border-t border-dashed border-ink/25" />
-            <div className="flex items-end justify-between gap-4">
+            <div className="flex items-baseline justify-between gap-4">
+              <p className="text-[15px] font-semibold">{b.pay}</p>
+              <p className="font-mono text-[15px] font-semibold">{b.payValue}</p>
+            </div>
+            <div className="mt-3 flex items-end justify-between gap-4">
               <div>
-                <p className="text-[15px] font-semibold">{b.total}</p>
-                <p className="text-[13px] text-muted">{b.totalText}</p>
+                <p className="text-[15px] font-semibold">{b.get}</p>
+                <p className="text-[13px] text-muted">{b.getText}</p>
               </div>
-              <p className="text-right text-[clamp(28px,3vw,40px)] leading-none font-semibold tracking-[-0.04em] text-bot">
-                {b.totalValue}
+              <p className="text-right text-[clamp(30px,3.2vw,44px)] leading-none font-semibold tracking-[-0.04em] text-bot">
+                {b.getValue}
               </p>
             </div>
             <div className="mt-6 flex items-center justify-between gap-4">
@@ -189,18 +192,11 @@ function Bill({ t, seen }: { t: Dict['benefits']; seen: boolean }) {
   );
 }
 
-/** Why automate at all: the bill, a note, and the chores it takes off the desk. */
+/** Why automate at all: the bill and a note next to it. */
 export default function Benefits({ t }: { t: Dict['benefits'] }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const seen = useInView(ref, { once: true, margin: '-25% 0px' });
-  // The tags light up one by one once the bill has printed.
-  const [lit, setLit] = useState(0);
-  useEffect(() => {
-    if (!seen) return;
-    const ids = t.bill.chips.map((_, i) => setTimeout(() => setLit(i + 1), reduce ? 0 : 1800 + i * 280));
-    return () => ids.forEach(clearTimeout);
-  }, [seen, reduce, t.bill.chips]);
   return (
     <section id="benefits" className="wrap scroll-mt-20 pt-16 md:pt-24">
       <p className="font-mono text-[13px] text-muted">{t.label}</p>
@@ -212,23 +208,6 @@ export default function Benefits({ t }: { t: Dict['benefits'] }) {
             {t.bill.note}
           </p>
           <p className="mx-auto mt-5 max-w-[440px] text-[16px] leading-relaxed text-body md:text-[17px] lg:mx-0">{t.bill.text}</p>
-          <p className="mt-7 text-[13px] text-muted">{t.bill.chipsTitle}</p>
-          <ul className="mt-3 flex flex-wrap justify-center gap-2 lg:justify-start">
-            {t.bill.chips.map((c, i) => (
-              <li
-                key={c}
-                className={cn(
-                  'flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[14px] transition-all duration-500',
-                  lit > i ? 'border-bot bg-bot text-card' : 'border-hair text-muted',
-                )}
-              >
-                <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden>
-                  <path d="m5 12.5 4 4 10-10" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                {c}
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
 

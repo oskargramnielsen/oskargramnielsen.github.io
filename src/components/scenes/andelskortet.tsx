@@ -11,11 +11,13 @@ const H = 600;
 const open = mapDots.filter((d) => d[2]);
 // Andelskortet's own colours: its green, and a light map like the CARTO tiles it uses.
 const GREEN = '#3a5d50';
+// The user line is in the site's own blue.
+const BLUE = '#1f3bff';
 
-// Visitors since launch: it climbs with small dips, like the real curve. Points are % of the
-// screen (x from the left, y from the top). It runs low under the text, climbs through the gap
-// between the text and the window, passes just under the visitor count and leaves top right.
-const CURVE = [
+// Andelskortet's users since launch: it climbs with small dips, like the real curve. Points are
+// % of the screen (x from the left, y from the top). It runs low under the text, climbs through
+// the gap between the text and the window, and ends at the user count above the window.
+const TRACE = [
   [0, 86],
   [4, 84],
   [8, 85],
@@ -52,6 +54,12 @@ const CURVE = [
   [96, 8],
   [100, 6.5],
 ] as const;
+// Squeezed so the line ends at END, where the count sits.
+const END = [84, 20] as const;
+const CURVE = TRACE.map(([x, y]) => [
+  x < 46 ? x : 46 + ((x - 46) * (END[0] - 46)) / (100 - 46),
+  86 - ((86 - y) * (86 - END[1])) / (86 - 6.5),
+]);
 // Smooth: a curve through the midpoints, bending at each traced point.
 const LINE =
   `M${CURVE[0][0]},${CURVE[0][1]} ` +
@@ -60,7 +68,7 @@ const LINE =
     .join(' ') +
   ` L${CURVE[CURVE.length - 1][0]},${CURVE[CURVE.length - 1][1]}`;
 // The same line closed along the bottom, for the soft fill under it.
-const AREA = `${LINE} L100,100 L0,100 Z`;
+const AREA = `${LINE} L${END[0]},100 L0,100 Z`;
 
 /** Height of the line (in %) at a given x, close enough to the smoothed curve for the moving dot. */
 function yAt(x: number) {
@@ -73,9 +81,9 @@ function yAt(x: number) {
 
 /** The rising visitor line with a soft fill under it, revealed left to right, a live dot at its tip. */
 function Line({ grow, id, className, width }: { grow: MotionValue<number>; id: string; className: string; width: number }) {
-  const clipW = useTransform(grow, (g) => g * 100);
-  const left = useTransform(grow, (g) => `${g * 100}%`);
-  const top = useTransform(grow, (g) => `${yAt(g * 100)}%`);
+  const clipW = useTransform(grow, (g) => g * END[0]);
+  const left = useTransform(grow, (g) => `${g * END[0]}%`);
+  const top = useTransform(grow, (g) => `${yAt(g * END[0])}%`);
   const shown = useTransform(grow, (g) => (g > 0.01 ? 1 : 0));
   return (
     <div className={className} aria-hidden>
@@ -85,9 +93,9 @@ function Line({ grow, id, className, width }: { grow: MotionValue<number>; id: s
             <motion.rect x="0" y="-5" height="110" width={clipW} />
           </clipPath>
           <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor={GREEN} stopOpacity="0.12" />
-            <stop offset="0.7" stopColor={GREEN} stopOpacity="0.03" />
-            <stop offset="1" stopColor={GREEN} stopOpacity="0" />
+            <stop offset="0" stopColor={BLUE} stopOpacity="0.1" />
+            <stop offset="0.7" stopColor={BLUE} stopOpacity="0.03" />
+            <stop offset="1" stopColor={BLUE} stopOpacity="0" />
           </linearGradient>
         </defs>
         <g clipPath={`url(#${id})`}>
@@ -95,7 +103,7 @@ function Line({ grow, id, className, width }: { grow: MotionValue<number>; id: s
           <path
             d={LINE}
             fill="none"
-            stroke={GREEN}
+            stroke={BLUE}
             strokeWidth={width}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -104,17 +112,29 @@ function Line({ grow, id, className, width }: { grow: MotionValue<number>; id: s
         </g>
       </svg>
       <motion.span className="absolute size-0" style={{ left, top, opacity: shown }}>
-        <span className="absolute -inset-[9px] animate-ping rounded-full opacity-30" style={{ background: GREEN }} />
-        <span className="absolute -inset-[7px] rounded-full border-[3px] border-card" style={{ background: GREEN }} />
+        <span className="absolute -inset-[9px] animate-ping rounded-full opacity-30" style={{ background: BLUE }} />
+        <span className="absolute -inset-[7px] rounded-full border-[3px] border-card" style={{ background: BLUE }} />
       </motion.span>
     </div>
   );
 }
 
-/** On large screens the line runs across the whole pinned screen, behind the text and the window. */
-export function AndelskortetBackdrop({ p }: { p: MotionValue<number> }) {
+/** How many have used it, counting up as the line grows. */
+const useUsers = (grow: MotionValue<number>) => useTransform(grow, (g) => Math.round(24485 * g).toLocaleString('da-DK'));
+
+/** On large screens the line runs across the whole pinned screen, behind the text and the window, and ends at the count. */
+export function AndelskortetBackdrop({ p, t }: { p: MotionValue<number>; t: Dict['work']['andelskortet'] }) {
   const grow = useTransform(p, (v) => seg(v, 0.1, 0.75));
-  return <Line grow={grow} id="ak-grow-wide" width={5} className="absolute inset-0" />;
+  const users = useUsers(grow);
+  return (
+    <>
+      <Line grow={grow} id="ak-grow-wide" width={5} className="absolute inset-0" />
+      <div className="absolute -translate-x-full pr-2 pb-5 text-right" style={{ left: `${END[0]}%`, bottom: `${100 - END[1]}%` }}>
+        <motion.b className="block text-[52px] leading-none font-semibold tracking-[-0.04em] text-bot">{users}</motion.b>
+        <span className="mt-1 block text-[13px] whitespace-nowrap text-body">{t.users}</span>
+      </div>
+    </>
+  );
 }
 
 /** The house-in-a-circle marker andelskortet.dk uses for open waiting lists. */
@@ -135,7 +155,7 @@ const HouseIcon = ({ className }: { className?: string }) => (
 export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict['work']['andelskortet'] }) {
   const scanY = useTransform(p, (v) => seg(v, 0.05, 0.6) * H);
   const grow = useTransform(p, (v) => seg(v, 0.1, 0.75));
-  const users = useTransform(grow, (g) => Math.round(24485 * g).toLocaleString('da-DK'));
+  const users = useUsers(grow);
   const step = useStep(p, [0.62, 0.78, 0.84, 0.9]);
 
   return (
@@ -149,8 +169,9 @@ export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict
           width={5}
           className="absolute top-[64px] left-1/2 h-[170px] w-screen -translate-x-1/2 sm:top-0 sm:h-full lg:hidden"
         />
-        <div className="absolute top-0 left-0">
-          <motion.b className="block text-[40px] leading-none font-semibold tracking-[-0.04em] md:text-[52px]" style={{ color: GREEN }}>
+        {/* On large screens the count sits at the end of the line in the backdrop instead. */}
+        <div className="absolute top-0 left-0 lg:hidden">
+          <motion.b className="block text-[40px] leading-none font-semibold tracking-[-0.04em] text-bot md:text-[52px]">
             {users}
           </motion.b>
           <span className="mt-1 block text-[13px] text-body">{t.users}</span>

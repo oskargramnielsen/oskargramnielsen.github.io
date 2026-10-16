@@ -22,8 +22,14 @@ const SAVED = 4860;
 const kr = (n: number) => n.toLocaleString('da-DK', { minimumFractionDigits: 2 });
 
 export default function Bank({ p, t }: { p: MotionValue<number>; t: B }) {
-  const rows = useStep(p, TX.map((_, i) => 0.03 + i * 0.045));
-  const sorted = useStep(p, TX.map((_, i) => 0.06 + i * 0.045));
+  const rows = useStep(
+    p,
+    TX.map((_, i) => 0.03 + i * 0.045),
+  );
+  const sorted = useStep(
+    p,
+    TX.map((_, i) => 0.06 + i * 0.045),
+  );
   const step = useStep(p, [0.34, 0.38, 0.43, 0.5, 0.55, 0.62, 0.67, 0.74, 0.79, 0.88]);
   const saved = useTransform(p, (v) => Math.round(SAVED * seg(v, 0.6, 0.86)).toLocaleString('da-DK'));
   const flagged = step >= 1;
@@ -43,11 +49,15 @@ export default function Bank({ p, t }: { p: MotionValue<number>; t: B }) {
               <span className="truncate">{tx.text}</span>
               <span className="text-right">{kr(tx.amount)}</span>
               <span className="col-span-2 flex gap-1.5 text-[10px] md:text-[11px]">
-                <span className={cn('px-1.5 py-px transition-colors duration-300', sorted > i ? 'bg-bot-soft text-bot' : 'bg-shade text-faint')}>
+                <span
+                  className={cn('px-1.5 py-px transition-colors duration-300', sorted > i ? 'bg-bot-soft text-bot' : 'bg-shade text-faint')}
+                >
                   {sorted > i ? t.categories[tx.cat] : '…'}
                 </span>
                 {tx.flag && (
-                  <span className={cn('bg-bot px-1.5 py-px text-card transition-opacity duration-300', flagged ? 'opacity-100' : 'opacity-0')}>
+                  <span
+                    className={cn('bg-bot px-1.5 py-px text-card transition-opacity duration-300', flagged ? 'opacity-100' : 'opacity-0')}
+                  >
                     {t.flags[tx.flag]}
                   </span>
                 )}
@@ -65,13 +75,29 @@ export default function Bank({ p, t }: { p: MotionValue<number>; t: B }) {
         <ThreadHead name="bank" status={t.status} initials="B" bot />
         <Thread className="h-[320px] md:h-[360px]">
           {step === 2 && <Typing key="t1" side="left" bot />}
-          {step >= 3 && <Bubble key="m1" side="left" bot>{t.messages[0]}</Bubble>}
+          {step >= 3 && (
+            <Bubble key="m1" side="left" bot>
+              {t.messages[0]}
+            </Bubble>
+          )}
           {step === 4 && <Typing key="t2" side="left" bot />}
-          {step >= 5 && <Bubble key="m2" side="left" bot>{t.messages[1]}</Bubble>}
+          {step >= 5 && (
+            <Bubble key="m2" side="left" bot>
+              {t.messages[1]}
+            </Bubble>
+          )}
           {step === 6 && <Typing key="t3" side="left" bot />}
-          {step >= 7 && <Bubble key="m3" side="left" bot>{t.messages[2]}</Bubble>}
+          {step >= 7 && (
+            <Bubble key="m3" side="left" bot>
+              {t.messages[2]}
+            </Bubble>
+          )}
           {step === 8 && <Typing key="t4" side="left" bot />}
-          {step >= 9 && <Bubble key="m4" side="left" bot>{t.messages[3]}</Bubble>}
+          {step >= 9 && (
+            <Bubble key="m4" side="left" bot>
+              {t.messages[3]}
+            </Bubble>
+          )}
           {step >= 10 && (
             <Bubble key="me" side="right" meta={t.seen}>
               {t.reply}

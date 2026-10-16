@@ -52,14 +52,14 @@ export const en = {
       printing: 'printing',
       title: 'Your week, itemised',
       when: 'every week',
-      total: 'Total',
-      totalText: 'Paid once',
-      totalValue: 'Hours back',
-      footer: 'Paid once · runs every week',
+      pay: 'You pay',
+      payValue: 'Once',
+      get: 'You get back',
+      getText: 'every week',
+      getValue: 'Your time',
+      footer: 'No subscription · yours to keep',
       note: 'Paid once.\nPays you back every week.',
       text: 'Copying, checking and chasing eat a surprising part of the week in a small office. Hand them to a program once, and the hours come back to you.',
-      chipsTitle: 'What it can take off your desk',
-      chips: ['Orders', 'Invoices', 'Reports', 'Emails', 'Reminders', 'Spreadsheets'],
     },
     // The tools, moved here from the day job.
     stack: {
@@ -122,7 +122,6 @@ export const en = {
       a: 'REI 60. The stairwell walls need REI 120.',
       source: 'Fire strategy.pdf · p. 14',
     },
-    privacy: 'What we build together stays between us too.',
     facts: [
       { k: 'Now', v: 'Automation Engineer, CN3' },
       { k: 'Education', v: 'MSc Architectural Engineering, DTU' },
@@ -272,11 +271,6 @@ export const en = {
         text: 'I show your team how it works. The code and accounts are yours. Support only if you want it.',
       },
     ],
-    meet: {
-      title: 'Meet the way that suits you',
-      options: ['At your place', 'Video call', 'Phone', 'Email or chat'],
-      note: 'In and around Copenhagen I’m happy to come by. Mix as you like.',
-    },
     pricing: {
       items: [
         { label: 'The plan', price: 'Free', note: 'No strings attached.' },

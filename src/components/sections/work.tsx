@@ -50,7 +50,14 @@ export default function Work({ t }: { t: Dict['work'] }) {
         <p className="mt-4 max-w-[600px] text-lg text-body md:text-xl">{t.intro}</p>
       </div>
 
-      <Scene id="andelskortet" {...shared} {...t.andelskortet} tall="long" backdrop={(p) => <AndelskortetBackdrop p={p} />}>
+      <Scene
+        id="andelskortet"
+        {...shared}
+        {...t.andelskortet}
+        tall="long"
+        progress={false}
+        backdrop={(p) => <AndelskortetBackdrop p={p} t={t.andelskortet} />}
+      >
         {(p) => <Andelskortet p={p} t={t.andelskortet} />}
       </Scene>
       <Scene id="housing" {...shared} {...t.housing}>

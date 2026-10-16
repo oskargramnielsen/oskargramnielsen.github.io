@@ -44,7 +44,12 @@ export function ThreadHead({ name, status, initials, bot }: { name: string; stat
  */
 export function Thread({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
-    <div className={cn('flex flex-col justify-end gap-1.5 overflow-hidden px-3 py-3 [mask-image:linear-gradient(transparent,black_28px)] md:px-4', className)}>
+    <div
+      className={cn(
+        'flex flex-col justify-end gap-1.5 overflow-hidden px-3 py-3 [mask-image:linear-gradient(transparent,black_28px)] md:px-4',
+        className,
+      )}
+    >
       <AnimatePresence initial={false}>{children}</AnimatePresence>
     </div>
   );
@@ -135,7 +140,19 @@ export function Divider({ children }: { children: React.ReactNode }) {
 }
 
 /** A phone-style notification banner. */
-export function Banner({ app, time, title, children, bot }: { app: string; time: string; title: string; bot?: boolean; children: React.ReactNode }) {
+export function Banner({
+  app,
+  time,
+  title,
+  children,
+  bot,
+}: {
+  app: string;
+  time: string;
+  title: string;
+  bot?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <div className="rounded-[14px] border border-hair bg-card/95 p-3 text-[13px] leading-snug shadow-[0_12px_30px_-12px_#00000033] backdrop-blur">
       <div className="mb-1 flex items-center gap-2 font-mono text-[10.5px] text-muted">

@@ -20,6 +20,8 @@ type Props = {
   caption?: string;
   /** Section height on large screens; more height = slower scrub. */
   tall?: 'normal' | 'long';
+  /** Show the thin progress bar under the text on large screens. */
+  progress?: boolean;
   /** Drawn across the whole pinned screen, behind the text and the canvas. Large screens only. */
   backdrop?: (p: MotionValue<number>) => React.ReactNode;
   children: (p: MotionValue<number>) => React.ReactNode;
@@ -42,6 +44,7 @@ export default function Scene({
   lesson,
   caption,
   tall = 'normal',
+  progress = true,
   backdrop,
   children,
 }: Props) {
@@ -83,9 +86,11 @@ export default function Scene({
               </p>
             }
           />
-          <div className="mt-7 hidden h-0.5 max-w-[470px] bg-hair lg:block motion-reduce:hidden">
-            <motion.div className="h-full origin-left bg-bot" style={{ scaleX: pinned }} />
-          </div>
+          {progress && (
+            <div className="mt-7 hidden h-0.5 max-w-[470px] bg-hair lg:block motion-reduce:hidden">
+              <motion.div className="h-full origin-left bg-bot" style={{ scaleX: pinned }} />
+            </div>
+          )}
         </div>
 
         <div

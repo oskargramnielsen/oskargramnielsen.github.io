@@ -53,14 +53,14 @@ export const da: Dict = {
       printing: 'printer',
       title: 'Jeres uge, specificeret',
       when: 'hver uge',
-      total: 'I alt',
-      totalText: 'Betalt én gang',
-      totalValue: 'Timer tilbage',
-      footer: 'Betalt én gang · kører hver uge',
+      pay: 'I betaler',
+      payValue: 'Én gang',
+      get: 'I får tilbage',
+      getText: 'hver uge',
+      getValue: 'Jeres tid',
+      footer: 'Intet abonnement · jeres at beholde',
       note: 'Betalt én gang.\nBetaler tilbage hver uge.',
       text: 'Kopiering, tjek og rykkere æder en overraskende stor del af ugen på et lille kontor. Giv dem til et program én gang, så kommer timerne tilbage til jer.',
-      chipsTitle: 'Det kan den tage fra jeres bord',
-      chips: ['Ordrer', 'Fakturaer', 'Rapporter', 'Mails', 'Rykkere', 'Regneark'],
     },
     // The tools, moved here from the day job.
     stack: {
@@ -121,7 +121,6 @@ export const da: Dict = {
       a: 'REI 60. Væggene ved trappen skal have REI 120.',
       source: 'Brandstrategi.pdf · s. 14',
     },
-    privacy: 'Det, vi bygger sammen, bliver også mellem os.',
     facts: [
       { k: 'Nu', v: 'Automation Engineer, CN3' },
       { k: 'Uddannelse', v: 'Cand.polyt. Bygningsdesign, DTU' },
@@ -275,11 +274,6 @@ export const da: Dict = {
         text: 'Jeg viser jeres folk, hvordan det virker. Koden og kontoerne er jeres. Support kun hvis I vil.',
       },
     ],
-    meet: {
-      title: 'Mød mig, som det passer jer',
-      options: ['Hos jer', 'Videomøde', 'Telefon', 'Mail eller chat'],
-      note: 'I og omkring København kommer jeg gerne forbi. Bland som I vil.',
-    },
     pricing: {
       items: [
         { label: 'Planen', price: 'Gratis', note: 'Helt uforpligtende.' },

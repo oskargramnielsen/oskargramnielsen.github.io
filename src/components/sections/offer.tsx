@@ -6,17 +6,9 @@ import { useStep, useViewProgress } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import { Bubble, Divider, Thread, ThreadHead, Typing } from '../scenes/bits';
 
-/** Line icons for the ways to meet, in the order of t.meet.options. */
-const MEET_ICONS = [
-  <path key="home" d="M4 11.5 12 5l8 6.5M6.5 10v9h11v-9M10 19v-5h4v5" />,
-  <path key="video" d="M4 7.5h11v9H4zM15 11l5-3v8l-5-3" />,
-  <path key="phone" d="M7 4h3l1.5 4-2 1.3a10 10 0 0 0 5.2 5.2L16 12.5l4 1.5v3a2 2 0 0 1-2 2A15 15 0 0 1 5 6a2 2 0 0 1 2-2Z" />,
-  <path key="chat" d="M5 6h14v9H10l-4 3.5V15H5z" />,
-];
-
 /**
  * How it actually goes, shown as the conversation a client would have with me.
- * The steps on the left light up as the thread plays. How we meet is up to the client.
+ * The steps on the left light up as the thread plays.
  */
 export default function Offer({ t }: { t: Dict['process'] }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -129,36 +121,7 @@ export default function Offer({ t }: { t: Dict['process'] }) {
         </div>
       </div>
 
-      {/* How we meet is up to the client. */}
-      <div className="mt-12 flex flex-col gap-4 border-y border-hair py-6 md:mt-16 lg:flex-row lg:items-center lg:gap-10">
-        <div className="lg:w-[300px] lg:shrink-0">
-          <h3 className="text-[19px] leading-snug font-semibold tracking-[-0.01em] md:text-[21px]">{t.meet.title}</h3>
-          <p className="mt-1 text-[14px] leading-snug text-muted md:text-[15px]">{t.meet.note}</p>
-        </div>
-        <ul className="grid flex-1 grid-cols-2 gap-2 sm:grid-cols-4">
-          {t.meet.options.map((o, i) => (
-            <li key={o} className="flex items-center gap-3 rounded-full border border-hair bg-card py-2 pr-4 pl-2 text-[15px] md:text-base">
-              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-shade">
-                <svg
-                  viewBox="0 0 24 24"
-                  className="size-[18px]"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  {MEET_ICONS[i]}
-                </svg>
-              </span>
-              {o}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="mt-6 grid gap-px border border-hair bg-hair md:mt-8 md:grid-cols-3">
+      <div className="mt-12 grid gap-px border border-hair bg-hair md:mt-16 md:grid-cols-3">
         {t.pricing.items.map((it, i) => (
           <div key={it.label} className="bg-paper p-5 md:p-6">
             <span className="font-mono text-[12px] text-muted">{it.label}</span>

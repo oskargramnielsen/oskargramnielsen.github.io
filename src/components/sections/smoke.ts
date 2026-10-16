@@ -29,12 +29,18 @@ const hash = (x: number, y: number, s: number) => {
   return v - Math.floor(v);
 };
 const vnoise = (x: number, y: number, s: number) => {
-  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
-  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const xi = Math.floor(x),
+    yi = Math.floor(y),
+    xf = x - xi,
+    yf = y - yi;
+  const u = xf * xf * (3 - 2 * xf),
+    v = yf * yf * (3 - 2 * yf);
   return lerp(lerp(hash(xi, yi, s), hash(xi + 1, yi, s), u), lerp(hash(xi, yi + 1, s), hash(xi + 1, yi + 1, s), u), v);
 };
 const fbm = (x: number, y: number, s: number) => {
-  let a = 0, amp = 0.5, f = 1;
+  let a = 0,
+    amp = 0.5,
+    f = 1;
   for (let o = 0; o < 5; o++) {
     a += amp * vnoise(x * f, y * f, s + o);
     f *= 2.03;
@@ -47,11 +53,14 @@ const fbm = (x: number, y: number, s: number) => {
 function puff([r, g, b]: number[], seed: number, S = 160) {
   const cv = document.createElement('canvas');
   cv.width = cv.height = S;
-  const c = cv.getContext('2d')!, img = c.createImageData(S, S);
+  const c = cv.getContext('2d')!,
+    img = c.createImageData(S, S);
   for (let y = 0; y < S; y++)
     for (let x = 0; x < S; x++) {
-      const dx = (x - S / 2) / (S / 2), dy = (y - S / 2) / (S / 2);
-      const n = fbm(x / 30, y / 30, seed), n2 = fbm(x / 14 + 9, y / 14, seed + 3);
+      const dx = (x - S / 2) / (S / 2),
+        dy = (y - S / 2) / (S / 2);
+      const n = fbm(x / 30, y / 30, seed),
+        n2 = fbm(x / 14 + 9, y / 14, seed + 3);
       const d = Math.hypot(dx, dy) * (0.6 + 0.8 * n2);
       const edge = clamp(Math.min(x, S - 1 - x, y, S - 1 - y) / (S * 0.16));
       const a = Math.pow(clamp(1 - d), 1.6) * Math.pow(clamp((n - 0.36 + 0.3 * clamp(1 - d)) * 2.4), 1.15) * edge;
@@ -69,7 +78,8 @@ function puff([r, g, b]: number[], seed: number, S = 160) {
 function sparkle(S = 32) {
   const cv = document.createElement('canvas');
   cv.width = cv.height = S;
-  const c = cv.getContext('2d')!, g = c.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+  const c = cv.getContext('2d')!,
+    g = c.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
   g.addColorStop(0, 'rgba(255,255,255,1)');
   g.addColorStop(0.18, 'rgba(200,210,255,0.95)');
   g.addColorStop(0.45, 'rgba(70,95,255,0.35)');
@@ -81,9 +91,14 @@ function sparkle(S = 32) {
 
 // A divergence-free swirl field (the curl of a moving stream function), so the smoke curls in strands instead of jittering.
 function field(x: number, y: number, t: number): [number, number] {
-  const a = 0.011, c = 0.014, a2 = 0.024, c2 = 0.019;
-  const s1 = Math.sin(a * x + 0.35 * t), k1 = Math.cos(a * x + 0.35 * t);
-  const s2 = Math.sin(c * y - 0.5 * t), k2 = Math.cos(c * y - 0.5 * t);
+  const a = 0.011,
+    c = 0.014,
+    a2 = 0.024,
+    c2 = 0.019;
+  const s1 = Math.sin(a * x + 0.35 * t),
+    k1 = Math.cos(a * x + 0.35 * t);
+  const s2 = Math.sin(c * y - 0.5 * t),
+    k2 = Math.cos(c * y - 0.5 * t);
   const g = Math.cos(a2 * x - c2 * y + 0.8 * t);
   const dx = k1 * k2 + 0.6 * g;
   const dy = -(c / a) * s1 * s2 - 0.6 * (c2 / a2) * g;
@@ -107,8 +122,16 @@ export class Smoke {
   prepare() {
     if (this.glint) return;
     // A mix of deep blue and soft periwinkle puffs.
-    this.fresh = [[38, 66, 240], [56, 88, 236], [44, 74, 220]].map((c, i) => puff(c, i * 13 + 1));
-    this.aged = [[132, 152, 238], [160, 176, 246], [118, 140, 228]].map((c, i) => puff(c, i * 17 + 5));
+    this.fresh = [
+      [38, 66, 240],
+      [56, 88, 236],
+      [44, 74, 220],
+    ].map((c, i) => puff(c, i * 13 + 1));
+    this.aged = [
+      [132, 152, 238],
+      [160, 176, 246],
+      [118, 140, 228],
+    ].map((c, i) => puff(c, i * 17 + 5));
     this.glint = sparkle();
   }
 
@@ -122,7 +145,8 @@ export class Smoke {
     for (let k = 0; k < count && this.parts.length < this.cap; k++) {
       const glint = Math.random() < 0.07;
       // Denser towards the middle of the note, so the cloud starts round rather than square.
-      const px = x + w * (0.5 + (Math.random() + Math.random() - 1) * 0.6), py = y + w * (0.5 + (Math.random() + Math.random() - 1) * 0.6);
+      const px = x + w * (0.5 + (Math.random() + Math.random() - 1) * 0.6),
+        py = y + w * (0.5 + (Math.random() + Math.random() - 1) * 0.6);
       this.parts.push({
         glint,
         x: px,

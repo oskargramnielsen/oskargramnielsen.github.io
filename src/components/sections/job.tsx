@@ -1,6 +1,7 @@
 'use client';
 
-import { motion, useReducedMotion } from 'motion/react';
+import { useEffect, useRef } from 'react';
+import { motion, useInView, useReducedMotion, useSpring } from 'motion/react';
 import type { Dict } from '@/content';
 import { site } from '@/content/site';
 
@@ -103,6 +104,90 @@ function Chat({ t }: { t: Dict['job']['chat'] }) {
   );
 }
 
+/**
+ * Who's behind it: a name badge hanging on a lanyard from the top of the section. It swings in,
+ * sways a little, and can be grabbed and swung, like a real one.
+ */
+function Badge({ t }: { t: Dict['job'] }) {
+  const reduce = useReducedMotion();
+  const angle = useSpring(0, { stiffness: 120, damping: 6, mass: 0.8 });
+  const ref = useRef<HTMLDivElement>(null);
+  const seen = useInView(ref, { once: true, margin: '-10% 0px' });
+  useEffect(() => {
+    if (reduce) return;
+    // Arrive with a swing, then come to rest.
+    if (seen) angle.set(0);
+    else angle.jump(-14);
+  }, [seen, reduce, angle]);
+  return (
+    <div ref={ref} className="relative mx-auto w-full max-w-[330px] lg:mx-0">
+      <motion.div
+        style={{ rotate: angle, transformOrigin: '50% -120px' }}
+        onPan={(_, info) => !reduce && angle.set(Math.max(-35, Math.min(35, info.offset.x * 0.12)))}
+        onPanEnd={() => angle.set(0)}
+        className="relative cursor-grab touch-pan-y select-none active:cursor-grabbing"
+      >
+        {/* The lanyard, running up out of sight. */}
+        <span
+          aria-hidden
+          className="absolute bottom-full left-1/2 h-[150px] w-[18px] -translate-x-1/2 overflow-hidden bg-bot [mask:linear-gradient(to_top,#000_70%,#0000)] lg:h-[260px]"
+        >
+          <span className="absolute inset-x-0 bottom-2 flex flex-col items-center gap-3 font-mono text-[8px] leading-none font-semibold text-card/70 [writing-mode:vertical-rl]">
+            {Array.from({ length: 4 }, (_, i) => (
+              <span key={i}>OGN</span>
+            ))}
+          </span>
+        </span>
+        {/* The clip. */}
+        <span
+          aria-hidden
+          className="absolute -top-3 left-1/2 z-10 h-6 w-10 -translate-x-1/2 rounded-[8px] border-2 border-[#b9bcc6] bg-[#e4e6ec]"
+        />
+        <div className="relative rounded-[24px] border border-hair bg-card p-5 shadow-[0_30px_60px_-30px_#00000066] md:p-6">
+          <span aria-hidden className="mx-auto mb-5 block h-2 w-12 rounded-full bg-hair" />
+          <div className="flex items-center gap-4">
+            <span className="relative grid size-16 shrink-0 place-items-center rounded-full bg-bot text-[22px] font-semibold tracking-[-0.02em] text-card">
+              OG
+              <span className="absolute right-0 bottom-0.5 size-4 rounded-full border-[3px] border-card bg-[#2fbf71]" />
+            </span>
+            <div>
+              <p className="text-[19px] leading-tight font-semibold tracking-[-0.02em]">{site.name}</p>
+              <p className="mt-0.5 text-[14px] text-muted">{t.facts[0].v}</p>
+            </div>
+          </div>
+          <dl className="mt-5 space-y-3 border-t border-hair pt-4 text-[14px]">
+            <div>
+              <dt className="text-[12px] text-faint">{t.facts[1].k}</dt>
+              <dd>{t.facts[1].v}</dd>
+            </div>
+            <div>
+              <dt className="text-[12px] text-faint">{t.facts[2].k}</dt>
+              <dd className="mt-1.5 flex flex-wrap gap-1.5">
+                {t.facts[2].v.split(', ').map((skill) => (
+                  <span key={skill} className="rounded-full bg-shade px-2.5 py-1 text-[13px]">
+                    {skill}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          </dl>
+          <a
+            href={site.cv}
+            download
+            onPointerDownCapture={(e) => e.stopPropagation()}
+            className="mt-5 flex items-center justify-between rounded-full bg-ink py-2.5 pr-2.5 pl-5 text-[15px] font-medium text-paper transition-colors duration-300 hover:bg-bot"
+          >
+            {t.cvLabel} · {t.cv}
+            <span className="grid size-8 place-items-center rounded-full bg-paper/15" aria-hidden>
+              ↓
+            </span>
+          </a>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function Job({ t }: { t: Dict['job'] }) {
   const reduce = useReducedMotion();
   const reveal = (i: number) => ({
@@ -113,10 +198,17 @@ export default function Job({ t }: { t: Dict['job'] }) {
   });
 
   return (
-    <section id="work" className="wrap scroll-mt-20 pt-16 md:pt-24">
-      <p className="font-mono text-[13px] text-muted">{t.label}</p>
-      <h2 className="mt-3 text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
-      <p className="mt-4 max-w-[640px] text-lg text-body md:text-xl">{t.body}</p>
+    <section id="work" className="wrap scroll-mt-20 overflow-clip pt-16 md:pt-24">
+      <div className="grid gap-x-12 gap-y-16 lg:grid-cols-[1fr_330px]">
+        <div>
+          <p className="font-mono text-[13px] text-muted">{t.label}</p>
+          <h2 className="mt-3 text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
+          <p className="mt-4 max-w-[640px] text-lg text-body md:text-xl">{t.body}</p>
+        </div>
+        <div className="pt-[110px] lg:-mt-16 lg:-mb-6 lg:pt-[150px]">
+          <Badge t={t} />
+        </div>
+      </div>
 
       <ol className="mt-8 grid gap-3 md:mt-10 lg:grid-cols-2 lg:gap-4">
         {t.items.map((item, i) => (
@@ -134,89 +226,6 @@ export default function Job({ t }: { t: Dict['job'] }) {
           </motion.li>
         ))}
       </ol>
-
-      {/* Who's behind it: a name badge that swings in on its lanyard, and a promise next to it. */}
-      <div className="mt-10 grid items-center gap-8 md:mt-14 md:grid-cols-[minmax(0,380px)_1fr] md:gap-12">
-        <motion.div
-          initial={reduce ? false : { rotate: -9, y: -24, opacity: 0 }}
-          whileInView={{ rotate: 0, y: 0, opacity: 1 }}
-          viewport={{ once: true, margin: '-15% 0px' }}
-          transition={{ type: 'spring', stiffness: 70, damping: 7, mass: 0.9 }}
-          style={{ transformOrigin: '50% -40px' }}
-          className="relative mx-auto w-full max-w-[380px] pt-10"
-        >
-          <span aria-hidden className="absolute top-0 left-1/2 h-12 w-4 -translate-x-1/2 bg-gradient-to-b from-transparent to-bot" />
-          <div className="relative rounded-[24px] border border-hair bg-card p-5 shadow-[0_30px_60px_-34px_#00000066] md:p-6">
-            <span aria-hidden className="mx-auto mb-5 block h-2 w-12 rounded-full bg-hair" />
-            <div className="flex items-center gap-4">
-              <span className="relative grid size-16 shrink-0 place-items-center rounded-full bg-bot text-[22px] font-semibold tracking-[-0.02em] text-card">
-                OG
-                <span className="absolute right-0 bottom-0.5 size-4 rounded-full border-[3px] border-card bg-[#2fbf71]" />
-              </span>
-              <div>
-                <p className="text-[19px] leading-tight font-semibold tracking-[-0.02em]">{site.name}</p>
-                <p className="mt-0.5 text-[14px] text-muted">{t.facts[0].v}</p>
-              </div>
-            </div>
-            <dl className="mt-5 space-y-3 border-t border-hair pt-4 text-[14px]">
-              <div>
-                <dt className="text-[12px] text-faint">{t.facts[1].k}</dt>
-                <dd>{t.facts[1].v}</dd>
-              </div>
-              <div>
-                <dt className="text-[12px] text-faint">{t.facts[2].k}</dt>
-                <dd className="mt-1.5 flex flex-wrap gap-1.5">
-                  {t.facts[2].v.split(', ').map((skill, i) => (
-                    <motion.span
-                      key={skill}
-                      initial={reduce ? false : { opacity: 0, scale: 0.8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.6 + i * 0.08 }}
-                      className="rounded-full bg-shade px-2.5 py-1 text-[13px]"
-                    >
-                      {skill}
-                    </motion.span>
-                  ))}
-                </dd>
-              </div>
-            </dl>
-            <a
-              href={site.cv}
-              download
-              className="mt-5 flex items-center justify-between rounded-full bg-ink py-2.5 pr-2.5 pl-5 text-[15px] font-medium text-paper transition-colors duration-300 hover:bg-bot"
-            >
-              {t.cvLabel} · {t.cv}
-              <span className="grid size-8 place-items-center rounded-full bg-paper/15" aria-hidden>
-                ↓
-              </span>
-            </a>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-15% 0px' }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="relative max-w-[520px] rounded-[28px] rounded-bl-[8px] bg-bot-soft p-6 text-bot md:rounded-bl-[28px] md:rounded-tl-[8px] md:p-8"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="mb-4 size-8"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <rect x="5" y="10.5" width="14" height="10" rx="2.5" />
-            <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5M12 14.5v2" />
-          </svg>
-          <p className="text-[24px] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[32px]">{t.privacy}</p>
-        </motion.div>
-      </div>
     </section>
   );
 }
