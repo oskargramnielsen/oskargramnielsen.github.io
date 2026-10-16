@@ -72,7 +72,7 @@ export default function Contact({ t }: { t: Dict['contact']; lang: Lang }) {
       <h2 className="text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
       <p className="mt-4 text-lg text-body md:text-xl">{t.intro}</p>
 
-      <div className="relative mt-10 max-w-[900px] overflow-hidden rounded-[28px] border border-hair bg-card shadow-[0_40px_80px_-50px_#0000004d] md:mt-12">
+      <div className="relative mt-10 max-w-[1040px] overflow-hidden rounded-[28px] border border-hair bg-card shadow-[0_40px_80px_-50px_#0000004d] md:mt-12">
         {/* Progress */}
         <div className="flex items-center justify-between px-6 pt-5 text-[13px] text-muted md:px-8 md:pt-7">
           <span>
@@ -103,54 +103,99 @@ export default function Contact({ t }: { t: Dict['contact']; lang: Lang }) {
               <p className="mb-6 text-[22px] leading-tight font-semibold tracking-[-0.02em] md:text-[28px]">{questions[q]}</p>
 
               {q === 0 && (
-                <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end">
-                  {/* The visitor's own sticky note, like the ones in the hero, with a few ideas to tap. */}
-                  <div className="relative flex aspect-square w-full max-w-[320px] shrink-0 -rotate-2 flex-col bg-[#fbe98f] px-5 pt-14 pb-4 shadow-[0_1px_1px_#0000000d,0_24px_34px_-20px_#0000004d] sm:max-w-[340px] sm:pt-16">
-                    <span aria-hidden className="absolute inset-x-0 top-0 h-[17%] bg-black/[0.04]" />
-                    <textarea
-                      value={details}
-                      onChange={(e) => setDetails(e.target.value)}
-                      placeholder={t.placeholder}
-                      aria-label={t.q1}
-                      className="relative min-h-0 w-full flex-1 resize-none bg-transparent font-[family-name:var(--font-hand)] text-[26px] leading-[1.1] font-semibold text-[#2a2616] outline-none placeholder:text-[#2a261666] md:text-[28px]"
-                    />
-                    <AnimatePresence initial={false}>
-                      {!details.trim() && (
-                        <motion.div
-                          key="ideas"
-                          initial={{ opacity: 0, y: 6 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 6 }}
-                          className="relative flex flex-wrap gap-1.5"
-                        >
-                          {t.suggestions.map((s) => (
-                            <button
-                              key={s}
-                              type="button"
-                              onClick={() => {
-                                setDetails(s);
-                                track('contact_suggestion', { text: s });
-                              }}
-                              className="rounded-full bg-[#2a2616]/[0.07] px-2.5 py-1 text-left text-[13px] leading-tight text-[#2a2616] transition-colors hover:bg-[#2a2616]/[0.14]"
-                            >
-                              + {s}
-                            </button>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-7">
+                  <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end">
+                    {/* The visitor's own sticky note, like the ones in the hero, with a few ideas to tap. */}
+                    <div className="relative flex aspect-square w-full max-w-[320px] shrink-0 -rotate-2 flex-col bg-[#fbe98f] px-5 pt-14 pb-4 shadow-[0_1px_1px_#0000000d,0_24px_34px_-20px_#0000004d] sm:max-w-[340px] sm:pt-16">
+                      <span aria-hidden className="absolute inset-x-0 top-0 h-[17%] bg-black/[0.04]" />
+                      <textarea
+                        value={details}
+                        onChange={(e) => setDetails(e.target.value)}
+                        placeholder={t.placeholder}
+                        aria-label={t.q1}
+                        className="relative min-h-0 w-full flex-1 resize-none bg-transparent font-[family-name:var(--font-hand)] text-[26px] leading-[1.1] font-semibold text-[#2a2616] outline-none placeholder:text-[#2a261666] md:text-[28px]"
+                      />
+                      <AnimatePresence initial={false}>
+                        {!details.trim() && (
+                          <motion.div
+                            key="ideas"
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 6 }}
+                            className="relative flex flex-wrap gap-1.5"
+                          >
+                            {t.suggestions.map((s) => (
+                              <button
+                                key={s}
+                                type="button"
+                                onClick={() => {
+                                  setDetails(s);
+                                  track('contact_suggestion', { text: s });
+                                }}
+                                className="rounded-full bg-[#2a2616]/[0.07] px-2.5 py-1 text-left text-[13px] leading-tight text-[#2a2616] transition-colors hover:bg-[#2a2616]/[0.14]"
+                              >
+                                + {s}
+                              </button>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={!details.trim()}
+                      onClick={() => {
+                        setQ(1);
+                        track('contact_step', { step: 2 });
+                      }}
+                      className="rounded-full bg-ink px-7 py-3 text-base font-medium text-paper transition-colors duration-300 hover:bg-bot disabled:opacity-30 disabled:hover:bg-ink"
+                    >
+                      {t.next} →
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    disabled={!details.trim()}
-                    onClick={() => {
-                      setQ(1);
-                      track('contact_step', { step: 2 });
-                    }}
-                    className="rounded-full bg-ink px-7 py-3 text-base font-medium text-paper transition-colors duration-300 hover:bg-bot disabled:opacity-30 disabled:hover:bg-ink"
-                  >
-                    {t.next} →
-                  </button>
+
+                  <div aria-hidden className="flex items-center gap-3 text-[13px] text-muted lg:flex-col">
+                    <span className="h-px flex-1 bg-hair lg:h-auto lg:w-px" />
+                    {t.or}
+                    <span className="h-px flex-1 bg-hair lg:h-auto lg:w-px" />
+                  </div>
+
+                  {/* For people who would rather talk than answer questions. */}
+                  <div className="flex flex-1 flex-col rounded-[22px] bg-shade p-5 md:p-6 lg:justify-center lg:p-8">
+                    <div aria-hidden className="mb-5 flex flex-wrap gap-1.5">
+                      {t.slots.map((s, i) => (
+                        <span
+                          key={s}
+                          className={cn(
+                            'rounded-full px-3 py-1.5 text-[13px]',
+                            i === 0 ? 'bg-bot text-card' : 'border border-hair bg-card text-muted',
+                          )}
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-[20px] leading-tight font-semibold tracking-[-0.02em] md:text-[22px]">{t.bookTitle}</p>
+                    <p className="mt-1.5 text-[15px] leading-snug text-muted">{t.bookText}</p>
+                    <a
+                      href={bookingHref}
+                      className="mt-5 flex items-center justify-center gap-2.5 rounded-full bg-bot px-6 py-4 text-[17px] font-medium text-card shadow-[0_14px_30px_-14px_#1f3bffaa] transition-colors duration-300 hover:bg-ink lg:mt-7"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="size-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        aria-hidden
+                      >
+                        <rect x="4" y="5.5" width="16" height="14" rx="2.5" />
+                        <path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" />
+                      </svg>
+                      {t.book}
+                    </a>
+                  </div>
                 </div>
               )}
 

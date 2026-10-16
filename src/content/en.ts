@@ -38,26 +38,66 @@ export const en = {
   benefits: {
     label: 'Why automate',
     title: 'Get your hours back.',
+    // In the order they appear in the week planner.
     items: [
-      { icon: 'time', title: 'Time back', text: 'The hours spent copying and checking come back to you.' },
-      { icon: 'check', title: 'Fewer mistakes', text: 'A program doesn’t mistype, skip a row or forget.' },
-      { icon: 'money', title: 'Lower costs', text: 'Pay once for the build instead of every week in hours.' },
-      { icon: 'heart', title: 'Work you like', text: 'Spend the day on customers and craft, not spreadsheets.' },
-      { icon: 'shield', title: 'Nothing to fear', text: 'Your data stays under control, and you see what it does.' },
-      { icon: 'moon', title: 'Always on', text: 'It runs at night and on weekends while you’re off.' },
+      { title: 'Time back', text: 'The hours spent copying and checking come back to you.' },
+      { title: 'Always on', text: 'It runs at night and on weekends while you’re off.' },
+      { title: 'Lower costs', text: 'Pay once for the build instead of every week in hours.' },
+      { title: 'Work you like', text: 'Spend the day on customers and craft, not spreadsheets.' },
+      { title: 'Fewer mistakes', text: 'A program doesn’t mistype, skip a row or forget.' },
+      { title: 'Nothing to fear', text: 'Your data stays under control, and you see every step it takes.' },
     ],
+    // The week planner.
+    week: 'Your week',
+    perWeek: 'back every week',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    night: 'Night',
+    chores: ['Copy orders', 'Monday report', 'Type in invoices', 'Same emails', 'Merge sheets', 'Chase invoices', 'Price list'],
+    keep: ['Client meeting', 'Site visit'],
+    free: ['Customers', 'Lunch, actually', 'New idea', 'Craft', 'Customers', 'Off early', 'Craft', 'Plan ahead', 'Coffee', 'Off early'],
+    builtOnce: 'Built once · runs every night',
+    log: { title: 'Log · 02:14', line: '37 orders booked', ok: '0 errors', see: 'See every step' },
   },
   job: {
     label: 'My day job',
     title: 'I automate work for a whole company.',
     body: "Engineer from DTU, based in Copenhagen. By day I automate work at CN3. Most of it is confidential, but here are a few things I've built:",
-    // The question and answer in the building illustration.
-    chat: ['Fire rating, floor 3?', 'REI 60, see sheet A-301'],
+    forYou: 'For you:',
     items: [
-      { title: 'Project control', text: 'A management system for one of the largest construction projects in the world.' },
-      { title: 'Talk to the building', text: 'Chatbots that answer questions about building models, on our own GPUs.' },
-      { title: 'Self-repairing software', text: 'When a user hits a bug, it finds the cause and fixes it.' },
+      {
+        title: 'Project control for a mega project',
+        text: 'A management system for one of the largest construction projects in the world. Schedules, progress and documents from many companies in one place, so delays show up weeks before they hurt.',
+        forYou: 'one live overview instead of ten spreadsheets.',
+      },
+      {
+        title: 'Chatbots for the company',
+        text: 'Chatbots that answer questions from building models, drawings and internal documents, and show where the answer comes from. They run on our own GPUs, so nothing leaves the company.',
+        forYou: 'a chatbot that knows your products, procedures and documents.',
+      },
     ],
+    // The Gantt illustration.
+    gantt: {
+      rows: ['Design', 'Foundations', 'Structure', 'Facade', 'Installations', 'Handover'],
+      today: 'Today',
+      alert: 'Delay spotted · 3 weeks ahead',
+    },
+    // The chatbot illustration.
+    chat: {
+      name: 'Project assistant',
+      status: 'runs on our own servers',
+      q: 'What fire rating do the walls on floor 3 need?',
+      a: 'REI 60. The stairwell walls need REI 120.',
+      source: 'Fire strategy.pdf · p. 14',
+    },
+    stack: {
+      title: 'A flexible tool stack',
+      text: 'I use what fits your company. Often that is the Microsoft tools you already pay for: Power Automate, Power Apps, SharePoint and Teams. When they aren’t enough, I write it in Python or TypeScript.',
+      center: 'Your process',
+      groups: [
+        { name: 'Microsoft 365 & Power Platform', tools: ['Power Automate', 'Power Apps', 'SharePoint', 'Teams', 'Outlook', 'Excel'] },
+        { name: 'Custom code & AI', tools: ['Python', 'TypeScript', 'AI models', 'APIs', 'Databases'] },
+      ],
+    },
     privacy: 'What we build together stays between us too.',
     facts: [
       { k: 'Now', v: 'Automation Engineer, CN3' },
@@ -134,6 +174,7 @@ export const en = {
       search: 'Search for a co-op or address…',
       attribution: 'Map © OpenStreetMap · co-ops from andelskortet.dk',
       users: 'people have used it',
+      graph: { title: 'Visitors per month', layers: ['New', 'Returning'], from: '2024', to: '2026' },
       legend: { all: 'Other co-ops', open: 'Open waiting lists' },
       mailApp: 'Mail',
       // Real messages. Private senders are anonymised.
@@ -184,7 +225,35 @@ export const en = {
   },
   process: {
     title: 'How we work together',
-    steps: ['You tell me what takes too long.', 'You get a plan. Free.', 'I build it. You own it.'],
+    intro: 'No method you have to fit into. This is what usually happens, and you decide how we meet along the way.',
+    steps: [
+      { when: 'Day 1', title: 'A first talk', text: '20 minutes about what takes too long. No preparation needed.' },
+      {
+        when: 'Week 1',
+        title: 'I see how it’s done today',
+        text: 'I sit with the person who does the task, or we share screens. Ten minutes of watching beats an hour of explaining.',
+      },
+      {
+        when: 'A few days later',
+        title: 'You get a plan. Free.',
+        text: 'In writing: what gets built, the fixed price, the hours saved and how your data is kept safe. Say no and it costs nothing.',
+      },
+      {
+        when: '1–4 weeks',
+        title: 'I build it in small steps',
+        text: 'You try it on your own data early and tell me what to change. Updates as often as you like.',
+      },
+      {
+        when: 'Go-live',
+        title: 'It runs. You own it.',
+        text: 'I show your team how it works. The code and accounts are yours. Support only if you want it.',
+      },
+    ],
+    meet: {
+      title: 'Meet the way that suits you',
+      options: ['At your place', 'Video call', 'Phone', 'Email or chat'],
+      note: 'In and around Copenhagen I’m happy to come by. Mix as you like.',
+    },
     pricing: {
       items: [
         { label: 'The plan', price: 'Free', note: 'No strings attached.' },
@@ -204,7 +273,10 @@ export const en = {
     thread: {
       status: 'usually replies within a day',
       you1: 'We copy orders from emails into e-conomic. About 5 hours a week.',
-      me1: 'That can run by itself. I will send you a plan.',
+      me1: 'That can run by itself. Shall we meet? I can come by, or we do a video call. Whatever suits you.',
+      you2a: 'Come by Thursday at 10?',
+      me2: 'See you Thursday ☕',
+      visit: 'Thursday · at your office',
       planTitle: 'Plan · order booking.pdf',
       free: 'free',
       planItems: ['What gets built', 'Price', 'Hours saved', 'How your data is kept safe'],
@@ -240,17 +312,22 @@ export const en = {
     sent: "Got it. You'll get a written plan from me within two working days.",
     mailOpened: 'Your mail app should open with the message ready to send.',
     error: 'Something went wrong. Write to me directly instead:',
+    // The booking card next to the sticky note, for people who'd rather talk.
+    or: 'or',
+    bookTitle: 'Rather just talk?',
+    bookText: 'Skip the questions and pick a time. 20 minutes on video, by phone or over coffee at your place.',
+    slots: ['Thu 10:00', 'Thu 13:30', 'Fri 09:00'],
     talk: 'Prefer talking?',
     book: 'Book 20 minutes',
   },
   footer: {
     place: 'Copenhagen',
-    privacy: 'Visits are counted without cookies. Google Analytics only if you say yes.',
+    privacy: 'Visits are counted without cookies. Statistics cookies only if you say yes.',
     settings: 'Cookie settings',
   },
   consent: {
     label: 'Cookies',
-    text: 'May I use Google Analytics to see which parts of the site are useful? No ads, nothing sold.',
+    text: 'This site uses cookies to see which parts are useful. Only statistics: no ads, nothing sold.',
     yes: 'Yes, fine',
     no: 'No thanks',
   },

@@ -124,10 +124,10 @@ export default function Analytics({ lang }: { lang: Lang }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
             transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1] }}
-            className="fixed inset-x-3 bottom-3 z-[70] rounded-[20px] border border-hair bg-card p-4 shadow-[0_20px_50px_-20px_#00000055] sm:right-auto sm:left-4 sm:max-w-[370px] sm:p-5"
+            className="fixed inset-x-3 bottom-3 z-[70] mx-auto max-w-[460px] rounded-[20px] border border-hair bg-card p-4 text-center shadow-[0_20px_50px_-20px_#00000055] sm:bottom-5 sm:p-5"
           >
             <p className="text-[14px] leading-snug text-body">{t.text}</p>
-            <div className="mt-3.5 flex gap-2">
+            <div className="mt-3.5 flex justify-center gap-2">
               <button
                 type="button"
                 onClick={() => setConsent('yes')}
