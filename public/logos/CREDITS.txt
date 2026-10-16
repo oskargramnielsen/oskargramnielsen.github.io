@@ -1,0 +1,4 @@
+Product logos are trademarks of their owners and are shown only to name the tools I work with.
+Microsoft Power Automate, SharePoint, Teams, Outlook, Excel: selfh.st/icons (CC BY 4.0), https://github.com/selfhst/icons
+Microsoft Power Apps: Wikimedia Commons, File:Powerapps-logo.svg
+Python, TypeScript: SVG Logos by Gil Barbara (CC0), https://github.com/gilbarbara/logos

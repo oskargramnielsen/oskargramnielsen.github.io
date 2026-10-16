@@ -124,21 +124,21 @@ export default function Analytics({ lang }: { lang: Lang }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
             transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1] }}
-            className="fixed inset-x-3 bottom-3 z-[70] mx-auto max-w-[460px] rounded-[20px] border border-hair bg-card p-4 text-center shadow-[0_20px_50px_-20px_#00000055] sm:bottom-5 sm:p-5"
+            className="fixed inset-x-3 bottom-3 z-[70] mx-auto flex w-fit max-w-[calc(100%-24px)] items-center gap-3 rounded-full border border-hair bg-card py-1.5 pr-1.5 pl-4 shadow-[0_20px_50px_-20px_#00000055] sm:bottom-5"
           >
-            <p className="text-[14px] leading-snug text-body">{t.text}</p>
-            <div className="mt-3.5 flex justify-center gap-2">
+            <p className="text-[13px] leading-tight text-body">{t.text}</p>
+            <div className="flex shrink-0 gap-1">
               <button
                 type="button"
                 onClick={() => setConsent('yes')}
-                className="rounded-full bg-ink px-4 py-2 text-[14px] font-medium text-card transition-colors hover:bg-bot"
+                className="rounded-full bg-ink px-3 py-1.5 text-[13px] font-medium text-card transition-colors hover:bg-bot"
               >
                 {t.yes}
               </button>
               <button
                 type="button"
                 onClick={() => setConsent('no')}
-                className="rounded-full border border-hair px-4 py-2 text-[14px] font-medium text-ink transition-colors hover:border-ink"
+                className="rounded-full px-2.5 py-1.5 text-[13px] font-medium text-muted transition-colors hover:text-ink"
               >
                 {t.no}
               </button>

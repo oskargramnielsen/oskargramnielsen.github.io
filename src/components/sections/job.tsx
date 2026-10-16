@@ -103,47 +103,6 @@ function Chat({ t }: { t: Dict['job']['chat'] }) {
   );
 }
 
-/** The tools on both sides, joined in the middle by the customer's process. */
-function Stack({ t }: { t: Dict['job']['stack'] }) {
-  const group = (g: (typeof t.groups)[number], gi: number) => (
-    <div key={g.name} className="flex-1">
-      <p className="mb-2 text-[12px] text-muted">{g.name}</p>
-      <div className="flex flex-wrap gap-1.5">
-        {g.tools.map((tool, i) => (
-          <motion.span
-            key={tool}
-            variants={pop(0.15 + gi * 0.5 + i * 0.07)}
-            className="rounded-full border border-hair bg-card px-3 py-1.5 text-[13px] whitespace-nowrap md:text-[14px]"
-          >
-            {tool}
-          </motion.span>
-        ))}
-      </div>
-    </div>
-  );
-  const link = (d: number) => (
-    <motion.span
-      aria-hidden
-      className="mx-auto block h-5 w-px origin-top bg-bot md:mx-0 md:h-px md:w-8 md:origin-left lg:w-12"
-      variants={{ hidden: { scale: 0 }, shown: { scale: 1, transition: { delay: d, duration: 0.4 } } }}
-    />
-  );
-  return (
-    <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-3">
-      {group(t.groups[0], 0)}
-      {link(1)}
-      <motion.span
-        variants={pop(1.2)}
-        className="mx-auto shrink-0 rounded-full bg-bot px-4 py-2.5 text-center text-[14px] font-medium text-card shadow-[0_10px_24px_-10px_#1f3bff99] md:mx-0"
-      >
-        {t.center}
-      </motion.span>
-      {link(1)}
-      {group(t.groups[1], 1)}
-    </div>
-  );
-}
-
 export default function Job({ t }: { t: Dict['job'] }) {
   const reduce = useReducedMotion();
   const reveal = (i: number) => ({
@@ -174,28 +133,89 @@ export default function Job({ t }: { t: Dict['job'] }) {
             </div>
           </motion.li>
         ))}
-        <motion.li
-          {...reveal(2)}
-          className="grid gap-6 rounded-[24px] border border-hair bg-card p-5 md:p-7 lg:col-span-2 lg:grid-cols-[.8fr_1.2fr] lg:items-center lg:gap-12"
-        >
-          <div>
-            <h3 className="text-[22px] leading-tight font-semibold tracking-[-0.02em] md:text-[28px]">{t.stack.title}</h3>
-            <p className="mt-2 text-[15px] leading-snug text-body md:text-base">{t.stack.text}</p>
-          </div>
-          <Stack t={t.stack} />
-        </motion.li>
       </ol>
 
-      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] text-muted">
-        <span className="font-medium text-bot">{t.privacy}</span>
-        {t.facts.map((f) => (
-          <span key={f.k}>
-            <span className="text-faint">{f.k}</span> {f.v}
-          </span>
-        ))}
-        <a href={site.cv} download className="text-ink underline underline-offset-4 hover:text-bot">
-          {t.cvLabel} · {t.cv}
-        </a>
+      {/* Who's behind it: a name badge that swings in on its lanyard, and a promise next to it. */}
+      <div className="mt-10 grid items-center gap-8 md:mt-14 md:grid-cols-[minmax(0,380px)_1fr] md:gap-12">
+        <motion.div
+          initial={reduce ? false : { rotate: -9, y: -24, opacity: 0 }}
+          whileInView={{ rotate: 0, y: 0, opacity: 1 }}
+          viewport={{ once: true, margin: '-15% 0px' }}
+          transition={{ type: 'spring', stiffness: 70, damping: 7, mass: 0.9 }}
+          style={{ transformOrigin: '50% -40px' }}
+          className="relative mx-auto w-full max-w-[380px] pt-10"
+        >
+          <span aria-hidden className="absolute top-0 left-1/2 h-12 w-4 -translate-x-1/2 bg-gradient-to-b from-transparent to-bot" />
+          <div className="relative rounded-[24px] border border-hair bg-card p-5 shadow-[0_30px_60px_-34px_#00000066] md:p-6">
+            <span aria-hidden className="mx-auto mb-5 block h-2 w-12 rounded-full bg-hair" />
+            <div className="flex items-center gap-4">
+              <span className="relative grid size-16 shrink-0 place-items-center rounded-full bg-bot text-[22px] font-semibold tracking-[-0.02em] text-card">
+                OG
+                <span className="absolute right-0 bottom-0.5 size-4 rounded-full border-[3px] border-card bg-[#2fbf71]" />
+              </span>
+              <div>
+                <p className="text-[19px] leading-tight font-semibold tracking-[-0.02em]">{site.name}</p>
+                <p className="mt-0.5 text-[14px] text-muted">{t.facts[0].v}</p>
+              </div>
+            </div>
+            <dl className="mt-5 space-y-3 border-t border-hair pt-4 text-[14px]">
+              <div>
+                <dt className="text-[12px] text-faint">{t.facts[1].k}</dt>
+                <dd>{t.facts[1].v}</dd>
+              </div>
+              <div>
+                <dt className="text-[12px] text-faint">{t.facts[2].k}</dt>
+                <dd className="mt-1.5 flex flex-wrap gap-1.5">
+                  {t.facts[2].v.split(', ').map((skill, i) => (
+                    <motion.span
+                      key={skill}
+                      initial={reduce ? false : { opacity: 0, scale: 0.8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.6 + i * 0.08 }}
+                      className="rounded-full bg-shade px-2.5 py-1 text-[13px]"
+                    >
+                      {skill}
+                    </motion.span>
+                  ))}
+                </dd>
+              </div>
+            </dl>
+            <a
+              href={site.cv}
+              download
+              className="mt-5 flex items-center justify-between rounded-full bg-ink py-2.5 pr-2.5 pl-5 text-[15px] font-medium text-paper transition-colors duration-300 hover:bg-bot"
+            >
+              {t.cvLabel} · {t.cv}
+              <span className="grid size-8 place-items-center rounded-full bg-paper/15" aria-hidden>
+                ↓
+              </span>
+            </a>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-15% 0px' }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="relative max-w-[520px] rounded-[28px] rounded-bl-[8px] bg-bot-soft p-6 text-bot md:rounded-bl-[28px] md:rounded-tl-[8px] md:p-8"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            className="mb-4 size-8"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <rect x="5" y="10.5" width="14" height="10" rx="2.5" />
+            <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5M12 14.5v2" />
+          </svg>
+          <p className="text-[24px] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[32px]">{t.privacy}</p>
+        </motion.div>
       </div>
     </section>
   );

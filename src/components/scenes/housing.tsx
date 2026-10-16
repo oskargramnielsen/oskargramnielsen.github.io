@@ -23,9 +23,9 @@ export default function Housing({ p, t }: { p: MotionValue<number>; t: Dict['wor
       <div>
         <Appear on={step >= 1}>
           <div className="border border-hair bg-card p-3">
-            <div className="mb-3 hidden h-24 place-items-center bg-[repeating-linear-gradient(135deg,#f1f0ec_0_8px,#f7f6f2_8px_16px)] font-mono text-[11px] text-faint sm:grid">
-              {t.photo}
-            </div>
+            {/* Stock photo (Unsplash), not the real apartment. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/apartment.jpg" alt={t.photo} loading="lazy" className="mb-3 aspect-[16/9] w-full object-cover" />
             <p className="text-[15px] font-semibold">{t.listingTitle}</p>
             <p className="text-[13px] text-muted">{t.listingMeta}</p>
           </div>
@@ -34,7 +34,10 @@ export default function Housing({ p, t }: { p: MotionValue<number>; t: Dict['wor
           {t.checks.map((c, i) => (
             <li
               key={c}
-              className={cn('flex justify-between border-b border-hair py-1.5 transition-opacity duration-300', step >= i + 2 ? 'opacity-100' : 'opacity-25')}
+              className={cn(
+                'flex justify-between border-b border-hair py-1.5 transition-opacity duration-300',
+                step >= i + 2 ? 'opacity-100' : 'opacity-25',
+              )}
             >
               <span>{c}</span>
               <span className="text-bot">✓</span>

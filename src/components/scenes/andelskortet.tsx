@@ -12,29 +12,14 @@ const open = mapDots.filter((d) => d[2]);
 // Andelskortet's own colours: its green, and a light map like the CARTO tiles it uses.
 const GREEN = '#3a5d50';
 
-// Visitors per month since launch, new and returning, stacked. Shape of the real curve, rounded.
-const NEW = [
-  120, 260, 420, 380, 450, 520, 610, 580, 700, 820, 760, 900, 980, 1050, 990, 1120, 1240, 1180, 1300, 1420, 1380, 1500, 1610, 1560, 1700,
-  1820,
-];
-const RET = [
-  20, 60, 110, 120, 150, 180, 220, 230, 260, 300, 310, 340, 380, 400, 410, 450, 480, 490, 520, 560, 570, 600, 640, 650, 690, 720,
-];
-const GW = 300;
-const GH = 100;
-const gx = (i: number) => (i / (NEW.length - 1)) * GW;
-const gy = (v: number) => GH - (v / 2600) * GH;
-const area = (top: number[], bottom: number[]) =>
-  `M${top.map((v, i) => `${gx(i)},${gy(v)}`).join(' L')} L${bottom
-    .map((v, i) => `${gx(i)},${gy(v)}`)
-    .reverse()
-    .join(' L')} Z`;
-const STACK = NEW.map((v, i) => v + RET[i]);
-const NEW_AREA = area(
-  NEW,
-  NEW.map(() => 0),
-);
-const RET_AREA = area(STACK, NEW);
+// Visitors since launch, month by month: some months grow fast, some slowly, but it never goes down.
+// Shape of the real curve, rounded. Drawn in a 100 x 100 box that stretches with the scene; on desktop
+// it starts behind the browser window and climbs out above it.
+const GROWTH = [3, 1, 4, 2, 5, 1.5, 3, 6, 2, 4, 2.5, 5, 7, 3, 4, 6, 2, 5, 8, 3, 6, 4, 7, 9, 5, 8];
+const TOTAL = GROWTH.map((_, i) => GROWTH.slice(0, i + 1).reduce((a, b) => a + b, 0));
+const LINE = TOTAL.map(
+  (v, i) => `${i ? 'L' : 'M'}${((i / (TOTAL.length - 1)) * 98).toFixed(2)},${(46 - (v / TOTAL[TOTAL.length - 1]) * 44).toFixed(2)}`,
+).join(' ');
 
 /** The house-in-a-circle marker andelskortet.dk uses for open waiting lists. */
 const House = () => (
@@ -54,52 +39,45 @@ const HouseIcon = ({ className }: { className?: string }) => (
 export default function Andelskortet({ p, t }: { p: MotionValue<number>; t: Dict['work']['andelskortet'] }) {
   const scanY = useTransform(p, (v) => seg(v, 0.05, 0.6) * H);
   const grow = useTransform(p, (v) => seg(v, 0.1, 0.75));
+  const clipW = useTransform(grow, (g) => g * 104);
   const users = useTransform(grow, (g) => Math.round(24485 * g).toLocaleString('da-DK'));
-  const clipW = useTransform(grow, (g) => g * GW);
   const step = useStep(p, [0.62, 0.78, 0.84, 0.9]);
 
   return (
     <div className="relative flex flex-col sm:block sm:h-[600px] lg:absolute lg:inset-0 lg:h-auto">
-      {/* In the back: how many people it has helped, month by month. */}
-      <div className="relative flex h-[200px] w-[92%] flex-col self-end rounded-[18px] border border-hair bg-card px-4 pt-3.5 pb-12 shadow-[0_20px_40px_-30px_#00000040] sm:absolute sm:top-0 sm:right-0 sm:h-[42%] sm:w-[66%] sm:px-5 sm:pt-4 sm:pb-[84px]">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <motion.b className="block text-[30px] leading-none font-semibold tracking-[-0.04em] md:text-[40px]" style={{ color: GREEN }}>
-              {users}
-            </motion.b>
-            <span className="mt-1 block text-[12px] text-body md:text-[13px]">{t.users}</span>
-          </div>
-          <div className="text-right text-[10.5px] leading-snug text-muted md:text-[11.5px]">
-            <p className="mb-0.5 text-ink">{t.graph.title}</p>
-            <p className="flex items-center justify-end gap-1.5">
-              <span className="size-2 rounded-full" style={{ background: GREEN }} />
-              {t.graph.layers[0]}
-              <span className="ml-1.5 size-2 rounded-full bg-[#a8c6b6]" />
-              {t.graph.layers[1]}
-            </p>
-          </div>
-        </div>
-        <svg viewBox={`0 0 ${GW} ${GH}`} preserveAspectRatio="none" className="mt-2 min-h-0 w-full flex-1" aria-hidden>
+      {/* In the back: how many people it has helped, a number that counts up and a line that only goes up. */}
+      <div className="relative h-[170px] sm:absolute sm:inset-0 sm:h-auto">
+        <svg
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          className="absolute inset-x-0 top-0 h-[230%] w-full overflow-visible sm:inset-0 sm:size-full"
+          aria-hidden
+        >
           <defs>
             <clipPath id="ak-grow">
-              <motion.rect x="0" y="0" height={GH} width={clipW} />
+              <motion.rect x="-2" y="-5" height="110" width={clipW} />
             </clipPath>
           </defs>
-          {[0.25, 0.5, 0.75].map((f) => (
-            <line key={f} x1="0" x2={GW} y1={GH * f} y2={GH * f} stroke="#ecebe6" strokeWidth="1" vectorEffect="non-scaling-stroke" />
-          ))}
-          <g clipPath="url(#ak-grow)">
-            <path d={RET_AREA} fill="#a8c6b6" />
-            <path d={NEW_AREA} fill={GREEN} />
-          </g>
+          <path
+            d={LINE}
+            clipPath="url(#ak-grow)"
+            fill="none"
+            stroke={GREEN}
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
         </svg>
-        <div className="flex justify-between pt-1 text-[10px] text-faint">
-          <span>{t.graph.from}</span>
-          <span>{t.graph.to}</span>
+        <div className="absolute top-0 left-0">
+          <motion.b className="block text-[40px] leading-none font-semibold tracking-[-0.04em] md:text-[52px]" style={{ color: GREEN }}>
+            {users}
+          </motion.b>
+          <span className="mt-1 block text-[13px] text-body">{t.users}</span>
         </div>
       </div>
 
-      <div className="relative z-10 -mt-10 flex h-[400px] w-full flex-col overflow-hidden rounded-[18px] border border-hair bg-card shadow-[0_30px_60px_-30px_#00000050] sm:absolute sm:bottom-0 sm:left-0 sm:mt-0 sm:h-[70%] sm:w-[86%]">
+      <div className="relative z-10 -mt-6 flex h-[420px] w-full flex-col overflow-hidden rounded-[18px] border border-hair bg-card shadow-[0_30px_60px_-30px_#00000050] sm:absolute sm:bottom-0 sm:left-0 sm:mt-0 sm:h-[80%] sm:w-[86%]">
         {/* Browser bar */}
         <div className="flex h-9 shrink-0 items-center gap-3 border-b border-hair bg-shade px-3.5">
           <div className="flex gap-1.5" aria-hidden>

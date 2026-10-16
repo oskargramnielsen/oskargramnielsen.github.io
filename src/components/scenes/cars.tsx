@@ -48,6 +48,9 @@ export default function Cars({ p, t }: { p: MotionValue<number>; t: Dict['work']
           {step === 1 && <Typing key="t1" side="left" bot />}
           {step >= 2 && (
             <Bubble key="table" side="left" bot className="w-[300px] max-w-full md:w-[340px]">
+              {/* Stock photo (Unsplash), not the listed car. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/golf.jpg" alt="" loading="lazy" className="mb-2.5 aspect-[16/8] w-full rounded-[12px] object-cover" />
               <p className="text-[13px]">
                 <b className="font-semibold text-ink">{t.car}</b>
               </p>

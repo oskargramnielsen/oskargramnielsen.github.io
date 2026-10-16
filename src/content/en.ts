@@ -38,25 +38,43 @@ export const en = {
   benefits: {
     label: 'Why automate',
     title: 'Get your hours back.',
-    // In the order they appear in the week planner.
     items: [
-      { title: 'Time back', text: 'The hours spent copying and checking come back to you.' },
-      { title: 'Always on', text: 'It runs at night and on weekends while you’re off.' },
-      { title: 'Lower costs', text: 'Pay once for the build instead of every week in hours.' },
-      { title: 'Work you like', text: 'Spend the day on customers and craft, not spreadsheets.' },
-      { title: 'Fewer mistakes', text: 'A program doesn’t mistype, skip a row or forget.' },
-      { title: 'Nothing to fear', text: 'Your data stays under control, and you see every step it takes.' },
+      { icon: 'time', title: 'Time back', text: 'The hours spent copying and checking come back to you.' },
+      { icon: 'check', title: 'Fewer mistakes', text: 'A program doesn’t mistype, skip a row or forget.' },
+      { icon: 'money', title: 'Lower costs', text: 'Pay once for the build instead of every week in hours.' },
+      { icon: 'heart', title: 'Work you like', text: 'Spend the day on customers and craft, not spreadsheets.' },
+      { icon: 'shield', title: 'Nothing to fear', text: 'Your data stays under control, and you see what it does.' },
+      { icon: 'moon', title: 'Always on', text: 'It runs at night and on weekends while you’re off.' },
     ],
-    // The week planner.
-    week: 'Your week',
-    perWeek: 'back every week',
-    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-    night: 'Night',
-    chores: ['Copy orders', 'Monday report', 'Type in invoices', 'Same emails', 'Merge sheets', 'Chase invoices', 'Price list'],
-    keep: ['Client meeting', 'Site visit'],
-    free: ['Customers', 'Lunch, actually', 'New idea', 'Craft', 'Customers', 'Off early', 'Craft', 'Plan ahead', 'Coffee', 'Off early'],
-    builtOnce: 'Built once · runs every night',
-    log: { title: 'Log · 02:14', line: '37 orders booked', ok: '0 errors', see: 'See every step' },
+    // The tools, moved here from the day job.
+    stack: {
+      title: 'A flexible tool stack',
+      text: 'I use what fits your company. Often that is the Microsoft tools you already pay for: Power Automate, Power Apps, SharePoint and Teams. When they aren’t enough, I write it in Python or TypeScript.',
+      center: 'Your process',
+      groups: [
+        {
+          name: 'Microsoft 365 & Power Platform',
+          tools: [
+            { name: 'Power Automate', icon: 'automate' },
+            { name: 'Power Apps', icon: 'apps' },
+            { name: 'SharePoint', icon: 'sharepoint' },
+            { name: 'Teams', icon: 'teams' },
+            { name: 'Outlook', icon: 'outlook' },
+            { name: 'Excel', icon: 'excel' },
+          ],
+        },
+        {
+          name: 'Custom code & AI',
+          tools: [
+            { name: 'Python', icon: 'python' },
+            { name: 'TypeScript', icon: 'typescript' },
+            { name: 'AI models', icon: 'ai' },
+            { name: 'APIs', icon: 'api' },
+            { name: 'Databases', icon: 'db' },
+          ],
+        },
+      ],
+    },
   },
   job: {
     label: 'My day job',
@@ -89,15 +107,6 @@ export const en = {
       a: 'REI 60. The stairwell walls need REI 120.',
       source: 'Fire strategy.pdf · p. 14',
     },
-    stack: {
-      title: 'A flexible tool stack',
-      text: 'I use what fits your company. Often that is the Microsoft tools you already pay for: Power Automate, Power Apps, SharePoint and Teams. When they aren’t enough, I write it in Python or TypeScript.',
-      center: 'Your process',
-      groups: [
-        { name: 'Microsoft 365 & Power Platform', tools: ['Power Automate', 'Power Apps', 'SharePoint', 'Teams', 'Outlook', 'Excel'] },
-        { name: 'Custom code & AI', tools: ['Python', 'TypeScript', 'AI models', 'APIs', 'Databases'] },
-      ],
-    },
     privacy: 'What we build together stays between us too.',
     facts: [
       { k: 'Now', v: 'Automation Engineer, CN3' },
@@ -122,7 +131,7 @@ export const en = {
       body: 'Co-op apartments went to whoever wrote first. So a program watched DBA and wrote to the seller within a minute.',
       short: 'A program that wrote to every new seller within a minute.',
       lesson: 'answer your leads in one minute instead of one day.',
-      photo: 'photo',
+      photo: 'Living room in a co-op apartment',
       listingTitle: '3 vær. andelslejlighed, 2100',
       listingMeta: '77 m² · 3.069.685 kr · ydelse 3.320 kr',
       checks: ['Postcode 2100, 2200 or 1800', '3 rooms or more', 'Under 3.5 m kr', 'Not seen before'],
@@ -174,7 +183,6 @@ export const en = {
       search: 'Search for a co-op or address…',
       attribution: 'Map © OpenStreetMap · co-ops from andelskortet.dk',
       users: 'people have used it',
-      graph: { title: 'Visitors per month', layers: ['New', 'Returning'], from: '2024', to: '2026' },
       legend: { all: 'Other co-ops', open: 'Open waiting lists' },
       mailApp: 'Mail',
       // Real messages. Private senders are anonymised.
@@ -288,36 +296,32 @@ export const en = {
   },
   contact: {
     title: 'Your turn. What would you rather not do?',
-    intro: 'Three quick questions. Takes under a minute.',
+    intro: 'Write it on the note and say how to reach you. Takes under a minute.',
     q1: 'What takes too long? Write it on the note.',
     q2: 'How much time does it take?',
     times: ['A few hours a month', 'A few hours a week', 'Hours every day', 'Not sure'],
     q3: 'Where should I send the plan?',
     placeholder: 'Write it here…',
-    next: 'Next',
     suggestions: [
       'Typing orders into e-\u2060conomic',
       'Answering the same emails',
       'Building the Monday report',
       'Chasing unpaid invoices',
     ],
+    name: 'Your name',
     email: 'Your email',
+    phone: 'Phone (optional)',
     send: 'Send',
     sending: 'Sending…',
-    back: 'Back',
-    step: 'Question',
-    of: 'of',
     you: 'you',
     now: 'now',
     sent: "Got it. You'll get a written plan from me within two working days.",
     mailOpened: 'Your mail app should open with the message ready to send.',
     error: 'Something went wrong. Write to me directly instead:',
-    // The booking card next to the sticky note, for people who'd rather talk.
-    or: 'or',
+    // The booking strip under the form, for people who'd rather talk.
     bookTitle: 'Rather just talk?',
-    bookText: 'Skip the questions and pick a time. 20 minutes on video, by phone or over coffee at your place.',
+    bookText: 'Skip the form and pick a time. 20 minutes on video, by phone or over coffee at your place.',
     slots: ['Thu 10:00', 'Thu 13:30', 'Fri 09:00'],
-    talk: 'Prefer talking?',
     book: 'Book 20 minutes',
   },
   footer: {
@@ -325,12 +329,7 @@ export const en = {
     privacy: 'Visits are counted without cookies. Statistics cookies only if you say yes.',
     settings: 'Cookie settings',
   },
-  consent: {
-    label: 'Cookies',
-    text: 'This site uses cookies to see which parts are useful. Only statistics: no ads, nothing sold.',
-    yes: 'Yes, fine',
-    no: 'No thanks',
-  },
+  consent: { label: 'Cookies', text: 'Cookies for statistics only. No ads.', yes: 'OK', no: 'No thanks' },
 };
 
 export type Dict = typeof en;
