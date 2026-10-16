@@ -1,8 +1,8 @@
 'use client';
 
-// Five alternative designs for the "Get your hours back" section, to pick from. Not linked from the site.
+// Alternative designs for the "Get your hours back" section, to pick from. Not linked from the site.
 import { useEffect, useRef, useState } from 'react';
-import { animate, motion, useInView, useReducedMotion } from 'motion/react';
+import { animate, motion, useInView, useReducedMotion, useSpring, useTransform } from 'motion/react';
 import { en } from '@/content/en';
 import { ICONS } from '@/components/sections/benefits';
 import { cn } from '@/lib/utils';
@@ -370,12 +370,367 @@ function Clock() {
   );
 }
 
+// What each benefit amounts to, printed as the price column on the bill.
+const VALUES: Record<string, string> = {
+  time: '+16 h',
+  check: '0 typos',
+  money: 'paid once',
+  heart: 'more of it',
+  shield: 'stays yours',
+  moon: '24/7',
+};
+
+/** F: the bill, done properly. A printer slides out an itemised bill where every benefit is a line, total at the bottom. */
+function Bill() {
+  const ref = useRef<HTMLDivElement>(null);
+  const seen = useInView(ref, { once: true, margin: '-25% 0px' });
+  const reduce = useReducedMotion();
+  return (
+    <div ref={ref} className="grid items-center gap-10 lg:grid-cols-[minmax(0,560px)_1fr] lg:gap-16">
+      <div className="mx-auto w-full max-w-[560px]">
+        <div className="relative z-10 flex h-14 items-center justify-between rounded-[18px] bg-ink px-5 shadow-[0_24px_40px_-24px_#00000099]">
+          <span className="font-mono text-[11px] tracking-[0.25em] text-white/45">YOUR AUTOMATION</span>
+          <span className="flex items-center gap-2 font-mono text-[11px] text-white/60">
+            <span className="size-2 animate-pulse rounded-full bg-[#3ddc84]" />
+            printing
+          </span>
+          <span aria-hidden className="absolute inset-x-6 -bottom-1 h-2 rounded-full bg-[#050608]" />
+        </div>
+        <div className="-mt-1 overflow-hidden px-4 pb-8">
+          <motion.div
+            initial={reduce ? false : { y: '-101%' }}
+            animate={seen ? { y: 0 } : undefined}
+            transition={{ duration: 2.4, ease: [0.35, 0.5, 0.25, 1] }}
+            className="drop-shadow-[0_18px_22px_#00000026]"
+          >
+            <div className="bg-card px-6 pt-7 pb-12 [mask:conic-gradient(from_-45deg_at_bottom,#0000,#000_1deg_89deg,#0000_90deg)_50%/18px_100%] sm:px-8">
+              <div className="flex items-baseline justify-between">
+                <p className="text-[22px] font-semibold tracking-[-0.02em]">Your week, itemised</p>
+                <p className="font-mono text-[12px] text-muted">Week 43</p>
+              </div>
+              <p className="mt-1 text-[14px] text-muted">What the automation gives you back, line by line.</p>
+              <div className="my-5 border-t border-dashed border-ink/25" />
+              <ul className="space-y-4">
+                {t.items.map((b) => (
+                  <li key={b.title} className="grid grid-cols-[36px_1fr_auto] items-start gap-3">
+                    <span className="grid size-9 place-items-center rounded-full bg-[#1f3bff14] text-bot">
+                      <Icon name={b.icon} className="size-[18px]" />
+                    </span>
+                    <div>
+                      <p className="text-[16px] leading-tight font-semibold">{b.title}</p>
+                      <p className="mt-0.5 text-[13px] leading-snug text-muted">{b.text}</p>
+                    </div>
+                    <p className="pt-0.5 text-right font-mono text-[14px] font-semibold whitespace-nowrap text-bot">{VALUES[b.icon]}</p>
+                  </li>
+                ))}
+              </ul>
+              <div className="my-5 border-t border-dashed border-ink/25" />
+              <div className="flex items-end justify-between">
+                <div>
+                  <p className="text-[15px] font-semibold">Time back</p>
+                  <p className="text-[13px] text-muted">every single week</p>
+                </div>
+                <p className="text-[44px] leading-none font-semibold tracking-[-0.04em] text-bot">{HOURS} h</p>
+              </div>
+              <div className="mt-6 flex items-center justify-between gap-4">
+                <div
+                  aria-hidden
+                  className="h-8 w-40 bg-[repeating-linear-gradient(90deg,#16171c_0_2px,transparent_2px_4px,#16171c_4px_5px,transparent_5px_8px)]"
+                />
+                <p className="text-right font-mono text-[11px] tracking-[0.15em] text-muted">PAID ONCE · RUNS EVERY WEEK</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+      <div className="text-center lg:text-left">
+        <p className="-rotate-2 font-[family-name:var(--font-hand)] text-[clamp(36px,3.6vw,56px)] leading-[1] font-semibold text-bot">
+          That’s two whole workdays.
+          <br />
+          Every week.
+        </p>
+        <p className="mx-auto mt-5 max-w-[380px] text-[16px] leading-relaxed text-body lg:mx-0">
+          A typical small office loses {HOURS} hours a week to copying, checking and chasing. You pay for the build once, and the bill keeps
+          printing in your favour.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// Where each benefit sits on the dial, in degrees from twelve o’clock.
+const ANGLES = [30, 90, 150, 210, 270, 330];
+
+/** G: a clock dial. The hand sweeps round, and each benefit around the face lights up as it passes. */
+function Dial() {
+  const ref = useRef<HTMLDivElement>(null);
+  const seen = useInView(ref, { once: true, margin: '-25% 0px' });
+  const [lit, setLit] = useState(0);
+  useEffect(() => {
+    if (!seen) return;
+    const ids = t.items.map((_, i) => setTimeout(() => setLit(i + 1), 500 + i * 650));
+    return () => ids.forEach(clearTimeout);
+  }, [seen]);
+  const a = useSpring(0, { stiffness: 50, damping: 18 });
+  useEffect(() => a.set(lit ? ANGLES[lit - 1] : 0), [a, lit]);
+  const sweep = useTransform(a, (v) => `conic-gradient(#1f3bff1f ${v}deg, transparent ${v}deg)`);
+
+  const Label = ({ i, side }: { i: number; side: 'left' | 'right' }) => {
+    const b = t.items[i];
+    return (
+      <li
+        className={cn(
+          'transition-all duration-500',
+          lit > i ? 'opacity-100' : 'opacity-25',
+          side === 'left' && 'lg:text-right',
+          (i === 1 || i === 4) && (side === 'right' ? 'lg:translate-x-5' : 'lg:-translate-x-5'),
+        )}
+      >
+        <div className={cn('flex items-center gap-3', side === 'left' && 'lg:flex-row-reverse')}>
+          <span
+            className={cn(
+              'grid size-10 shrink-0 place-items-center rounded-full transition-colors duration-500',
+              lit > i ? 'bg-bot text-card' : 'bg-shade text-muted',
+            )}
+          >
+            <Icon name={b.icon} className="size-5" />
+          </span>
+          <h3 className="text-[19px] leading-tight font-semibold">{b.title}</h3>
+        </div>
+        <p className="mt-2 text-[15px] leading-snug text-muted">{b.text}</p>
+      </li>
+    );
+  };
+
+  return (
+    <div ref={ref} className="grid items-center gap-10 lg:grid-cols-[1fr_minmax(0,420px)_1fr] lg:gap-12">
+      <ul className="order-3 flex flex-col-reverse gap-6 lg:order-1 lg:flex-col lg:gap-16">
+        {[5, 4, 3].map((i) => (
+          <Label key={i} i={i} side="left" />
+        ))}
+      </ul>
+      <div className="relative order-1 mx-auto aspect-square w-full max-w-[420px] lg:order-2">
+        <motion.div className="absolute inset-[4%] rounded-full" style={{ background: sweep }} />
+        <svg viewBox="0 0 300 300" className="absolute inset-0 size-full" aria-hidden>
+          <circle cx="150" cy="150" r="144" fill="none" stroke="#16171c" strokeOpacity="0.12" strokeWidth="2" />
+          {Array.from({ length: 60 }, (_, k) => {
+            const r = (k / 60) * Math.PI * 2;
+            const r0 = k % 5 ? 132 : 124;
+            return (
+              <line
+                key={k}
+                x1={150 + r0 * Math.sin(r)}
+                y1={150 - r0 * Math.cos(r)}
+                x2={150 + 138 * Math.sin(r)}
+                y2={150 - 138 * Math.cos(r)}
+                stroke="#16171c"
+                strokeOpacity={k % 5 ? 0.18 : 0.55}
+                strokeWidth={k % 5 ? 1 : 2.5}
+                strokeLinecap="round"
+              />
+            );
+          })}
+          {ANGLES.map((d, i) => {
+            const r = (d / 180) * Math.PI;
+            return (
+              <circle
+                key={d}
+                cx={150 + 108 * Math.sin(r)}
+                cy={150 - 108 * Math.cos(r)}
+                r="6"
+                className="transition-[fill] duration-500"
+                fill={lit > i ? '#1f3bff' : '#ebe8e1'}
+              />
+            );
+          })}
+        </svg>
+        <motion.div className="absolute inset-0" style={{ rotate: a }}>
+          <span className="absolute top-[9%] left-1/2 h-[28%] w-[5px] -translate-x-1/2 rounded-full bg-bot" />
+        </motion.div>
+        <div className="absolute inset-[28%] grid place-items-center rounded-full bg-card text-center shadow-[0_10px_30px_-18px_#00000066]">
+          <div>
+            <p className="text-[44px] leading-none font-semibold tracking-[-0.05em] md:text-[56px]">
+              +{Math.round((HOURS * lit) / 6)}
+              <span className="text-[22px]">h</span>
+            </p>
+            <p className="text-[13px] text-muted">back every week</p>
+          </div>
+        </div>
+      </div>
+      <ul className="order-2 flex flex-col gap-6 lg:order-3 lg:gap-16">
+        {[0, 1, 2].map((i) => (
+          <Label key={i} i={i} side="right" />
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// A night's work, as the notifications you wake up to. One per benefit, in time order.
+const FEED = [
+  { icon: 'moon', time: '03:12', text: '214 orders booked into e-conomic while you slept.' },
+  { icon: 'check', time: '04:40', text: 'All 1,208 rows checked. Nothing mistyped, nothing skipped.' },
+  { icon: 'shield', time: '05:00', text: 'Backup done. Your data stayed in your own Microsoft 365.' },
+  { icon: 'money', time: '06:15', text: '38 reminders sent. No extra hours paid for it.' },
+  { icon: 'time', time: '07:00', text: 'This week so far: 6 h 20 min given back to you.' },
+  { icon: 'heart', time: '07:30', text: 'Your morning is free. Two customers asked for a quote.' },
+];
+
+/** H: Monday morning. A phone lock screen fills with what the automation did overnight. */
+function Morning() {
+  const ref = useRef<HTMLDivElement>(null);
+  const seen = useInView(ref, { once: true, margin: '-25% 0px' });
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!seen) return;
+    const ids = FEED.map((_, i) => setTimeout(() => setN(i + 1), 500 + i * 700));
+    return () => ids.forEach(clearTimeout);
+  }, [seen]);
+  const title = (icon: string) => t.items.find((b) => b.icon === icon)!.title;
+  return (
+    <div ref={ref} className="grid items-center gap-12 lg:grid-cols-[340px_1fr] lg:gap-20">
+      <div className="mx-auto h-[700px] w-full max-w-[330px] overflow-hidden rounded-[48px] border-[10px] border-ink bg-[radial-gradient(120%_80%_at_30%_0%,#4a63ff,#1b2280_55%,#0b0d2b)] p-3 shadow-[0_40px_70px_-40px_#000000aa]">
+        <div className="mx-auto mt-1 h-6 w-24 rounded-full bg-ink" />
+        <p className="mt-4 text-center text-[15px] font-medium text-white/80">Monday 20 October</p>
+        <p className="text-center text-[64px] leading-none font-semibold tracking-[-0.04em] text-white">07:30</p>
+        <ul className="mt-5 flex flex-col gap-1.5">
+          {FEED.slice(0, n)
+            .reverse()
+            .map((f) => (
+              <motion.li
+                key={f.icon}
+                layout
+                initial={{ opacity: 0, y: -14, scale: 0.94 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                className="rounded-[18px] bg-white/85 px-3 py-2.5 backdrop-blur"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="grid size-5 place-items-center rounded-[6px] bg-bot text-card">
+                    <Icon name={f.icon} className="size-3.5" />
+                  </span>
+                  <p className="flex-1 text-[12px] font-semibold">{title(f.icon)}</p>
+                  <p className="text-[11px] text-muted">{f.time}</p>
+                </div>
+                <p className="mt-1 text-[13px] leading-snug text-ink">{f.text}</p>
+              </motion.li>
+            ))}
+        </ul>
+      </div>
+      <div className="text-center lg:text-left">
+        <p className="text-[clamp(30px,3.4vw,52px)] leading-[1.05] font-semibold tracking-[-0.03em]">
+          Monday, 07:30.
+          <br />
+          <span className="text-bot">The work is already done.</span>
+        </p>
+        <p className="mx-auto mt-5 max-w-[460px] text-[17px] leading-relaxed text-body lg:mx-0">
+          This is a normal morning after the build. The robot worked through the night, and your phone tells you what it did. You start the
+          week with the people, not the paperwork.
+        </p>
+        <ul className="mt-7 flex flex-wrap justify-center gap-2 lg:justify-start">
+          {FEED.map((f, i) => (
+            <li
+              key={f.icon}
+              className={cn(
+                'flex items-center gap-2 rounded-full border px-3 py-1.5 text-[14px] transition-all duration-500',
+                n > i ? 'border-bot bg-bot text-card' : 'border-hair text-muted',
+              )}
+            >
+              <Icon name={f.icon} className="size-4" />
+              {title(f.icon)}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+// 46 working weeks of 16 hours, counted in 40-hour work weeks.
+const YEAR_HOURS = HOURS * 46;
+const YEAR_WEEKS = Math.round(YEAR_HOURS / 40);
+
+/** I: a year at a glance. 52 squares, one per week, and the weeks you get back turn blue. */
+function Year() {
+  const ref = useRef<HTMLDivElement>(null);
+  const seen = useInView(ref, { once: true, margin: '-25% 0px' });
+  const reduce = useReducedMotion();
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!seen) return;
+    const c = animate(0, YEAR_WEEKS, { duration: reduce ? 0 : 2.6, ease: 'easeOut', onUpdate: (v) => setN(v) });
+    return () => c.stop();
+  }, [seen, reduce]);
+  return (
+    <div ref={ref}>
+      <div className="grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:items-end lg:gap-16">
+        <div>
+          <p className="text-[clamp(72px,11vw,168px)] leading-[0.85] font-semibold tracking-[-0.06em] text-bot">
+            {Math.round((YEAR_HOURS * n) / YEAR_WEEKS)}
+            <span className="text-[0.4em] tracking-[-0.02em]"> h</span>
+          </p>
+          <p className="mt-4 max-w-[420px] text-[18px] leading-snug text-body">
+            back every year. At {HOURS} hours a week, that’s <b className="font-semibold text-ink">{YEAR_WEEKS} full work weeks</b> you no
+            longer spend copying and checking.
+          </p>
+        </div>
+        <div>
+          <div className="grid grid-cols-13 gap-1.5 sm:gap-2">
+            {Array.from({ length: 52 }, (_, k) => (
+              <span
+                key={k}
+                className={cn(
+                  'aspect-square rounded-[5px] transition-colors duration-300 sm:rounded-[7px]',
+                  k < Math.round(n) ? 'bg-bot' : 'bg-[#e6e2d8]',
+                )}
+              />
+            ))}
+          </div>
+          <div className="mt-3 flex gap-5 text-[13px] text-muted">
+            <span className="flex items-center gap-2">
+              <span className="size-3 rounded-[3px] bg-bot" />
+              weeks you get back
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="size-3 rounded-[3px] bg-[#e6e2d8]" />
+              one year
+            </span>
+          </div>
+        </div>
+      </div>
+      <ul className="mt-14 grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-6">
+        {t.items.map((b) => (
+          <li key={b.title} className="border-t-2 border-ink pt-4">
+            <Icon name={b.icon} className="size-6 text-bot" />
+            <h3 className="mt-3 text-[17px] leading-tight font-semibold">{b.title}</h3>
+            <p className="mt-1 text-[14px] leading-snug text-muted">{b.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 const OPTIONS = [
-  { id: 'a', name: 'The receipt', idea: 'A till receipt prints the hours you get back; the benefits are stamped next to it.', C: Receipt },
+  {
+    id: 'f',
+    name: 'The bill, redone',
+    idea: 'New. A printer slides out an itemised bill: every benefit is a line, the hours are the total.',
+    C: Bill,
+  },
+  { id: 'g', name: 'The dial', idea: 'New. The clock hand sweeps round and lights up each benefit around the face.', C: Dial },
+  {
+    id: 'h',
+    name: 'Monday morning',
+    idea: 'New. Your phone fills with what the automation did overnight. The future, not the chores.',
+    C: Morning,
+  },
+  { id: 'i', name: 'A year back', idea: 'New. One square per week of the year; the weeks you get back turn blue.', C: Year },
+  { id: 'e', name: 'The clock', idea: 'A clock face fills in slice by slice while the hours count up.', C: Clock },
+  { id: 'a', name: 'The receipt', idea: 'The first try at the bill, kept for comparison.', C: Receipt },
   { id: 'b', name: 'Sticky notes', idea: 'The benefits as handwritten notes, like the hero. Each one slaps onto the wall.', C: Notes },
   { id: 'c', name: 'Big type', idea: 'No boxes at all. A huge hour counter and a numbered list that draws itself.', C: Editorial },
   { id: 'd', name: 'The switch', idea: 'Flip from "Today" to "With automation" and every problem turns into a benefit.', C: Switch },
-  { id: 'e', name: 'The clock', idea: 'A clock face fills in slice by slice while the hours count up.', C: Clock },
 ];
 
 export default function BenefitOptions() {
@@ -384,10 +739,11 @@ export default function BenefitOptions() {
       <header className="wrap pt-16 md:pt-24">
         <p className="font-mono text-[13px] text-bot">Design options · not public</p>
         <h1 className="mt-3 text-[clamp(28px,3.4vw,48px)] leading-[1.05] font-semibold tracking-[-0.03em]">
-          “Get your hours back”: five options
+          “Get your hours back”: nine options
         </h1>
         <p className="mt-3 max-w-[640px] text-lg text-body">
-          The site currently shows the original cards. Pick a letter, and it replaces them. Scroll slowly: each one animates in.
+          The site currently shows the original cards. F to I are new, the earlier ones follow below. Pick a letter, and it replaces them.
+          Scroll slowly: each one animates in.
         </p>
         <nav className="mt-6 flex flex-wrap gap-2">
           {OPTIONS.map((o) => (
