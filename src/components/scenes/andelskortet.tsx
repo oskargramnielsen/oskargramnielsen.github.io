@@ -13,53 +13,44 @@ const open = mapDots.filter((d) => d[2]);
 const GREEN = '#3a5d50';
 
 // Visitors since launch: it climbs with small dips, like the real curve. Points are % of the
-// screen (x from the left, y from the top), traced from Oskar's sketch.
+// screen (x from the left, y from the top). It runs low under the text, climbs through the gap
+// between the text and the window, passes just under the visitor count and leaves top right.
 const CURVE = [
-  [2, 72],
-  [3, 69],
-  [5, 71],
-  [7, 71.5],
-  [9.5, 69],
-  [12, 70.5],
-  [14.5, 70.5],
-  [17.5, 67.5],
-  [20, 68.5],
-  [23.5, 67],
-  [25.5, 65],
-  [28, 66],
-  [31, 58.5],
-  [32, 59.5],
-  [34, 57.5],
-  [36.5, 53],
-  [38, 49.5],
-  [39.5, 50.5],
-  [41, 45],
-  [42, 33.5],
-  [44, 33.5],
-  [45.5, 27.5],
-  [47, 26.5],
-  [50, 23],
-  [53, 21],
-  [55, 23],
-  [59, 19.5],
-  [61.5, 19.5],
-  [64.5, 13.5],
-  [66, 15],
-  [70, 9],
-  [73, 12],
-  [75, 8],
-  [76.5, 9],
-  [79, 10.5],
-  [81, 5.5],
-  [84, 8],
-  [86, 5],
-  [88.5, 6.5],
-  [90, 2.5],
-  [92, 2.5],
-  [93, 1.5],
-  [94, 2.5],
-  [96.5, 1.5],
-  [98, 1.5],
+  [0, 86],
+  [4, 84],
+  [8, 85],
+  [12, 82.5],
+  [16, 83.5],
+  [20, 81],
+  [24, 81.5],
+  [28, 78],
+  [31, 79],
+  [34, 75.5],
+  [37, 76.5],
+  [40, 71],
+  [42, 61],
+  [43.5, 62],
+  [45, 50],
+  [46.5, 42],
+  [48, 43],
+  [50, 35],
+  [53, 31.5],
+  [55, 33],
+  [58, 27],
+  [61, 28],
+  [64, 22],
+  [66, 23.5],
+  [69, 17],
+  [72, 19],
+  [75, 14],
+  [78, 15.5],
+  [81, 11],
+  [84, 12.5],
+  [87, 9],
+  [90, 9.5],
+  [93, 7.5],
+  [96, 8],
+  [100, 6.5],
 ] as const;
 // Smooth: a curve through the midpoints, bending at each traced point.
 const LINE =
@@ -68,35 +59,62 @@ const LINE =
     .map(([x, y], i) => `Q${x},${y} ${(x + CURVE[i + 2][0]) / 2},${(y + CURVE[i + 2][1]) / 2}`)
     .join(' ') +
   ` L${CURVE[CURVE.length - 1][0]},${CURVE[CURVE.length - 1][1]}`;
+// The same line closed along the bottom, for the soft fill under it.
+const AREA = `${LINE} L100,100 L0,100 Z`;
 
-/** The rising visitor line, revealed left to right as the scene plays. */
+/** Height of the line (in %) at a given x, close enough to the smoothed curve for the moving dot. */
+function yAt(x: number) {
+  const k = CURVE.findIndex(([cx]) => cx >= x);
+  if (k <= 0) return CURVE[0][1];
+  const [x0, y0] = CURVE[k - 1];
+  const [x1, y1] = CURVE[k];
+  return y0 + ((y1 - y0) * (x - x0)) / (x1 - x0);
+}
+
+/** The rising visitor line with a soft fill under it, revealed left to right, a live dot at its tip. */
 function Line({ grow, id, className, width }: { grow: MotionValue<number>; id: string; className: string; width: number }) {
-  const clipW = useTransform(grow, (g) => g * 104);
+  const clipW = useTransform(grow, (g) => g * 100);
+  const left = useTransform(grow, (g) => `${g * 100}%`);
+  const top = useTransform(grow, (g) => `${yAt(g * 100)}%`);
+  const shown = useTransform(grow, (g) => (g > 0.01 ? 1 : 0));
   return (
-    <svg viewBox="0 0 100 100" preserveAspectRatio="none" className={className} aria-hidden>
-      <defs>
-        <clipPath id={id}>
-          <motion.rect x="-2" y="-5" height="110" width={clipW} />
-        </clipPath>
-      </defs>
-      <path
-        d={LINE}
-        clipPath={`url(#${id})`}
-        fill="none"
-        stroke={GREEN}
-        strokeWidth={width}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
+    <div className={className} aria-hidden>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full">
+        <defs>
+          <clipPath id={id}>
+            <motion.rect x="0" y="-5" height="110" width={clipW} />
+          </clipPath>
+          <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor={GREEN} stopOpacity="0.12" />
+            <stop offset="0.7" stopColor={GREEN} stopOpacity="0.03" />
+            <stop offset="1" stopColor={GREEN} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <g clipPath={`url(#${id})`}>
+          <path d={AREA} fill={`url(#${id}-fill)`} />
+          <path
+            d={LINE}
+            fill="none"
+            stroke={GREEN}
+            strokeWidth={width}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        </g>
+      </svg>
+      <motion.span className="absolute size-0" style={{ left, top, opacity: shown }}>
+        <span className="absolute -inset-[9px] animate-ping rounded-full opacity-30" style={{ background: GREEN }} />
+        <span className="absolute -inset-[7px] rounded-full border-[3px] border-card" style={{ background: GREEN }} />
+      </motion.span>
+    </div>
   );
 }
 
 /** On large screens the line runs across the whole pinned screen, behind the text and the window. */
 export function AndelskortetBackdrop({ p }: { p: MotionValue<number> }) {
   const grow = useTransform(p, (v) => seg(v, 0.1, 0.75));
-  return <Line grow={grow} id="ak-grow-wide" width={6} className="absolute inset-0 size-full opacity-90" />;
+  return <Line grow={grow} id="ak-grow-wide" width={5} className="absolute inset-0" />;
 }
 
 /** The house-in-a-circle marker andelskortet.dk uses for open waiting lists. */

@@ -38,14 +38,29 @@ export const en = {
   benefits: {
     label: 'Why automate',
     title: 'Get your hours back.',
+    // Each benefit is a line on the bill; the icon picks its symbol.
     items: [
-      { icon: 'time', title: 'Time back', text: 'The hours spent copying and checking come back to you.' },
-      { icon: 'check', title: 'Fewer mistakes', text: 'A program doesn’t mistype, skip a row or forget.' },
-      { icon: 'money', title: 'Lower costs', text: 'Pay once for the build instead of every week in hours.' },
-      { icon: 'heart', title: 'Work you like', text: 'Spend the day on customers and craft, not spreadsheets.' },
-      { icon: 'shield', title: 'Nothing to fear', text: 'Your data stays under control, and you see what it does.' },
-      { icon: 'moon', title: 'Always on', text: 'It runs at night and on weekends while you’re off.' },
+      { icon: 'time', title: 'Time back', text: 'Hours of copying, gone.' },
+      { icon: 'check', title: 'Fewer mistakes', text: 'No typos, no skipped rows.' },
+      { icon: 'money', title: 'Lower costs', text: 'Pay once, not every week.' },
+      { icon: 'heart', title: 'Work you like', text: 'Customers, not spreadsheets.' },
+      { icon: 'shield', title: 'Nothing to fear', text: 'Your data stays yours.' },
+      { icon: 'moon', title: 'Always on', text: 'It works while you sleep.' },
     ],
+    bill: {
+      printer: 'Your automation',
+      printing: 'printing',
+      title: 'Your week, itemised',
+      when: 'every week',
+      total: 'Total',
+      totalText: 'Paid once',
+      totalValue: 'Hours back',
+      footer: 'Paid once · runs every week',
+      note: 'Paid once.\nPays you back every week.',
+      text: 'Copying, checking and chasing eat a surprising part of the week in a small office. Hand them to a program once, and the hours come back to you.',
+      chipsTitle: 'What it can take off your desk',
+      chips: ['Orders', 'Invoices', 'Reports', 'Emails', 'Reminders', 'Spreadsheets'],
+    },
     // The tools, moved here from the day job.
     stack: {
       title: 'A flexible tool stack',

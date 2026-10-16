@@ -1,42 +1,52 @@
 'use client';
 
-import { motion, useReducedMotion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useInView, useReducedMotion } from 'motion/react';
 import type { Dict } from '@/content';
+import { cn } from '@/lib/utils';
 
-const draw = {
-  hidden: { pathLength: 0, opacity: 0 },
-  shown: { pathLength: 1, opacity: 1, transition: { duration: 0.9, ease: 'easeOut' as const } },
-};
-
-/** Small line icons that draw themselves when the card scrolls in. */
-export const ICONS: Record<string, React.ReactNode> = {
+// The "price" of each line on the bill: a symbol, not a number, since every office is different.
+const svg = (d: React.ReactNode, fill = false) => (
+  <svg
+    viewBox="0 0 24 24"
+    className="size-[22px]"
+    fill={fill ? 'currentColor' : 'none'}
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    {d}
+  </svg>
+);
+const SYMBOLS: Record<string, React.ReactNode> = {
   time: (
     <>
-      <motion.circle cx="12" cy="12" r="8.5" variants={draw} />
-      <motion.path d="M12 7.5V12l3 2" variants={draw} />
+      <span className="text-[22px] leading-none">+</span>
+      {svg(
+        <>
+          <circle cx="12" cy="12" r="8.5" />
+          <path d="M12 7.5V12l3 2" />
+        </>,
+      )}
     </>
   ),
   check: (
     <>
-      <motion.circle cx="12" cy="12" r="8.5" variants={draw} />
-      <motion.path d="m8.3 12.2 2.5 2.5 5-5.2" variants={draw} />
+      {svg(<path d="m5 12.5 4 4 10-10" />)}
+      {svg(<path d="m5 12.5 4 4 10-10" />)}
     </>
   ),
-  money: (
+  money: <span className="text-[19px] leading-none font-semibold">1×</span>,
+  heart: svg(<path d="M12 19.5s-7-4.3-7-9.4A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.1c0 5.1-7 9.4-7 9.4Z" />, true),
+  shield: svg(
     <>
-      <motion.rect x="3.5" y="6.5" width="17" height="11" rx="2" variants={draw} />
-      <motion.circle cx="12" cy="12" r="2.6" variants={draw} />
-      <motion.path d="M6.5 9.5v.01M17.5 14.5v.01" variants={draw} />
-    </>
+      <rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="currentColor" />
+      <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" />
+    </>,
   ),
-  heart: <motion.path d="M12 19.5s-7-4.3-7-9.4A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.1c0 5.1-7 9.4-7 9.4Z" variants={draw} />,
-  shield: (
-    <>
-      <motion.path d="M12 3.5 5 6.2v5.3c0 4.3 3 7.6 7 9 4-1.4 7-4.7 7-9V6.2l-7-2.7Z" variants={draw} />
-      <motion.path d="m9 12 2.2 2.2L15.2 10" variants={draw} />
-    </>
-  ),
-  moon: <motion.path d="M19 14.6A7.5 7.5 0 0 1 9.4 5a7.5 7.5 0 1 0 9.6 9.6Z" variants={draw} />,
+  moon: <span className="text-[17px] leading-none font-semibold tracking-[-0.02em]">24/7</span>,
 };
 
 const pop = (d: number) => ({
@@ -116,54 +126,118 @@ function Stack({ t }: { t: Dict['benefits']['stack'] }) {
   );
 }
 
-/** Why automate at all: a few short benefits, each with an icon. */
+/** The bill: a printer slides out the week, itemised. Every benefit is a line, and the total is your hours back. */
+function Bill({ t, seen }: { t: Dict['benefits']; seen: boolean }) {
+  const reduce = useReducedMotion();
+  const b = t.bill;
+  return (
+    <div className="mx-auto w-full max-w-[540px]">
+      <div className="relative z-10 flex h-14 items-center justify-between rounded-[18px] bg-ink px-5 shadow-[0_24px_40px_-24px_#00000099]">
+        <span className="font-mono text-[11px] tracking-[0.25em] text-white/45 uppercase">{b.printer}</span>
+        <span className="flex items-center gap-2 font-mono text-[11px] text-white/60">
+          <span className="size-2 animate-pulse rounded-full bg-[#3ddc84]" />
+          {b.printing}
+        </span>
+        <span aria-hidden className="absolute inset-x-6 -bottom-1 h-2 rounded-full bg-[#050608]" />
+      </div>
+      <div className="-mt-1 overflow-hidden px-4 pb-8">
+        <motion.div
+          initial={reduce ? false : { y: '-101%' }}
+          animate={seen ? { y: 0 } : undefined}
+          transition={{ duration: 2.2, ease: [0.35, 0.5, 0.25, 1] }}
+          className="drop-shadow-[0_8px_10px_#0000001f]"
+        >
+          <div className="bg-card px-6 pt-7 pb-12 [mask:conic-gradient(from_-45deg_at_bottom,#0000,#000_1deg_89deg,#0000_90deg)_50%/18px_100%] sm:px-8">
+            <div className="flex items-baseline justify-between gap-4">
+              <p className="text-[20px] font-semibold tracking-[-0.02em] sm:text-[22px]">{b.title}</p>
+              <p className="shrink-0 font-mono text-[12px] text-muted">{b.when}</p>
+            </div>
+            <div className="my-5 border-t border-dashed border-ink/25" />
+            <ul className="space-y-4">
+              {t.items.map((item) => (
+                <li key={item.title} className="flex items-center gap-3">
+                  <div className="min-w-0">
+                    <p className="text-[16px] leading-tight font-semibold">{item.title}</p>
+                    <p className="mt-0.5 text-[13.5px] leading-snug text-muted">{item.text}</p>
+                  </div>
+                  <span aria-hidden className="h-px min-w-4 flex-1 translate-y-1 border-b border-dotted border-ink/30" />
+                  <span className="flex shrink-0 items-center gap-0.5 font-mono text-bot">{SYMBOLS[item.icon]}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="my-5 border-t border-dashed border-ink/25" />
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="text-[15px] font-semibold">{b.total}</p>
+                <p className="text-[13px] text-muted">{b.totalText}</p>
+              </div>
+              <p className="text-right text-[clamp(28px,3vw,40px)] leading-none font-semibold tracking-[-0.04em] text-bot">
+                {b.totalValue}
+              </p>
+            </div>
+            <div className="mt-6 flex items-center justify-between gap-4">
+              <div
+                aria-hidden
+                className="h-8 w-32 shrink-0 bg-[repeating-linear-gradient(90deg,#16171c_0_2px,transparent_2px_4px,#16171c_4px_5px,transparent_5px_8px)] sm:w-40"
+              />
+              <p className="text-right font-mono text-[10.5px] tracking-[0.15em] text-muted uppercase">{b.footer}</p>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+/** Why automate at all: the bill, a note, and the chores it takes off the desk. */
 export default function Benefits({ t }: { t: Dict['benefits'] }) {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const seen = useInView(ref, { once: true, margin: '-25% 0px' });
+  // The tags light up one by one once the bill has printed.
+  const [lit, setLit] = useState(0);
+  useEffect(() => {
+    if (!seen) return;
+    const ids = t.bill.chips.map((_, i) => setTimeout(() => setLit(i + 1), reduce ? 0 : 1800 + i * 280));
+    return () => ids.forEach(clearTimeout);
+  }, [seen, reduce, t.bill.chips]);
   return (
     <section id="benefits" className="wrap scroll-mt-20 pt-16 md:pt-24">
       <p className="font-mono text-[13px] text-muted">{t.label}</p>
       <h2 className="mt-3 text-[clamp(32px,4.2vw,62px)] leading-[1.02] font-semibold tracking-[-0.03em]">{t.title}</h2>
-      <ul className="mt-7 grid gap-2.5 sm:grid-cols-2 md:mt-10 md:gap-3 lg:grid-cols-3">
-        {t.items.map((b, i) => (
-          <motion.li
-            key={b.title}
-            initial={reduce ? false : 'hidden'}
-            whileInView="shown"
-            viewport={{ once: true, margin: '-10% 0px' }}
-            variants={{
-              hidden: { opacity: 0, y: 16 },
-              shown: { opacity: 1, y: 0, transition: { duration: 0.5, delay: (i % 3) * 0.08, when: 'beforeChildren' } },
-            }}
-            className="group flex gap-4 rounded-[20px] border border-hair bg-card p-4 transition-[border-color,translate] duration-300 hover:-translate-y-0.5 hover:border-bot/40 sm:block md:p-6"
-          >
-            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-bot-soft text-bot md:size-11">
-              <svg
-                viewBox="0 0 24 24"
-                className="size-5 md:size-[22px]"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
+      <div ref={ref} className="mt-8 grid items-center gap-8 md:mt-12 lg:grid-cols-[minmax(0,540px)_1fr] lg:gap-16">
+        <Bill t={t} seen={seen} />
+        <div className="text-center lg:text-left">
+          <p className="-rotate-2 font-[family-name:var(--font-hand)] text-[clamp(34px,3.4vw,52px)] leading-[1.05] font-semibold whitespace-pre-line text-bot">
+            {t.bill.note}
+          </p>
+          <p className="mx-auto mt-5 max-w-[440px] text-[16px] leading-relaxed text-body md:text-[17px] lg:mx-0">{t.bill.text}</p>
+          <p className="mt-7 text-[13px] text-muted">{t.bill.chipsTitle}</p>
+          <ul className="mt-3 flex flex-wrap justify-center gap-2 lg:justify-start">
+            {t.bill.chips.map((c, i) => (
+              <li
+                key={c}
+                className={cn(
+                  'flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[14px] transition-all duration-500',
+                  lit > i ? 'border-bot bg-bot text-card' : 'border-hair text-muted',
+                )}
               >
-                {ICONS[b.icon]}
-              </svg>
-            </span>
-            <div>
-              <h3 className="text-[17px] leading-tight font-semibold tracking-[-0.01em] sm:mt-4 md:mt-5 md:text-xl">{b.title}</h3>
-              <p className="mt-1 text-[14px] leading-snug text-muted md:mt-1.5 md:text-[15px]">{b.text}</p>
-            </div>
-          </motion.li>
-        ))}
-      </ul>
+                <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden>
+                  <path d="m5 12.5 4 4 10-10" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {c}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
 
       <motion.div
         initial={reduce ? false : 'hidden'}
         whileInView="shown"
         viewport={{ once: true, margin: '-15% 0px' }}
         variants={{ hidden: { opacity: 0, y: 16 }, shown: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-        className="mt-3 grid gap-6 rounded-[24px] border border-hair bg-card p-5 md:mt-4 md:p-7 xl:grid-cols-[.55fr_1.45fr] xl:items-center xl:gap-10"
+        className="mt-6 grid gap-6 rounded-[24px] border border-hair bg-card p-5 md:mt-10 md:p-7 xl:grid-cols-[.55fr_1.45fr] xl:items-center xl:gap-10"
       >
         <div>
           <h3 className="text-[22px] leading-tight font-semibold tracking-[-0.02em] md:text-[28px]">{t.stack.title}</h3>
